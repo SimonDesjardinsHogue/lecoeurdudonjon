@@ -765,6 +765,7 @@ input[type="text"]:focus {
 }
 
 
+/* Daily Quests Styling */
 
 /* Daily Quests Styling */
 .quest-completed {
@@ -774,14 +775,4 @@ input[type="text"]:focus {
 
 .quest-active {
     border: 2px solid #FFD700;
-}
-
-.shop-item-disabled {
-    opacity: 0.5;
-    pointer-events: none;
-}
-
-.shop-item-disabled button {
-    background: linear-gradient(135deg, #666 0%, #444 100%);
-    cursor: not-allowed;
 }
