@@ -2,11 +2,35 @@
 import { init, startGame, rest, showShop, showStats, showSaveOptions, showMain, resetGame, buyItem, restoreSaveFromStart, meetNPC, showLeaderboard } from './game-logic.js';
 import { explore, attack, defend, flee } from './combat.js';
 import { exportSave, importSave } from './save-load.js';
+import { audioManager } from './audio.js';
 
+// Initialize audio context after user interaction
+function initAudio() {
+    audioManager.init();
+}
+
+// Toggle audio on/off
+function toggleAudio() {
+    const isMuted = audioManager.toggleMute();
+    const audioToggle = document.getElementById('audioToggle');
+    if (audioToggle) {
+        audioToggle.textContent = isMuted ? '🔇' : '🔊';
+        audioToggle.classList.toggle('muted', isMuted);
+    }
+}
 
 // Initialize game on load
 window.addEventListener('load', () => {
     init();
+    
+    // Update audio button state on load
+    const isMuted = audioManager.isMuted;
+    const audioToggle = document.getElementById('audioToggle');
+    if (audioToggle) {
+        audioToggle.textContent = isMuted ? '🔇' : '🔊';
+        audioToggle.classList.toggle('muted', isMuted);
+    }
+});
 
 // Expose functions to global scope for onclick handlers
 window.startGame = function() {
@@ -41,3 +65,4 @@ window.resetGame = resetGame;
 window.restoreSaveFromStart = restoreSaveFromStart;
 window.meetNPC = meetNPC;
 window.showLeaderboard = showLeaderboard;
+window.toggleAudio = toggleAudio;
