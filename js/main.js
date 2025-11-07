@@ -30,7 +30,11 @@ window.addEventListener('load', () => {
         audioToggle.textContent = isMuted ? '🔇' : '🔊';
         audioToggle.classList.toggle('muted', isMuted);
     }
+    
+    // Dispatch event to signal that modules loaded successfully
+    window.dispatchEvent(new Event('modulesReady'));
 });
+
 
 // Expose functions to global scope for onclick handlers
 window.startGame = function() {

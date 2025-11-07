@@ -12,8 +12,38 @@ Dans le royaume oublié de Valoria, les ténèbres s'étendent. Au cœur du donj
 
 ### Démarrer le Jeu
 
-1. Ouvrez `index.html` dans votre navigateur web
-2. Entrez le nom de votre héros
+#### ⚠️ Important - Serveur Requis
+
+Le jeu utilise des modules JavaScript ES6 qui nécessitent un serveur HTTP pour fonctionner correctement.
+
+**Option 1 - Jouer en ligne (Recommandé):**
+- Visitez directement: [https://simondesjardinshogue.github.io/lecoeurdudonjon/](https://simondesjardinshogue.github.io/lecoeurdudonjon/)
+
+**Option 2 - Jouer en local:**
+
+```bash
+# Avec Python 3 (préinstallé sur Mac/Linux)
+python3 -m http.server 8000
+
+# Avec Node.js
+npx http-server -p 8000
+
+# Avec PHP
+php -S localhost:8000
+```
+
+Puis ouvrez votre navigateur à: `http://localhost:8000/`
+
+**Option 3 - Extensions de navigateur:**
+- Visual Studio Code: Extension "Live Server"
+- Chrome: Extension "Web Server for Chrome"
+
+**Note:** ❌ N'ouvrez PAS `index.html` directement (file://) - cela ne fonctionnera pas à cause des restrictions de sécurité des modules ES6.
+
+### Commencer à Jouer
+
+1. Entrez le nom de votre héros
+2. Choisissez une classe (Guerrier, Magicien, Archer, ou Rogue)
 3. Cliquez sur "Commencer l'Aventure"
 
 ### Fonctionnalités
@@ -82,10 +112,33 @@ Pour accéder aux options de sauvegarde :
 
 ## 🛠️ Technologie
 
+Le jeu utilise une **architecture modulaire** basée sur des modules ES6 JavaScript pour une meilleure maintenabilité et évolutivité.
+
 - **HTML5** : Structure du jeu
 - **CSS3** : Style médiéval/fantastique avec gradients et animations
-- **JavaScript** : Logique du jeu, combat, progression
+- **JavaScript ES6 Modules** : Architecture modulaire
+  - `game-state.js` : État centralisé du jeu
+  - `game-logic.js` : Logique métier principale
+  - `combat.js` : Système de combat
+  - `ui.js` : Gestion de l'interface
+  - `save-load.js` : Persistance des données
+  - `character-classes.js` : Système de classes
+  - `audio.js` : Gestion audio
+  - `particles.js` : Effets visuels
+  - `keyboard-handler.js` : Raccourcis clavier
 - **LocalStorage** : Sauvegarde automatique
+
+### 👨‍💻 Développement et Contribution
+
+Pour contribuer au projet ou ajouter des fonctionnalités, consultez le guide complet:
+📖 **[CONTRIBUTING.md](CONTRIBUTING.md)** - Guide de contribution avec architecture détaillée
+
+Le guide explique:
+- Structure modulaire et organisation du code
+- Comment ajouter des fonctionnalités (ennemis, objets, écrans, etc.)
+- Bonnes pratiques de développement
+- Comment tester vos modifications
+- Débogage et résolution de problèmes
 
 ## 🎨 Design
 

@@ -274,5 +274,63 @@
     </div>
 
     <script type="module" src="js/main.js"></script>
+    
+    <!-- Fallback script to detect module loading failures -->
+    <script>
+        (function() {
+            // Configuration
+            const GITHUB_PAGES_URL = 'https://simondesjardinshogue.github.io/lecoeurdudonjon/';
+            const MODULE_LOAD_TIMEOUT = 2000; // 2 seconds to allow for slower connections
+            
+            // Flag to track if modules loaded successfully
+            let modulesLoaded = false;
+            
+            // Listen for successful module load (main.js will set this)
+            window.addEventListener('modulesReady', function() {
+                modulesLoaded = true;
+            });
+            
+            // Check if modules loaded successfully
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    // Check if the startGame function exists (exposed by main.js)
+                    if (typeof window.startGame === 'undefined' && !modulesLoaded) {
+                        showModuleError();
+                    }
+                }, MODULE_LOAD_TIMEOUT);
+            });
+            
+            function showModuleError() {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'module-error-dialog';
+                errorDiv.innerHTML = `
+                    <h2>⚠️ Erreur de Chargement</h2>
+                    <p><strong>Le jeu ne peut pas se charger correctement.</strong></p>
+                    <p>Vous essayez probablement d'ouvrir le fichier directement dans votre navigateur (protocole file://).</p>
+                    <h3 style="color: #DAA520; margin-top: 20px;">Solutions:</h3>
+                    <ol>
+                        <li><strong>Option 1 - Jouer en ligne:</strong><br>
+                            Visitez <a href="${GITHUB_PAGES_URL}" target="_blank">${GITHUB_PAGES_URL}</a>
+                        </li>
+                        <li><strong>Option 2 - Serveur local:</strong><br>
+                            Ouvrez un terminal dans le dossier du jeu et lancez:<br>
+                            <code>python3 -m http.server 8000</code><br>
+                            Puis visitez <a href="http://localhost:8000/">http://localhost:8000/</a>
+                        </li>
+                        <li><strong>Option 3 - Extension navigateur:</strong><br>
+                            Installez une extension comme "Live Server" (VS Code) ou "Web Server for Chrome"
+                        </li>
+                    </ol>
+                    <p style="margin-top: 20px; font-size: 0.9em; color: #aaa;">
+                        <em>Note technique: Le jeu utilise des modules ES6 JavaScript qui nécessitent un serveur HTTP pour des raisons de sécurité (CORS).</em>
+                    </p>
+                    <button onclick="this.parentElement.remove()">
+                        Fermer ce message
+                    </button>
+                `;
+                document.body.appendChild(errorDiv);
+            }
+        })();
+    </script>
 </body>
 </html>
