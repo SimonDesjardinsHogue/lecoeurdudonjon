@@ -347,7 +347,9 @@ export function showShop(filterCategory = 'all', filterByClass = false) {
                 <option value="damage" ${filterCategory === 'damage' ? 'selected' : ''}>⚔️ Force</option>
                 <option value="energy" ${filterCategory === 'energy' ? 'selected' : ''}>⚡ Énergie</option>
                 <option value="exp" ${filterCategory === 'exp' ? 'selected' : ''}>✨ Expérience</option>
-                <option value="equipment" ${filterCategory === 'equipment' ? 'selected' : ''}>🛡️ Équipement</option>
+                <option value="shield" ${filterCategory === 'shield' ? 'selected' : ''}>🛡️ Boucliers</option>
+                <option value="weapon" ${filterCategory === 'weapon' ? 'selected' : ''}>⚔️ Armes</option>
+                <option value="armor" ${filterCategory === 'armor' ? 'selected' : ''}>🛡️ Armures</option>
             </select>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -357,10 +359,17 @@ export function showShop(filterCategory = 'all', filterByClass = false) {
     `;
     shopDiv.appendChild(filterContainer);
     
-    // Filter items based on category
+    // Filter items based on category or type
     let filteredItems = filterCategory === 'all' 
         ? shopItems 
-        : shopItems.filter(item => item.category === filterCategory);
+        : shopItems.filter(item => {
+            // For equipment types (shield, weapon, armor), check the type field
+            if (filterCategory === 'shield' || filterCategory === 'weapon' || filterCategory === 'armor') {
+                return item.type === filterCategory;
+            }
+            // For other categories (heal, damage, energy, exp), check the category field
+            return item.category === filterCategory;
+        });
     
     // Additional filter by class compatibility if checkbox is checked
     if (filterByClass) {
