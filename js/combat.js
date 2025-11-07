@@ -7,6 +7,7 @@ import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 import { updateQuestProgress } from './daily-quests.js';
 import { updateSkillBuffs, applyShieldBuff, checkDodge, clearSkillBuffs, resetCombatState } from './skills.js';
+import { trackAchievementProgress, checkAchievements } from './achievements.js';
 
 // Check if player should face a boss (every 5 levels)
 function shouldFaceBoss() {
@@ -207,6 +208,9 @@ export function explore() {
     // Update quest progress for exploring
     updateQuestProgress('explore', 1);
     
+    // Track exploration for achievements
+    trackAchievementProgress('exploration', 1);
+    
     // Check for boss encounter first
     if (shouldFaceBoss()) {
         gameState.currentEnemy = createBossEnemy();
@@ -291,6 +295,10 @@ export function attack() {
         updateQuestProgress('kill', 1);
         updateQuestProgress('collect_gold', goldEarned);
         updateQuestProgress('survive', 1);
+        
+        // Track combat win for achievements
+        trackAchievementProgress('combat_win', 1);
+        checkAchievements();
         
         // Play victory sound and show particles
         audioManager.playSound('victory');
@@ -477,6 +485,9 @@ function handleDefeat() {
     p.health = 0;
     addCombatLog('Vous avez été vaincu...', 'damage');
     
+    // Track combat loss for achievements (resets consecutive wins)
+    trackAchievementProgress('combat_loss');
+    
     // Clear skill buffs when combat ends
     clearSkillBuffs();
     resetCombatState();
@@ -527,6 +538,10 @@ export function flee() {
     const fleeChance = Math.random();
     if (fleeChance > 0.5) {
         addCombatLog('Vous fuyez le combat !', 'info');
+        
+        // Track successful escape for achievements
+        trackAchievementProgress('successful_escape', 1);
+        checkAchievements();
         
         // Play flee sound
         audioManager.playSound('flee');

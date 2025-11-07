@@ -203,6 +203,7 @@
                     <button onclick="showStats()">📊 Voir Statistiques (5)</button>
                     <button onclick="showLeaderboard()">🏆 Classement (6)</button>
                     <button onclick="showDailyQuests()">📜 Défis Quotidiens (7)</button>
+                    <button onclick="showAchievements()">🏅 Succès (8)</button>
                 </div>
             </div>
 
@@ -297,6 +298,18 @@
                     <h3>🏆 Classement des Héros</h3>
                     <p>Les plus grands héros du royaume de Valoria :</p>
                     <div id="leaderboardList"></div>
+                </div>
+                <div class="game-actions">
+                    <button onclick="showMain()">🚪 Retour (ESC)</button>
+                </div>
+            </div>
+
+            <!-- Achievements Screen -->
+            <div id="achievementsScreen" class="game-screen">
+                <div class="story-text">
+                    <h3>🏅 Succès et Accomplissements</h3>
+                    <p>Débloquez des succès pour gagner des récompenses permanentes !</p>
+                    <div id="achievementsContainer" style="max-height: 500px; overflow-y: auto;"></div>
                 </div>
                 <div class="game-actions">
                     <button onclick="showMain()">🚪 Retour (ESC)</button>

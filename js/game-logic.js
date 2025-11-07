@@ -7,6 +7,7 @@ import { characterRaces, applyRaceModifiers } from './character-races.js';
 import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 import { initializeDailyQuests, checkDailyReset, updateQuestProgress, showDailyQuestsScreen } from './daily-quests.js';
+import { initAchievements, trackAchievementProgress, checkAchievements } from './achievements.js';
 
 // Helper function to get class display name
 function getClassDisplayName(classKey) {
@@ -159,8 +160,10 @@ export function init() {
     loadGame();
     initializeShopItems();
     initializeDailyQuests();
+    initAchievements();
     checkEnergyRegeneration();
     checkDailyReset();
+    checkAchievements();
     updateUI();
     
     // Show restore button if save exists
@@ -310,6 +313,9 @@ export function checkLevelUp() {
         audioManager.playSound('levelup');
         particleSystem.createLevelUpEffect();
         
+        // Check achievements after level up
+        checkAchievements();
+        
         saveGame();
         updateUI();
     }
@@ -426,6 +432,10 @@ export function buyItem(index) {
         
         // Update quest progress for shop purchases
         updateQuestProgress('shop', 1);
+        
+        // Track item purchase for achievements
+        trackAchievementProgress('item_bought', 1);
+        checkAchievements();
         
         saveGame();
         updateUI();
@@ -776,6 +786,120 @@ export function buyRareItem(index) {
     } else {
         alert(`Vous n'avez pas assez d'or ! (Coût: ${item.cost} or)`);
     }
+}
+
+// Show achievements screen
+export function showAchievements() {
+    showScreen('achievementsScreen');
+    
+    const container = document.getElementById('achievementsContainer');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    // Import achievements functions
+    import('./achievements.js').then(module => {
+        const { achievements: achievementsList, getAchievementsByCategory, isAchievementUnlocked, getAchievementProgress } = module;
+        
+        const categories = getAchievementsByCategory();
+        const categoryNames = {
+            combat: '⚔️ Combat',
+            wealth: '💰 Richesse',
+            progression: '⭐ Progression',
+            challenge: '🏆 Défis',
+            skills: '⚡ Compétences',
+            commerce: '🛒 Commerce',
+            quests: '📜 Quêtes',
+            exploration: '🗺️ Exploration'
+        };
+        
+        let unlockedCount = 0;
+        let totalCount = achievementsList.length;
+        
+        for (const [category, items] of Object.entries(categories)) {
+            if (items.length === 0) continue;
+            
+            const categoryHeader = document.createElement('div');
+            categoryHeader.className = 'achievement-category';
+            categoryHeader.textContent = categoryNames[category] || category;
+            container.appendChild(categoryHeader);
+            
+            items.forEach(achievement => {
+                const isUnlocked = isAchievementUnlocked(achievement.id);
+                if (isUnlocked) unlockedCount++;
+                
+                const progress = getAchievementProgress(achievement);
+                
+                const item = document.createElement('div');
+                item.className = `achievement-item ${isUnlocked ? 'unlocked' : 'locked'}`;
+                
+                const icon = document.createElement('div');
+                icon.className = 'achievement-icon';
+                icon.textContent = achievement.icon;
+                if (!isUnlocked) icon.style.filter = 'grayscale(100%)';
+                item.appendChild(icon);
+                
+                const details = document.createElement('div');
+                details.className = 'achievement-details';
+                
+                const name = document.createElement('div');
+                name.className = 'achievement-name';
+                name.textContent = isUnlocked ? `✓ ${achievement.name}` : `🔒 ${achievement.name}`;
+                details.appendChild(name);
+                
+                const description = document.createElement('div');
+                description.className = 'achievement-description';
+                description.textContent = achievement.description;
+                details.appendChild(description);
+                
+                if (isUnlocked) {
+                    const reward = document.createElement('div');
+                    reward.className = 'achievement-reward';
+                    const rewardParts = [];
+                    if (achievement.reward.gold) rewardParts.push(`+${achievement.reward.gold} or`);
+                    if (achievement.reward.xp) rewardParts.push(`+${achievement.reward.xp} XP`);
+                    if (achievement.reward.strength) rewardParts.push(`+${achievement.reward.strength} Force`);
+                    if (achievement.reward.defense) rewardParts.push(`+${achievement.reward.defense} Défense`);
+                    if (achievement.reward.dexterity) rewardParts.push(`+${achievement.reward.dexterity} Dextérité`);
+                    if (achievement.reward.maxHealth) rewardParts.push(`+${achievement.reward.maxHealth} HP max`);
+                    if (achievement.reward.maxEnergy) rewardParts.push(`+${achievement.reward.maxEnergy} Énergie max`);
+                    reward.textContent = `Récompense: ${rewardParts.join(', ')}`;
+                    details.appendChild(reward);
+                } else {
+                    const progressBar = document.createElement('div');
+                    progressBar.className = 'achievement-progress';
+                    const progressFill = document.createElement('div');
+                    progressFill.className = 'achievement-progress-fill';
+                    progressFill.style.width = `${progress.percentage}%`;
+                    progressBar.appendChild(progressFill);
+                    details.appendChild(progressBar);
+                    
+                    const progressText = document.createElement('div');
+                    progressText.style.fontSize = '0.85em';
+                    progressText.style.color = '#999';
+                    progressText.style.marginTop = '5px';
+                    progressText.textContent = `Progression: ${progress.current}/${progress.required}`;
+                    details.appendChild(progressText);
+                }
+                
+                item.appendChild(details);
+                container.appendChild(item);
+            });
+        }
+        
+        // Add summary header
+        const summary = document.createElement('div');
+        summary.style.cssText = 'text-align: center; padding: 20px; background: rgba(218, 165, 32, 0.1); border-radius: 5px; margin-bottom: 20px; border: 2px solid #DAA520;';
+        summary.innerHTML = `
+            <div style="font-size: 1.5em; font-weight: bold; color: #FFD700; margin-bottom: 10px;">
+                🏆 ${unlockedCount} / ${totalCount} Succès Débloqués
+            </div>
+            <div style="font-size: 0.9em; color: #ccc;">
+                ${Math.floor((unlockedCount / totalCount) * 100)}% de complétion
+            </div>
+        `;
+        container.insertBefore(summary, container.firstChild);
+    });
 }
 
 // Show daily quests (export for main.js)

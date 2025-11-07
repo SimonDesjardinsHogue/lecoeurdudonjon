@@ -4,6 +4,7 @@ import { saveGame } from './save-load.js';
 import { updateUI } from './ui.js';
 import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
+import { trackAchievementProgress, checkAchievements } from './achievements.js';
 
 // Quest templates
 const questTemplates = [
@@ -162,6 +163,10 @@ function completeQuest(quest) {
     // Track total rewards
     quests.stats.totalRewards.gold += quest.rewards.gold;
     quests.stats.totalRewards.xp += quest.rewards.xp;
+    
+    // Track quest completion for achievements
+    trackAchievementProgress('quest_completed', 1);
+    checkAchievements();
     
     // Play completion sound
     audioManager.playSound('levelup');

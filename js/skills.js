@@ -4,6 +4,7 @@ import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 import { addCombatLog } from './ui.js';
 import { saveGame } from './save-load.js';
+import { trackAchievementProgress } from './achievements.js';
 
 // Skill cooldown tracker
 const skillCooldowns = {};
@@ -209,6 +210,9 @@ export function useSkill(skillId) {
     
     // Increment combat turn
     gameState.combatTurn = (gameState.combatTurn || 0) + 1;
+    
+    // Track skill usage for achievements
+    trackAchievementProgress('skill_used', 1);
     
     saveGame();
     return true;

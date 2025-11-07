@@ -784,3 +784,99 @@ input[type="text"]:focus {
 .quest-active {
     border: 2px solid #FFD700;
 }
+
+/* Achievement Notification */
+.achievement-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #2c1810 0%, #1a0f0a 100%);
+    border: 3px solid #FFD700;
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 350px;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+    text-align: center;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 0.5s ease;
+    z-index: 1000;
+}
+
+.achievement-notification.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Achievement List Styles */
+.achievement-item {
+    background: rgba(139, 69, 19, 0.2);
+    border: 2px solid #8B4513;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px 0;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.achievement-item.unlocked {
+    border-color: #FFD700;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.achievement-item.locked {
+    opacity: 0.6;
+}
+
+.achievement-icon {
+    font-size: 2.5em;
+    flex-shrink: 0;
+}
+
+.achievement-details {
+    flex-grow: 1;
+    text-align: left;
+}
+
+.achievement-name {
+    font-weight: bold;
+    color: #DAA520;
+    margin-bottom: 5px;
+}
+
+.achievement-description {
+    font-size: 0.9em;
+    color: #ccc;
+    margin-bottom: 5px;
+}
+
+.achievement-reward {
+    font-size: 0.85em;
+    color: #51cf66;
+}
+
+.achievement-progress {
+    width: 100%;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.achievement-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+    transition: width 0.3s ease;
+}
+
+.achievement-category {
+    color: #DAA520;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 20px 0 10px 0;
+    text-transform: uppercase;
+    border-bottom: 2px solid #8B4513;
+    padding-bottom: 5px;
+}
