@@ -3,6 +3,7 @@ import { init, startGame, rest, showShop, showStats, showSaveOptions, showMain, 
 import { explore, attack, defend, flee } from './combat.js';
 import { exportSave, importSave } from './save-load.js';
 import { audioManager } from './audio.js';
+import { initKeyboardHandler } from './keyboard-handler.js';
 
 // Initialize audio context after user interaction
 function initAudio() {
@@ -22,6 +23,9 @@ function toggleAudio() {
 // Initialize game on load
 window.addEventListener('load', () => {
     init();
+    
+    // Initialize keyboard handler
+    initKeyboardHandler();
     
     // Update audio button state on load
     const isMuted = audioManager.isMuted;
