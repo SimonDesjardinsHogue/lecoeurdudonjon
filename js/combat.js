@@ -5,6 +5,7 @@ import { saveGame } from './save-load.js';
 import { checkLevelUp, meetNPC } from './game-logic.js';
 import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
+import { updateQuestProgress } from './daily-quests.js';
 
 // Check if player should face a boss (every 5 levels)
 function shouldFaceBoss() {
@@ -202,6 +203,9 @@ export function explore() {
     // Consume energy for exploring
     gameState.player.energy = Math.max(0, gameState.player.energy - 10);
     
+    // Update quest progress for exploring
+    updateQuestProgress('explore', 1);
+    
     // Check for boss encounter first
     if (shouldFaceBoss()) {
         gameState.currentEnemy = createBossEnemy();
@@ -274,10 +278,18 @@ export function attack() {
     
     if (e.health <= 0) {
         // Victory
-        p.gold += e.gold;
-        p.xp += e.xp;
+        const goldEarned = e.gold;
+        const xpEarned = e.xp;
+        
+        p.gold += goldEarned;
+        p.xp += xpEarned;
         p.kills++;
-        addCombatLog(`Victoire ! Vous gagnez ${e.gold} or et ${e.xp} XP !`, 'victory');
+        addCombatLog(`Victoire ! Vous gagnez ${goldEarned} or et ${xpEarned} XP !`, 'victory');
+        
+        // Update quest progress
+        updateQuestProgress('kill', 1);
+        updateQuestProgress('collect_gold', goldEarned);
+        updateQuestProgress('survive', 1);
         
         // Play victory sound and show particles
         audioManager.playSound('victory');
@@ -445,6 +457,16 @@ function handleDefeat() {
     const p = gameState.player;
     p.health = 0;
     addCombatLog('Vous avez été vaincu...', 'damage');
+    
+    // Reset survive quest progress since player died
+    if (gameState.dailyQuests && gameState.dailyQuests.active) {
+        gameState.dailyQuests.active.forEach(quest => {
+            if (quest.type === 'survive') {
+                quest.progress = 0;
+            }
+        });
+    }
+    
     setTimeout(() => {
         p.health = Math.floor(p.maxHealth * 0.5);
         p.gold = Math.floor(p.gold * 0.5);

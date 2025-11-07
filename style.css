@@ -765,3 +765,13 @@ input[type="text"]:focus {
 }
 
 
+
+/* Daily Quests Styling */
+.quest-completed {
+    opacity: 0.7;
+    border: 2px solid #51cf66 !important;
+}
+
+.quest-active {
+    border: 2px solid #FFD700;
+}

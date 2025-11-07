@@ -5,6 +5,7 @@ import { saveGame, loadGame } from './save-load.js';
 import { characterClasses, applyCharacterClass } from './character-classes.js';
 import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
+import { initializeDailyQuests, checkDailyReset, updateQuestProgress, showDailyQuestsScreen } from './daily-quests.js';
 
 // Helper function to get class display name
 function getClassDisplayName(classKey) {
@@ -156,7 +157,9 @@ export function checkEnergyRegeneration() {
 export function init() {
     loadGame();
     initializeShopItems();
+    initializeDailyQuests();
     checkEnergyRegeneration();
+    checkDailyReset();
     updateUI();
     
     // Show restore button if save exists
@@ -382,6 +385,9 @@ export function buyItem(index) {
         
         // Play purchase sound
         audioManager.playSound('purchase');
+        
+        // Update quest progress for shop purchases
+        updateQuestProgress('shop', 1);
         
         saveGame();
         updateUI();
@@ -703,6 +709,9 @@ export function buyRareItem(index) {
         // Play purchase sound
         audioManager.playSound('purchase');
         
+        // Update quest progress for shop purchases
+        updateQuestProgress('shop', 1);
+        
         checkLevelUp();
         saveGame();
         updateUI();
@@ -712,3 +721,6 @@ export function buyRareItem(index) {
         alert(`Vous n'avez pas assez d'or ! (Coût: ${item.cost} or)`);
     }
 }
+
+// Show daily quests (export for main.js)
+export { showDailyQuestsScreen };
