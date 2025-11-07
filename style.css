@@ -745,6 +745,10 @@ input[type="text"]:focus {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .stat-group-character {
+        grid-column: span 2;
+    }
+
     .characteristics-group {
         grid-column: span 2;
     }
@@ -772,9 +776,38 @@ input[type="text"]:focus {
     .game-stats {
         grid-template-columns: repeat(3, 1fr);
     }
+
+    .stat-group-character {
+        grid-column: span 1;
+    }
+
+    .stat-group-combat {
+        grid-column: span 2;
+    }
+
+    .stat-group-progression {
+        grid-column: span 1;
+    }
 }
 
 /* Default/Standard Desktops (1200px - 1919px) use base styles with 900px container */
+@media screen and (min-width: 1200px) and (max-width: 1919px) {
+    .game-stats {
+        grid-template-columns: repeat(5, 1fr);
+    }
+
+    .stat-group-character {
+        grid-column: span 1;
+    }
+
+    .stat-group-combat {
+        grid-column: span 2;
+    }
+
+    .stat-group-progression {
+        grid-column: span 1;
+    }
+}
 
 /* Large Desktops and High-Resolution Displays (≥1920px) */
 @media screen and (min-width: 1920px) {
