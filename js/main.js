@@ -1,9 +1,11 @@
 // Main Entry Point Module
 import { init, startGame, rest, showShop, showStats, showSaveOptions, showMain, resetGame, buyItem, restoreSaveFromStart, meetNPC, showLeaderboard, buyRareItem, showDailyQuestsScreen } from './game-logic.js';
-import { explore, attack, defend, flee } from './combat.js';
+import { explore, attack, defend, flee, enemyAttack } from './combat.js';
 import { exportSave, importSave } from './save-load.js';
 import { audioManager } from './audio.js';
 import { initKeyboardHandler } from './keyboard-handler.js';
+import { useSkill as useSkillFn } from './skills.js';
+import { updateUI, updateEnemyUI, updateSkillsUI } from './ui.js';
 
 // Initialize audio context after user interaction
 function initAudio() {
@@ -100,3 +102,20 @@ window.meetNPC = meetNPC;
 window.showLeaderboard = showLeaderboard;
 window.toggleAudio = toggleAudio;
 window.showDailyQuests = showDailyQuestsScreen;
+
+// Expose useSkill function
+window.useSkill = function(skillId) {
+    initAudio();
+    const success = useSkillFn(skillId);
+    if (success) {
+        updateEnemyUI();
+        updateUI();
+        updateSkillsUI();
+        
+        // Enemy attacks after skill use
+        setTimeout(() => {
+            enemyAttack();
+            updateSkillsUI();
+        }, 1000);
+    }
+};

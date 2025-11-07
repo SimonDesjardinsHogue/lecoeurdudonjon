@@ -1,5 +1,6 @@
 // UI Management Module
 import { gameState } from './game-state.js';
+import { getPlayerSkills, isSkillOnCooldown, getSkillCooldown } from './skills.js';
 
 // Show specific screen
 export function showScreen(screenId) {
@@ -12,6 +13,11 @@ export function showScreen(screenId) {
         document.getElementById('gameStats').style.display = 'grid';
     } else {
         document.getElementById('gameStats').style.display = 'none';
+    }
+    
+    // Update skills UI when showing combat screen
+    if (screenId === 'combatScreen') {
+        updateSkillsUI();
     }
 }
 
@@ -75,4 +81,53 @@ export function showSaveIndicator() {
             indicator.classList.remove('show');
         }, 2000);
     }
+}
+
+// Update skills UI in combat
+export function updateSkillsUI() {
+    const skillsContainer = document.getElementById('skillsContainer');
+    if (!skillsContainer) return;
+    
+    const skills = getPlayerSkills();
+    if (!skills || skills.length === 0) {
+        skillsContainer.innerHTML = '';
+        return;
+    }
+    
+    const player = gameState.player;
+    
+    skillsContainer.innerHTML = '<div style="margin-bottom: 5px; color: #DAA520; font-weight: bold;">⚡ Compétences Spéciales:</div>';
+    
+    skills.forEach(skill => {
+        const cooldown = getSkillCooldown(skill.id);
+        const isOnCooldown = isSkillOnCooldown(skill.id);
+        const hasEnergy = player.energy >= skill.energyCost;
+        const canUse = !isOnCooldown && hasEnergy;
+        
+        const button = document.createElement('button');
+        button.style.cssText = 'margin: 5px; padding: 8px 12px; font-size: 0.9em;';
+        button.disabled = !canUse;
+        
+        let buttonText = `${skill.icon} ${skill.name}`;
+        if (isOnCooldown) {
+            buttonText += ` (${cooldown} tours)`;
+            button.style.opacity = '0.5';
+        } else {
+            buttonText += ` (${skill.energyCost} ⚡)`;
+        }
+        
+        if (!hasEnergy) {
+            button.style.opacity = '0.5';
+        }
+        
+        button.textContent = buttonText;
+        button.title = skill.description;
+        button.onclick = () => {
+            if (window.useSkill) {
+                window.useSkill(skill.id);
+            }
+        };
+        
+        skillsContainer.appendChild(button);
+    });
 }

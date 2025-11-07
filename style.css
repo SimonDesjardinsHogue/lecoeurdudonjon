@@ -211,6 +211,15 @@ button:disabled {
     color: #4dabf7;
 }
 
+.combat-log p.special {
+    color: #ffd700;
+    font-weight: bold;
+}
+
+.combat-log p.error {
+    color: #ff8c00;
+}
+
 .enemy-info {
     background: rgba(139, 0, 0, 0.3);
     padding: 15px;

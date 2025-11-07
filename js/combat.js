@@ -6,6 +6,7 @@ import { checkLevelUp, meetNPC } from './game-logic.js';
 import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 import { updateQuestProgress } from './daily-quests.js';
+import { updateSkillBuffs, applyShieldBuff, checkDodge, clearSkillBuffs, resetCombatState } from './skills.js';
 
 // Check if player should face a boss (every 5 levels)
 function shouldFaceBoss() {
@@ -311,6 +312,10 @@ export function attack() {
         
         checkLevelUp();
         
+        // Clear skill buffs when combat ends
+        clearSkillBuffs();
+        resetCombatState();
+        
         // Return to main screen after victory
         setTimeout(() => {
             gameState.inCombat = false;
@@ -334,6 +339,16 @@ export function attack() {
 export function enemyAttack() {
     const p = gameState.player;
     const e = gameState.currentEnemy;
+    
+    // Update skill buffs at start of enemy turn
+    updateSkillBuffs();
+    
+    // Check for dodge from smoke bomb
+    if (checkDodge()) {
+        addCombatLog(`💨 Vous esquivez l'attaque grâce à la Bombe Fumigène !`, 'special');
+        updateUI();
+        return;
+    }
     
     let defense = p.defense;
     if (gameState.defending) {
@@ -433,7 +448,11 @@ export function enemyAttack() {
     }
     
     // Normal attack
-    const enemyDamage = Math.max(1, e.strength - defense + Math.floor(Math.random() * 5));
+    let enemyDamage = Math.max(1, e.strength - defense + Math.floor(Math.random() * 5));
+    
+    // Apply mana shield buff if active
+    enemyDamage = applyShieldBuff(enemyDamage);
+    
     p.health -= enemyDamage;
     addCombatLog(`Le ${e.name} vous inflige ${enemyDamage} dégâts !`, 'damage');
     
@@ -457,6 +476,10 @@ function handleDefeat() {
     const p = gameState.player;
     p.health = 0;
     addCombatLog('Vous avez été vaincu...', 'damage');
+    
+    // Clear skill buffs when combat ends
+    clearSkillBuffs();
+    resetCombatState();
     
     // Reset survive quest progress since player died
     if (gameState.dailyQuests && gameState.dailyQuests.active) {
