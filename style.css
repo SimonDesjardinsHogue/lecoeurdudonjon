@@ -427,4 +427,341 @@ input[type="text"]:focus {
     font-size: 16px;
 }
 
+/* ========================================
+   RESPONSIVE DESIGN - MOBILE FIRST
+   ======================================== */
+
+/* Small Mobile Devices (≤480px) */
+@media screen and (max-width: 480px) {
+    body {
+        padding: 10px;
+    }
+
+    .game-container {
+        border-width: 2px;
+    }
+
+    .game-header {
+        padding: 15px 10px;
+    }
+
+    .game-header h1 {
+        font-size: 1.3em;
+        margin-bottom: 3px;
+    }
+
+    .game-header .subtitle {
+        font-size: 0.75em;
+    }
+
+    .audio-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        top: 8px;
+        right: 8px;
+    }
+
+    .game-stats {
+        grid-template-columns: 1fr;
+        padding: 10px;
+        gap: 8px;
+    }
+
+    .stat-box {
+        padding: 8px;
+    }
+
+    .characteristics-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+    }
+
+    .game-content {
+        padding: 15px 10px;
+        min-height: 250px;
+    }
+
+    .story-text {
+        font-size: 0.95em;
+        line-height: 1.6;
+    }
+
+    button {
+        padding: 10px 16px;
+        font-size: 0.9em;
+        min-width: 120px;
+    }
+
+    .game-actions {
+        gap: 8px;
+    }
+
+    /* Class selection on mobile */
+    .class-option {
+        padding: 12px;
+    }
+
+    .class-label strong {
+        font-size: 1em;
+    }
+
+    .class-label small {
+        font-size: 0.85em;
+    }
+
+    /* Input fields */
+    input[type="text"] {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 12px;
+        max-width: 100%;
+    }
+
+    /* Combat screen */
+    .combat-log {
+        max-height: 150px;
+        padding: 10px;
+        font-size: 0.9em;
+    }
+
+    .enemy-info {
+        padding: 12px;
+    }
+
+    /* Shop items */
+    .shop-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .shop-item button {
+        width: 100%;
+    }
+
+    /* Footer */
+    .game-footer {
+        flex-direction: column;
+        gap: 8px;
+        font-size: 0.75em;
+        padding: 10px;
+    }
+}
+
+/* Tablets and Medium Devices (481px - 768px) */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+    body {
+        padding: 15px;
+    }
+
+    .game-header h1 {
+        font-size: 1.6em;
+    }
+
+    .game-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .characteristics-group {
+        grid-column: span 2;
+    }
+
+    .game-content {
+        padding: 18px;
+    }
+
+    button {
+        font-size: 0.95em;
+    }
+
+    input[type="text"] {
+        font-size: 16px; /* Prevents zoom on iOS */
+        max-width: 400px;
+    }
+}
+
+/* Large Tablets and Small Desktops (769px - 1199px) */
+@media screen and (min-width: 769px) and (max-width: 1199px) {
+    .game-container {
+        max-width: 800px;
+    }
+
+    .game-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Default/Standard Desktops (1200px - 1919px) use base styles with 900px container */
+
+/* Large Desktops and High-Resolution Displays (≥1920px) */
+@media screen and (min-width: 1920px) {
+    body {
+        padding: 40px;
+    }
+
+    .game-container {
+        max-width: 1400px;
+    }
+
+    .game-header {
+        padding: 30px;
+    }
+
+    .game-header h1 {
+        font-size: 2.8em;
+    }
+
+    .game-header .subtitle {
+        font-size: 1.1em;
+    }
+
+    .audio-toggle {
+        width: 55px;
+        height: 55px;
+        font-size: 24px;
+        top: 15px;
+        right: 15px;
+    }
+
+    .game-stats {
+        grid-template-columns: repeat(4, 1fr);
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .stat-box {
+        padding: 15px;
+    }
+
+    .stat-label {
+        font-size: 0.9em;
+    }
+
+    .stat-value {
+        font-size: 1.4em;
+    }
+
+    .game-content {
+        padding: 30px;
+        min-height: 400px;
+    }
+
+    .story-text {
+        font-size: 1.15em;
+        line-height: 2;
+    }
+
+    button {
+        padding: 15px 30px;
+        font-size: 1.1em;
+        min-width: 180px;
+    }
+
+    .game-actions {
+        gap: 15px;
+    }
+
+    .class-option {
+        padding: 20px;
+    }
+
+    .class-label strong {
+        font-size: 1.2em;
+    }
+
+    input[type="text"] {
+        font-size: 1.1em;
+        padding: 12px;
+        max-width: 400px;
+    }
+
+    .combat-log {
+        max-height: 300px;
+        padding: 20px;
+        font-size: 1.05em;
+    }
+
+    .enemy-info {
+        padding: 20px;
+    }
+
+    .shop-item {
+        padding: 20px;
+    }
+
+    .game-footer {
+        padding: 20px;
+        font-size: 0.9em;
+    }
+}
+
+/* Extra Large Screens (≥2560px) - Includes 4K and 8K displays */
+@media screen and (min-width: 2560px) {
+    .game-container {
+        max-width: 1800px;
+    }
+
+    .game-header h1 {
+        font-size: 3.2em;
+    }
+
+    .game-header .subtitle {
+        font-size: 1.3em;
+    }
+
+    .story-text {
+        font-size: 1.3em;
+    }
+
+    button {
+        font-size: 1.2em;
+        padding: 18px 35px;
+    }
+
+    .stat-value {
+        font-size: 1.6em;
+    }
+}
+
+/* Landscape orientation on mobile devices only */
+@media screen and (max-width: 900px) and (max-height: 500px) and (orientation: landscape) {
+    .game-header {
+        padding: 10px;
+    }
+
+    .game-header h1 {
+        font-size: 1.2em;
+    }
+
+    .game-stats {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 5px;
+        padding: 8px;
+    }
+
+    .stat-box {
+        padding: 6px;
+    }
+
+    .game-content {
+        padding: 10px;
+        min-height: auto;
+    }
+
+    .story-text {
+        font-size: 0.85em;
+        line-height: 1.4;
+    }
+
+    button {
+        padding: 8px 12px;
+        font-size: 0.85em;
+        min-width: 100px;
+    }
+
+    .combat-log {
+        max-height: 100px;
+    }
+}
+
 
