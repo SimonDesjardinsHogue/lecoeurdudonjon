@@ -413,6 +413,7 @@ export function buyItem(index) {
         alert(`Vous avez acheté ${item.name} !`);
         
         // Refresh shop with current filter state
+        // Null checks are needed because this function may be called when shop screen is not active
         const categoryFilter = document.getElementById('categoryFilter');
         const classFilter = document.getElementById('classFilter');
         const currentCategory = categoryFilter ? categoryFilter.value : 'all';
