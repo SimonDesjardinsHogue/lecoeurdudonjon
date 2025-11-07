@@ -109,7 +109,7 @@ Le jeu est automatiquement déployé sur GitHub Pages à chaque push sur la bran
 Le fichier `.github/workflows/deploy.yml` contient un workflow GitHub Actions qui :
 - Se déclenche automatiquement à chaque push sur la branche `main`
 - Configure GitHub Pages avec les permissions nécessaires
-- Upload tous les fichiers du projet comme artefact
+- Téléverse tous les fichiers du projet comme artefact
 - Déploie le site sur GitHub Pages
 
 Les permissions suivantes sont configurées dans le workflow :
@@ -130,7 +130,7 @@ Si vous forkez ce projet, suivez ces étapes détaillées pour activer GitHub Pa
    - Cliquez sur **Pages**
    - Sous **Build and deployment** (Construction et déploiement) :
      - Pour **Source**, sélectionnez **GitHub Actions** dans le menu déroulant
-     - (Ne sélectionnez pas "Deploy from a branch" - utilisez bien "GitHub Actions")
+     - (Ne sélectionnez pas l'option de déploiement depuis une branche - utilisez bien "GitHub Actions")
 
 3. **Premier déploiement**
    - Le workflow se déclenchera automatiquement au prochain push sur la branche `main`
