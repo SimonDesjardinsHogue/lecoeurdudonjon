@@ -1,6 +1,12 @@
 // Keyboard Handler Module
 import { gameState } from './game-state.js';
 
+// Configuration: List of game keys that should prevent default browser behavior
+const GAME_KEYS = ['a', 'd', 'f', 'escape', '1', '2', '3', '4', '5', '6'];
+
+// Configuration: Screens where ESC key should not return to main menu
+const ESC_DISABLED_SCREENS = ['startScreen', 'mainScreen', 'victoryScreen'];
+
 // Get the current active screen
 function getCurrentScreen() {
     const screens = document.querySelectorAll('.game-screen');
@@ -18,14 +24,13 @@ export function handleKeyPress(event) {
     const currentScreen = getCurrentScreen();
     
     // Prevent default behavior for game shortcuts
-    const gameKeys = ['a', 'd', 'f', 'escape', '1', '2', '3', '4', '5', '6'];
-    if (gameKeys.includes(key)) {
+    if (GAME_KEYS.includes(key)) {
         event.preventDefault();
     }
     
-    // ESC key - Return to main menu from any screen (except start screen)
+    // ESC key - Return to main menu from any screen
     if (key === 'escape') {
-        if (currentScreen !== 'startScreen' && currentScreen !== 'mainScreen' && currentScreen !== 'victoryScreen') {
+        if (!ESC_DISABLED_SCREENS.includes(currentScreen)) {
             // If in combat, don't allow escape (player must flee instead)
             if (gameState.inCombat) {
                 return;
@@ -35,7 +40,7 @@ export function handleKeyPress(event) {
         return;
     }
     
-    // Combat screen shortcuts
+    // Combat screen shortcuts - only work when in combat AND on combat screen
     if (currentScreen === 'combatScreen' && gameState.inCombat) {
         switch (key) {
             case 'a':
