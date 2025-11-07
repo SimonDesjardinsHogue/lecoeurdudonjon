@@ -5,12 +5,32 @@ import { saveGame, loadGame } from './save-load.js';
 
 // Set up shop item effects
 export function initializeShopItems() {
-    shopItems[0].effect = () => healPlayer(50);  // Potion de Soin
-    shopItems[1].effect = () => { gameState.player.strength += 5; };  // Épée en Acier
-    shopItems[2].effect = () => { gameState.player.defense += 3; };  // Armure de Cuir
-    shopItems[3].effect = () => healPlayer(100);  // Grande Potion
-    shopItems[4].effect = () => { gameState.player.strength += 10; };  // Épée Enchantée
-    shopItems[5].effect = () => { gameState.player.defense += 5; };  // Bouclier de Fer
+    // Healing potions
+    shopItems[0].effect = () => healPlayer(30);  // Petite Potion de Soin
+    shopItems[1].effect = () => healPlayer(50);  // Potion de Soin
+    shopItems[2].effect = () => healPlayer(100);  // Grande Potion de Soin
+    shopItems[3].effect = () => healPlayer(200);  // Potion de Soin Suprême
+    
+    // Damage potions
+    shopItems[4].effect = () => { gameState.player.strength += 3; };  // Potion de Force Mineure
+    shopItems[5].effect = () => { gameState.player.strength += 5; };  // Potion de Force
+    shopItems[6].effect = () => { gameState.player.strength += 8; };  // Potion de Force Majeure
+    
+    // Energy potions
+    shopItems[7].effect = () => restoreEnergy(30);  // Potion d'Énergie Mineure
+    shopItems[8].effect = () => restoreEnergy(50);  // Potion d'Énergie
+    shopItems[9].effect = () => restoreEnergy(100);  // Potion d'Énergie Majeure
+    
+    // Experience potions
+    shopItems[10].effect = () => addExperience(30);  // Potion d'Expérience Mineure
+    shopItems[11].effect = () => addExperience(60);  // Potion d'Expérience
+    shopItems[12].effect = () => addExperience(120);  // Potion d'Expérience Majeure
+    
+    // Equipment
+    shopItems[13].effect = () => { gameState.player.strength += 5; };  // Épée en Acier
+    shopItems[14].effect = () => { gameState.player.strength += 10; };  // Épée Enchantée
+    shopItems[15].effect = () => { gameState.player.defense += 3; };  // Armure de Cuir
+    shopItems[16].effect = () => { gameState.player.defense += 5; };  // Bouclier de Fer
 }
 
 // Check energy regeneration (6:00 AM Toronto time)
@@ -84,6 +104,23 @@ export function healPlayer(amount) {
     updateUI();
 }
 
+// Restore energy
+export function restoreEnergy(amount) {
+    const p = gameState.player;
+    p.energy = Math.min(p.maxEnergy, p.energy + amount);
+    saveGame();
+    updateUI();
+}
+
+// Add experience
+export function addExperience(amount) {
+    const p = gameState.player;
+    p.xp += amount;
+    checkLevelUp();
+    saveGame();
+    updateUI();
+}
+
 // Rest at the inn
 export function rest() {
     const p = gameState.player;
@@ -144,25 +181,60 @@ export function checkLevelUp() {
 }
 
 // Show shop
-export function showShop() {
+export function showShop(filterCategory = 'all') {
     showScreen('shopScreen');
     const shopDiv = document.getElementById('shopItems');
     shopDiv.innerHTML = '';
     
-    shopItems.forEach((item, index) => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'shop-item';
-        const icon = item.icon || '📦';
-        itemDiv.innerHTML = `
-            <div class="shop-item-info">
-                <strong>${icon} ${item.name}</strong><br>
-                <small>${item.description}</small>
-            </div>
-            <div class="shop-item-price">${item.cost} 💰</div>
-            <button onclick="window.buyItem(${index})">Acheter</button>
-        `;
-        shopDiv.appendChild(itemDiv);
-    });
+    // Add filter dropdown
+    const filterContainer = document.createElement('div');
+    filterContainer.style.marginBottom = '20px';
+    filterContainer.innerHTML = `
+        <label for="categoryFilter" style="color: #DAA520; margin-right: 10px;">Type de produit :</label>
+        <select id="categoryFilter" onchange="window.showShop(this.value)" style="padding: 8px; background: rgba(0, 0, 0, 0.7); color: #f0f0f0; border: 2px solid #8B4513; border-radius: 5px; font-family: 'Courier New', monospace; cursor: pointer;">
+            <option value="all" ${filterCategory === 'all' ? 'selected' : ''}>🏪 Tous les produits</option>
+            <option value="heal" ${filterCategory === 'heal' ? 'selected' : ''}>❤️ Soin</option>
+            <option value="damage" ${filterCategory === 'damage' ? 'selected' : ''}>⚔️ Force</option>
+            <option value="energy" ${filterCategory === 'energy' ? 'selected' : ''}>⚡ Énergie</option>
+            <option value="exp" ${filterCategory === 'exp' ? 'selected' : ''}>✨ Expérience</option>
+            <option value="equipment" ${filterCategory === 'equipment' ? 'selected' : ''}>🛡️ Équipement</option>
+        </select>
+    `;
+    shopDiv.appendChild(filterContainer);
+    
+    // Filter items based on category
+    const filteredItems = filterCategory === 'all' 
+        ? shopItems 
+        : shopItems.filter(item => item.category === filterCategory);
+    
+    if (filteredItems.length === 0) {
+        const emptyMsg = document.createElement('p');
+        emptyMsg.textContent = 'Aucun produit dans cette catégorie.';
+        emptyMsg.style.fontStyle = 'italic';
+        emptyMsg.style.color = '#999';
+        emptyMsg.style.textAlign = 'center';
+        emptyMsg.style.padding = '20px';
+        shopDiv.appendChild(emptyMsg);
+    } else {
+        filteredItems.forEach((item) => {
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'shop-item';
+            const icon = item.icon || '📦';
+            
+            // Find the original index in shopItems array
+            const originalIndex = shopItems.indexOf(item);
+            
+            itemDiv.innerHTML = `
+                <div class="shop-item-info">
+                    <strong>${icon} ${item.name}</strong><br>
+                    <small>${item.description}</small>
+                </div>
+                <div class="shop-item-price">${item.cost} 💰</div>
+                <button onclick="window.buyItem(${originalIndex})">Acheter</button>
+            `;
+            shopDiv.appendChild(itemDiv);
+        });
+    }
 }
 
 // Buy item
