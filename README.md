@@ -104,10 +104,55 @@ Le jeu est entièrement côté client et peut être :
 
 Le jeu est automatiquement déployé sur GitHub Pages à chaque push sur la branche `main`. Le workflow de déploiement est configuré dans `.github/workflows/deploy.yml`.
 
-Pour activer GitHub Pages sur votre propre fork :
-1. Allez dans les paramètres du dépôt
-2. Section "Pages" → Source : "GitHub Actions"
-3. Le site sera accessible à `https://[votre-nom-utilisateur].github.io/lecoeurdudonjon/`
+#### Configuration Automatique du Déploiement
+
+Le fichier `.github/workflows/deploy.yml` contient un workflow GitHub Actions qui :
+- Se déclenche automatiquement à chaque push sur la branche `main`
+- Configure GitHub Pages avec les permissions nécessaires
+- Upload tous les fichiers du projet comme artefact
+- Déploie le site sur GitHub Pages
+
+Les permissions suivantes sont configurées dans le workflow :
+- `contents: read` - Pour lire le contenu du dépôt
+- `pages: write` - Pour écrire sur GitHub Pages
+- `id-token: write` - Pour l'authentification
+
+#### Pour Activer GitHub Pages sur Votre Propre Fork
+
+Si vous forkez ce projet, suivez ces étapes détaillées pour activer GitHub Pages :
+
+1. **Accéder aux paramètres du dépôt**
+   - Allez sur la page de votre dépôt GitHub (`https://github.com/[votre-nom-utilisateur]/lecoeurdudonjon`)
+   - Cliquez sur l'onglet **Settings** (Paramètres) en haut à droite
+
+2. **Configurer GitHub Pages**
+   - Dans le menu latéral gauche, descendez jusqu'à la section **Code and automation** (Code et automatisation)
+   - Cliquez sur **Pages**
+   - Sous **Build and deployment** (Construction et déploiement) :
+     - Pour **Source**, sélectionnez **GitHub Actions** dans le menu déroulant
+     - (Ne sélectionnez pas "Deploy from a branch" - utilisez bien "GitHub Actions")
+
+3. **Premier déploiement**
+   - Le workflow se déclenchera automatiquement au prochain push sur la branche `main`
+   - Vous pouvez aussi déclencher le déploiement manuellement :
+     - Allez dans l'onglet **Actions** de votre dépôt
+     - Sélectionnez le workflow "Deploy to GitHub Pages"
+     - Cliquez sur **Run workflow** → **Run workflow**
+
+4. **Vérifier le déploiement**
+   - Dans l'onglet **Actions**, vous pouvez suivre la progression du déploiement
+   - Le déploiement prend généralement 1-2 minutes
+   - Une fois terminé, une coche verte ✓ apparaîtra
+
+5. **Accéder à votre site**
+   - Le site sera accessible à : `https://[votre-nom-utilisateur].github.io/lecoeurdudonjon/`
+   - L'URL exacte sera également affichée dans les paramètres **Pages** après le premier déploiement réussi
+
+#### Dépannage
+
+- **Le workflow ne se déclenche pas** : Vérifiez que vous avez bien sélectionné "GitHub Actions" comme source dans les paramètres Pages
+- **Erreur de permissions** : Assurez-vous que GitHub Actions a les permissions nécessaires dans Settings → Actions → General → Workflow permissions (choisir "Read and write permissions")
+- **Page 404** : Attendez quelques minutes après le premier déploiement, le DNS peut prendre un peu de temps à se propager
 
 ### Test Local
 
