@@ -252,3 +252,50 @@ input[type="text"]:focus {
 .save-indicator.show {
     opacity: 1;
 }
+
+.class-option {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 5px;
+    border: 2px solid #8B4513;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.class-option:hover {
+    border-color: #DAA520;
+    background: rgba(139, 69, 19, 0.3);
+    transform: translateY(-2px);
+}
+
+.class-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.class-option input[type="radio"]:checked + .class-label {
+    color: #DAA520;
+}
+
+.class-option input[type="radio"]:checked ~ * {
+    border-color: #DAA520;
+}
+
+.class-option:has(input[type="radio"]:checked) {
+    border-color: #DAA520;
+    background: rgba(218, 165, 32, 0.2);
+    box-shadow: 0 0 15px rgba(218, 165, 32, 0.3);
+}
+
+.class-label {
+    display: block;
+    line-height: 1.6;
+}
+
+.class-label strong {
+    font-size: 1.1em;
+    display: block;
+    margin-bottom: 5px;
+}

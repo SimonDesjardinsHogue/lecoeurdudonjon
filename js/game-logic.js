@@ -2,6 +2,7 @@
 import { gameState, shopItems, npcs } from './game-state.js';
 import { updateUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame, loadGame } from './save-load.js';
+import { characterClasses, applyCharacterClass } from './character-classes.js';
 
 // Set up shop item effects
 export function initializeShopItems() {
@@ -89,8 +90,19 @@ export function startGame() {
         return;
     }
     
+    // Get selected character class
+    const selectedClass = document.querySelector('input[name="characterClass"]:checked');
+    if (!selectedClass) {
+        alert('Veuillez choisir une classe de personnage !');
+        return;
+    }
+    
     gameState.player.name = name;
     gameState.player.gamesPlayed++;
+    
+    // Apply character class
+    applyCharacterClass(gameState.player, selectedClass.value);
+    
     saveGame();
     showScreen('mainScreen');
     updateUI();
@@ -276,6 +288,7 @@ export function showStats() {
     };
     
     container.appendChild(createStatParagraph('Nom', p.name));
+    container.appendChild(createStatParagraph('Classe', `${p.classIcon} ${p.className}`));
     container.appendChild(createStatParagraph('Niveau', p.level));
     container.appendChild(createStatParagraph('Santé', `${p.health}/${p.maxHealth}`));
     container.appendChild(createStatParagraph('Énergie', `${p.energy}/${p.maxEnergy}`));
@@ -310,6 +323,9 @@ export function resetGame() {
         
         // Reset player
         gameState.player.name = '';
+        gameState.player.class = 'guerrier';
+        gameState.player.className = 'Guerrier';
+        gameState.player.classIcon = '⚔️';
         gameState.player.level = 1;
         gameState.player.health = 100;
         gameState.player.maxHealth = 100;

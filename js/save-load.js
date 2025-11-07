@@ -35,6 +35,16 @@ export function loadGame() {
             if (!gameState.player.hasOwnProperty('lastSleepTime')) {
                 gameState.player.lastSleepTime = null;
             }
+            // Add character class properties if they don't exist (for backwards compatibility)
+            if (!gameState.player.hasOwnProperty('class')) {
+                gameState.player.class = 'guerrier';
+            }
+            if (!gameState.player.hasOwnProperty('className')) {
+                gameState.player.className = 'Guerrier';
+            }
+            if (!gameState.player.hasOwnProperty('classIcon')) {
+                gameState.player.classIcon = '⚔️';
+            }
         } catch (e) {
             console.error('Error loading save:', e);
         }
@@ -160,6 +170,16 @@ export function importSave() {
         }
         if (!('lastSleepTime' in loadedState.player)) {
             loadedState.player.lastSleepTime = null;
+        }
+        // Add character class properties if they don't exist (for backwards compatibility)
+        if (!('class' in loadedState.player)) {
+            loadedState.player.class = 'guerrier';
+        }
+        if (!('className' in loadedState.player)) {
+            loadedState.player.className = 'Guerrier';
+        }
+        if (!('classIcon' in loadedState.player)) {
+            loadedState.player.classIcon = '⚔️';
         }
         
         // Validate property types for all player properties
