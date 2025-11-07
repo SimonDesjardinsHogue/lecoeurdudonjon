@@ -32,6 +32,12 @@ export function handleKeyPress(event) {
     const key = event.key.toLowerCase();
     const currentScreen = getCurrentScreen();
     
+    // Don't capture shortcuts if user is typing in an input or textarea
+    const activeElement = document.activeElement;
+    if (activeElement && (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA')) {
+        return;
+    }
+    
     // Prevent default behavior for game shortcuts
     if (GAME_KEYS.includes(key)) {
         event.preventDefault();

@@ -2,6 +2,8 @@
 export const gameState = {
     player: {
         name: '',
+        gender: 'male',
+        race: 'humain',
         class: 'guerrier',
         className: 'Guerrier',
         classIcon: '⚔️',
