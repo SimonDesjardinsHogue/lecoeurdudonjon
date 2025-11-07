@@ -99,6 +99,49 @@
                     <input type="text" id="nameInput" placeholder="Nom du héros" maxlength="20">
                 </div>
                 <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">Genre :</label>
+                    <div style="display: flex; gap: 20px;">
+                        <label class="class-option" style="flex: 1;">
+                            <input type="radio" name="characterGender" value="male" checked>
+                            <span class="class-label">
+                                <strong>♂️ Masculin</strong>
+                            </span>
+                        </label>
+                        <label class="class-option" style="flex: 1;">
+                            <input type="radio" name="characterGender" value="female">
+                            <span class="class-label">
+                                <strong>♀️ Féminin</strong>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">Race :</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
+                        <label class="class-option">
+                            <input type="radio" name="characterRace" value="humain" checked>
+                            <span class="class-label">
+                                <strong>👤 Humain</strong><br>
+                                <small style="color: #999;">Équilibré</small>
+                            </span>
+                        </label>
+                        <label class="class-option">
+                            <input type="radio" name="characterRace" value="elfe">
+                            <span class="class-label">
+                                <strong>🧝 Elfe</strong><br>
+                                <small>DEX +2, CON -2</small>
+                            </span>
+                        </label>
+                        <label class="class-option">
+                            <input type="radio" name="characterRace" value="nain">
+                            <span class="class-label">
+                                <strong>🧔 Nain</strong><br>
+                                <small>DEX -2, CON +2</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <div style="margin: 20px 0;">
                     <label style="display: block; margin-bottom: 10px; font-weight: bold;">Choisissez votre classe :</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <label class="class-option">

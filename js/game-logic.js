@@ -3,6 +3,7 @@ import { gameState, shopItems, rareItems, npcs } from './game-state.js';
 import { updateUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame, loadGame } from './save-load.js';
 import { characterClasses, applyCharacterClass } from './character-classes.js';
+import { characterRaces, applyRaceModifiers } from './character-races.js';
 import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 import { initializeDailyQuests, checkDailyReset, updateQuestProgress, showDailyQuestsScreen } from './daily-quests.js';
@@ -178,6 +179,20 @@ export function startGame() {
         return;
     }
     
+    // Get selected character gender
+    const selectedGender = document.querySelector('input[name="characterGender"]:checked');
+    if (!selectedGender) {
+        alert('Veuillez choisir un genre pour votre personnage !');
+        return;
+    }
+    
+    // Get selected character race
+    const selectedRace = document.querySelector('input[name="characterRace"]:checked');
+    if (!selectedRace) {
+        alert('Veuillez choisir une race pour votre personnage !');
+        return;
+    }
+    
     // Get selected character class
     const selectedClass = document.querySelector('input[name="characterClass"]:checked');
     if (!selectedClass) {
@@ -186,10 +201,14 @@ export function startGame() {
     }
     
     gameState.player.name = name;
+    gameState.player.gender = selectedGender.value;
     gameState.player.gamesPlayed++;
     
-    // Apply character class
+    // Apply character class first
     applyCharacterClass(gameState.player, selectedClass.value);
+    
+    // Then apply race modifiers on top
+    applyRaceModifiers(gameState.player, selectedRace.value);
     
     saveGame();
     showScreen('mainScreen');
@@ -446,6 +465,8 @@ export function showStats() {
     };
     
     container.appendChild(createStatParagraph('Nom', p.name));
+    container.appendChild(createStatParagraph('Genre', p.gender === 'male' ? '♂️ Masculin' : '♀️ Féminin'));
+    container.appendChild(createStatParagraph('Race', `${p.raceIcon || '👤'} ${p.raceName || 'Humain'}`));
     container.appendChild(createStatParagraph('Classe', `${p.classIcon} ${p.className}`));
     container.appendChild(createStatParagraph('Niveau', p.level));
     container.appendChild(createStatParagraph('Points de vie', `${p.health}/${p.maxHealth}`));
@@ -486,6 +507,10 @@ export function resetGame() {
         
         // Reset player
         gameState.player.name = '';
+        gameState.player.gender = 'male';
+        gameState.player.race = 'humain';
+        gameState.player.raceName = undefined;
+        gameState.player.raceIcon = undefined;
         gameState.player.class = 'guerrier';
         gameState.player.className = 'Guerrier';
         gameState.player.classIcon = '⚔️';
@@ -494,6 +519,11 @@ export function resetGame() {
         gameState.player.maxHealth = 100;
         gameState.player.strength = 10;
         gameState.player.defense = 5;
+        gameState.player.dexterity = 10;
+        gameState.player.constitution = 10;
+        gameState.player.intelligence = 10;
+        gameState.player.wisdom = 10;
+        gameState.player.charisma = 10;
         gameState.player.gold = 50;
         gameState.player.xp = 0;
         gameState.player.xpToLevel = 100;
