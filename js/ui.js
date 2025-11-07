@@ -38,6 +38,16 @@ export function updateUI() {
     document.getElementById('playerXP').textContent = `${p.xp}/${p.xpToLevel}`;
     document.getElementById('playerEnergy').textContent = `${p.energy}/${p.maxEnergy}`;
     
+    // Update character info
+    const classDisplay = p.classIcon ? `${p.classIcon} ${p.className || p.class}` : (p.className || p.class);
+    document.getElementById('playerClass').textContent = classDisplay;
+    
+    const raceDisplay = p.raceIcon ? `${p.raceIcon} ${p.raceName || p.race}` : (p.raceName || p.race);
+    document.getElementById('playerRace').textContent = raceDisplay;
+    
+    const genderDisplay = p.gender === 'female' ? '♀️ Féminin' : '♂️ Masculin';
+    document.getElementById('playerGender').textContent = genderDisplay;
+    
     // Update health bar
     const healthPercent = (p.health / p.maxHealth) * 100;
     document.getElementById('healthFill').style.width = healthPercent + '%';

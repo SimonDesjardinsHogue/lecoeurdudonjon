@@ -23,39 +23,88 @@
         </div>
 
         <div class="game-stats" id="gameStats" style="display: none;">
-            <div class="stat-box">
-                <div class="stat-label">Nom</div>
-                <div class="stat-value" id="playerName">---</div>
+            <!-- Groupe 1: Informations personnelles (Nom, Classe, Race, Sexe) -->
+            <div class="stat-box stat-group-character">
+                <div class="stat-label">Personnage</div>
+                <div class="character-info">
+                    <div class="char-info-line">
+                        <span class="char-info-label">Nom:</span>
+                        <span class="stat-value" id="playerName">---</span>
+                    </div>
+                    <div class="char-info-line">
+                        <span class="char-info-label">Classe:</span>
+                        <span class="stat-value" id="playerClass">⚔️ Guerrier</span>
+                    </div>
+                    <div class="char-info-line">
+                        <span class="char-info-label">Race:</span>
+                        <span class="stat-value" id="playerRace">👤 Humain</span>
+                    </div>
+                    <div class="char-info-line">
+                        <span class="char-info-label">Sexe:</span>
+                        <span class="stat-value" id="playerGender">♂️ Masculin</span>
+                    </div>
+                </div>
             </div>
-            <div class="stat-box">
-                <div class="stat-label">Niveau</div>
-                <div class="stat-value" id="playerLevel">1</div>
+
+            <!-- Groupe 2: Statistiques de combat (PV, CA, Énergie) -->
+            <div class="stat-box stat-group-combat">
+                <div class="stat-label">Combat</div>
+                <div class="combat-stats">
+                    <div class="combat-stat-item">
+                        <div class="combat-icon">❤️</div>
+                        <div class="combat-stat-content">
+                            <div class="combat-stat-label">Points de vie</div>
+                            <div class="stat-value" id="playerHealth">100/100</div>
+                            <div class="health-bar">
+                                <div class="health-fill" id="healthFill" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="combat-stat-item">
+                        <div class="combat-icon">🛡️</div>
+                        <div class="combat-stat-content">
+                            <div class="combat-stat-label">Classe d'armure</div>
+                            <div class="stat-value" id="playerDefense">5</div>
+                        </div>
+                    </div>
+                    <div class="combat-stat-item">
+                        <div class="combat-icon">⚡</div>
+                        <div class="combat-stat-content">
+                            <div class="combat-stat-label">Énergie</div>
+                            <div class="stat-value" id="playerEnergy">100/100</div>
+                            <div class="health-bar">
+                                <div class="health-fill" id="energyFill" style="width: 100%; background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- Groupe 3: Progression (Niveau et Expérience) -->
+            <div class="stat-box stat-group-progression">
+                <div class="stat-label">Progression</div>
+                <div class="progression-stats">
+                    <div class="progression-item">
+                        <span class="progression-label">Niveau</span>
+                        <span class="stat-value" id="playerLevel">1</span>
+                    </div>
+                    <div class="progression-item">
+                        <span class="progression-label">Expérience</span>
+                        <span class="stat-value" id="playerXP">0/100</span>
+                    </div>
+                    <div class="xp-bar">
+                        <div class="xp-fill" id="xpFill" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Or (séparé) -->
             <div class="stat-box">
                 <div class="stat-label">Or</div>
                 <div class="stat-value" id="playerGold">0 💰</div>
             </div>
-            <div class="stat-box">
-                <div class="stat-label">Points de vie</div>
-                <div class="stat-value" id="playerHealth">100/100</div>
-                <div class="health-bar">
-                    <div class="health-fill" id="healthFill" style="width: 100%;"></div>
-                </div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Énergie</div>
-                <div class="stat-value" id="playerEnergy">100/100</div>
-                <div class="health-bar">
-                    <div class="health-fill" id="energyFill" style="width: 100%; background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);"></div>
-                </div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Expérience</div>
-                <div class="stat-value" id="playerXP">0/100</div>
-                <div class="xp-bar">
-                    <div class="xp-fill" id="xpFill" style="width: 0%;"></div>
-                </div>
-            </div>
+
+            <!-- Caractéristiques -->
             <div class="stat-box characteristics-group">
                 <div class="stat-label">Caractéristiques</div>
                 <div class="characteristics-grid">
@@ -84,10 +133,6 @@
                         <span class="char-value" id="playerCharisma">10</span>
                     </div>
                 </div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Classe d'armure</div>
-                <div class="stat-value" id="playerDefense">5</div>
             </div>
         </div>
 
@@ -195,15 +240,21 @@
                 <div class="story-text">
                     <p>Vous vous tenez devant l'entrée du donjon. Les torches vacillent sur les murs de pierre ancienne. Que souhaitez-vous faire ?</p>
                 </div>
-                <div class="game-actions">
-                    <button onclick="explore()">🗺️ Explorer le Donjon (1)</button>
-                    <button onclick="meetNPC()">💬 Rencontrer un PNJ (2)</button>
-                    <button onclick="showShop()">🏪 Visiter le Marchand (3)</button>
-                    <button onclick="rest()">🛌 Dormir à l'Auberge (4)</button>
-                    <button onclick="showStats()">📊 Voir Statistiques (5)</button>
-                    <button onclick="showLeaderboard()">🏆 Classement (6)</button>
-                    <button onclick="showDailyQuests()">📜 Défis Quotidiens (7)</button>
-                    <button onclick="showAchievements()">🏅 Succès (8)</button>
+                <div class="game-actions-grid">
+                    <div class="actions-column">
+                        <div class="actions-column-title">🎮 Actions de Jeu</div>
+                        <button onclick="explore()">🗺️ Explorer le Donjon (1)</button>
+                        <button onclick="meetNPC()">💬 Rencontrer un PNJ (2)</button>
+                        <button onclick="showShop()">🏪 Visiter le Marchand (3)</button>
+                        <button onclick="rest()">🛌 Dormir à l'Auberge (4)</button>
+                    </div>
+                    <div class="actions-column">
+                        <div class="actions-column-title">📊 Informations</div>
+                        <button onclick="showStats()">📊 Voir Statistiques (5)</button>
+                        <button onclick="showLeaderboard()">🏆 Classement (6)</button>
+                        <button onclick="showDailyQuests()">📜 Défis Quotidiens (7)</button>
+                        <button onclick="showAchievements()">🏅 Succès (8)</button>
+                    </div>
                 </div>
             </div>
 
