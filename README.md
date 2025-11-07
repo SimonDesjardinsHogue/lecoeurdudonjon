@@ -19,9 +19,10 @@ Dans le royaume oublié de Valoria, les ténèbres s'étendent. Au cœur du donj
 ### Fonctionnalités
 
 #### 🗺️ Explorer le Donjon
-- Rencontrez des ennemis aléatoires
+- Rencontrez des ennemis aléatoires ou des PNJ amicaux
 - Combattez pour gagner de l'or et de l'expérience
 - Progressez à travers différents niveaux de difficulté
+- 70% de chance de rencontrer un monstre, 30% de chance de rencontrer un PNJ
 
 ![Combat Screenshot](https://github.com/user-attachments/assets/e4fb88ef-63e4-46f8-b7e4-5f9c2339a699)
 

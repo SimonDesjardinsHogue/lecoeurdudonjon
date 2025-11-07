@@ -2,7 +2,7 @@
 import { gameState, enemies } from './game-state.js';
 import { updateUI, updateEnemyUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame } from './save-load.js';
-import { checkLevelUp } from './game-logic.js';
+import { checkLevelUp, meetNPC } from './game-logic.js';
 
 // Start exploring the dungeon
 export function explore() {
@@ -15,22 +15,31 @@ export function explore() {
     // Consume energy for exploring
     gameState.player.energy = Math.max(0, gameState.player.energy - 10);
     
-    // Random encounter - select enemy based on player level but ensure we don't exceed array bounds
-    const maxEnemyIndex = Math.min(enemies.length - 1, gameState.player.level);
-    const enemyTemplate = enemies[Math.floor(Math.random() * (maxEnemyIndex + 1))];
+    // Random encounter - 30% chance to meet an NPC, 70% chance to meet a monster
+    const encounterRoll = Math.random();
     
-    gameState.currentEnemy = {
-        ...enemyTemplate,
-        maxHealth: enemyTemplate.health
-    };
+    if (encounterRoll < 0.3) {
+        // NPC encounter
+        meetNPC();
+    } else {
+        // Monster encounter - select enemy based on player level but ensure we don't exceed array bounds
+        const maxEnemyIndex = Math.min(enemies.length - 1, gameState.player.level);
+        const enemyTemplate = enemies[Math.floor(Math.random() * (maxEnemyIndex + 1))];
+        
+        gameState.currentEnemy = {
+            ...enemyTemplate,
+            maxHealth: enemyTemplate.health
+        };
+        
+        gameState.inCombat = true;
+        gameState.defending = false;
+        
+        showScreen('combatScreen');
+        document.getElementById('combatLog').innerHTML = '';
+        addCombatLog(`Vous rencontrez un ${gameState.currentEnemy.name} !`, 'info');
+        updateEnemyUI();
+    }
     
-    gameState.inCombat = true;
-    gameState.defending = false;
-    
-    showScreen('combatScreen');
-    document.getElementById('combatLog').innerHTML = '';
-    addCombatLog(`Vous rencontrez un ${gameState.currentEnemy.name} !`, 'info');
-    updateEnemyUI();
     saveGame();
     updateUI();
 }
