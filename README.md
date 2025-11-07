@@ -1,12 +1,12 @@
-# ⚔️ Le Coeur du Donjon ⚔️
+# ⚔️ Le Coeur du Dragon ⚔️
 
-Un jeu simple, médiéval et fantastique inspiré par Legend of the Red Dragon.
+Un conte médiéval et fantastique inspiré par Legend of the Red Dragon.
 
 ![Game Screenshot](https://github.com/user-attachments/assets/589cfd57-3726-44ea-b8e6-5f2b63bcc5c9)
 
 ## 📖 Description
 
-Dans le royaume oublié de Valoria, les ténèbres s'étendent. Au cœur du donjon ancien se cache un artefact légendaire - le Coeur du Donjon - capable de sauver le royaume. Êtes-vous prêt à devenir cette légende ?
+Dans le royaume oublié de Valoria, les ténèbres s'étendent. Au cœur du donjon ancien se cache un artefact légendaire - le Coeur du Dragon - capable de sauver le royaume. Êtes-vous prêt à devenir cette légende ?
 
 ## 🎮 Comment Jouer
 
@@ -91,7 +91,7 @@ Achetez des améliorations et des potions :
 
 - **Montée de niveau** : Gagnez de l'expérience en combattant
 - **Améliorations automatiques** : +20 HP max, +5 Force, +3 Défense par niveau
-- **Objectif** : Vaincre 10 ennemis pour atteindre le Coeur du Donjon
+- **Objectif** : Vaincre 10 ennemis pour atteindre le Coeur du Dragon
 
 ### Sauvegarde
 

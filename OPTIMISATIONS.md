@@ -1,4 +1,4 @@
-# 🎮 30 Optimisations et Améliorations pour Le Coeur du Donjon
+# 🎮 30 Optimisations et Améliorations pour Le Coeur du Dragon
 
 Ce document présente une liste complète de 30 suggestions d'optimisations et d'améliorations pour améliorer l'expérience de jeu, les performances et la maintenabilité du code.
 
@@ -224,7 +224,7 @@ Ce document présente une liste complète de 30 suggestions d'optimisations et d
 
 ## 💭 Notes Finales
 
-Ces 30 optimisations peuvent transformer "Le Coeur du Donjon" en une expérience de jeu beaucoup plus riche et engageante. Il est recommandé de :
+Ces 30 optimisations peuvent transformer "Le Coeur du Dragon" en une expérience de jeu beaucoup plus riche et engageante. Il est recommandé de :
 
 1. **Prioriser selon les retours utilisateurs** : Implémentez d'abord ce que les joueurs demandent
 2. **Tester progressivement** : Chaque amélioration doit être testée avant de passer à la suivante

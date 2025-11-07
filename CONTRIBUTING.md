@@ -1,4 +1,4 @@
-# Guide de Contribution - Le Coeur du Donjon
+# Guide de Contribution - Le Coeur du Dragon
 
 ## 📁 Structure du Projet
 
