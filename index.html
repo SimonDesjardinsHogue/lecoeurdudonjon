@@ -791,15 +791,37 @@
                 const encoded = btoa(encodeURIComponent(saveData));
                 
                 const resultDiv = document.getElementById('exportResult');
-                resultDiv.innerHTML = `
-                    <div style="background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 5px; margin-top: 10px;">
-                        <p style="color: #51cf66; margin-bottom: 10px;">✓ Code généré avec succès !</p>
-                        <textarea readonly style="width: 100%; max-width: 100%; height: 100px; background: rgba(0, 0, 0, 0.7); color: #f0f0f0; border: 1px solid #8B4513; padding: 10px; font-family: 'Courier New', monospace; font-size: 0.8em; border-radius: 5px;">${encoded}</textarea>
-                        <button onclick="copySaveCode('${encoded}')" style="margin-top: 10px;">📋 Copier le Code</button>
-                    </div>
-                `;
+                
+                // Create elements safely to avoid XSS
+                const container = document.createElement('div');
+                container.style.cssText = 'background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 5px; margin-top: 10px;';
+                
+                const successMsg = document.createElement('p');
+                successMsg.style.cssText = 'color: #51cf66; margin-bottom: 10px;';
+                successMsg.textContent = '✓ Code généré avec succès !';
+                
+                const textarea = document.createElement('textarea');
+                textarea.readOnly = true;
+                textarea.style.cssText = 'width: 100%; max-width: 100%; height: 100px; background: rgba(0, 0, 0, 0.7); color: #f0f0f0; border: 1px solid #8B4513; padding: 10px; font-family: "Courier New", monospace; font-size: 0.8em; border-radius: 5px;';
+                textarea.value = encoded;
+                
+                const copyBtn = document.createElement('button');
+                copyBtn.textContent = '📋 Copier le Code';
+                copyBtn.style.cssText = 'margin-top: 10px;';
+                copyBtn.addEventListener('click', () => copySaveCode(encoded));
+                
+                container.appendChild(successMsg);
+                container.appendChild(textarea);
+                container.appendChild(copyBtn);
+                
+                resultDiv.innerHTML = '';
+                resultDiv.appendChild(container);
             } catch (e) {
-                document.getElementById('exportResult').innerHTML = `<p style="color: #ff6b6b;">❌ Erreur lors de l'export: ${e.message}</p>`;
+                const errorMsg = document.createElement('p');
+                errorMsg.style.color = '#ff6b6b';
+                errorMsg.textContent = '❌ Erreur lors de l\'export: ' + e.message;
+                document.getElementById('exportResult').innerHTML = '';
+                document.getElementById('exportResult').appendChild(errorMsg);
             }
         }
 
@@ -816,7 +838,7 @@
             }
         }
 
-        // Fallback copy method
+        // Fallback copy method for browsers without Clipboard API
         function fallbackCopy(text) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
@@ -825,8 +847,12 @@
             document.body.appendChild(textarea);
             textarea.select();
             try {
-                document.execCommand('copy');
-                alert('Code copié dans le presse-papiers !');
+                const success = document.execCommand('copy');
+                if (success) {
+                    alert('Code copié dans le presse-papiers !');
+                } else {
+                    alert('Impossible de copier automatiquement. Veuillez copier le code manuellement.');
+                }
             } catch (e) {
                 alert('Impossible de copier automatiquement. Veuillez copier le code manuellement.');
             }
@@ -839,7 +865,11 @@
             const resultDiv = document.getElementById('importResult');
             
             if (!code) {
-                resultDiv.innerHTML = `<p style="color: #ff6b6b;">❌ Veuillez entrer un code de sauvegarde.</p>`;
+                const errorMsg = document.createElement('p');
+                errorMsg.style.color = '#ff6b6b';
+                errorMsg.textContent = '❌ Veuillez entrer un code de sauvegarde.';
+                resultDiv.innerHTML = '';
+                resultDiv.appendChild(errorMsg);
                 return;
             }
             
@@ -847,9 +877,34 @@
                 const decoded = decodeURIComponent(atob(code));
                 const loadedState = JSON.parse(decoded);
                 
-                // Validate the loaded state
-                if (!loadedState.player || !loadedState.player.name) {
-                    throw new Error('Code de sauvegarde invalide');
+                // Comprehensive validation of the loaded state
+                if (!loadedState || typeof loadedState !== 'object') {
+                    throw new Error('Invalid state structure');
+                }
+                
+                // Validate player object and required properties
+                const requiredPlayerProps = ['name', 'level', 'health', 'maxHealth', 'strength', 'defense', 'gold', 'xp', 'xpToLevel', 'kills', 'gamesPlayed'];
+                if (!loadedState.player || typeof loadedState.player !== 'object') {
+                    throw new Error('Missing player data');
+                }
+                
+                for (const prop of requiredPlayerProps) {
+                    if (!(prop in loadedState.player)) {
+                        throw new Error(`Missing player property: ${prop}`);
+                    }
+                }
+                
+                // Validate property types
+                if (typeof loadedState.player.name !== 'string' || 
+                    typeof loadedState.player.level !== 'number' ||
+                    typeof loadedState.player.health !== 'number' ||
+                    typeof loadedState.player.maxHealth !== 'number') {
+                    throw new Error('Invalid player data types');
+                }
+                
+                // Validate required state properties
+                if (!('inCombat' in loadedState) || !('defending' in loadedState)) {
+                    throw new Error('Missing state properties');
                 }
                 
                 // Restore the game state
@@ -857,13 +912,21 @@
                 saveGame();
                 updateUI();
                 
-                resultDiv.innerHTML = `<p style="color: #51cf66;">✓ Sauvegarde restaurée avec succès ! Bienvenue, ${gameState.player.name} !</p>`;
+                const successMsg = document.createElement('p');
+                successMsg.style.color = '#51cf66';
+                successMsg.textContent = `✓ Sauvegarde restaurée avec succès ! Bienvenue, ${gameState.player.name} !`;
+                resultDiv.innerHTML = '';
+                resultDiv.appendChild(successMsg);
                 
                 setTimeout(() => {
                     showScreen('mainScreen');
                 }, 2000);
             } catch (e) {
-                resultDiv.innerHTML = `<p style="color: #ff6b6b;">❌ Code invalide ou corrompu. Veuillez vérifier et réessayer.</p>`;
+                const errorMsg = document.createElement('p');
+                errorMsg.style.color = '#ff6b6b';
+                errorMsg.textContent = '❌ Code invalide ou corrompu. Veuillez vérifier et réessayer.';
+                resultDiv.innerHTML = '';
+                resultDiv.appendChild(errorMsg);
             }
         }
 
