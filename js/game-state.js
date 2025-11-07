@@ -23,20 +23,58 @@ export const gameState = {
 
 // Enemy templates
 export const enemies = [
-    { name: 'Rat Géant', health: 30, strength: 8, defense: 2, gold: 15, xp: 25 },
-    { name: 'Gobelin', health: 50, strength: 12, defense: 4, gold: 25, xp: 40 },
-    { name: 'Squelette', health: 60, strength: 15, defense: 6, gold: 35, xp: 50 },
-    { name: 'Orc', health: 80, strength: 18, defense: 8, gold: 50, xp: 70 },
-    { name: 'Loup-Garou', health: 100, strength: 22, defense: 10, gold: 75, xp: 90 },
-    { name: 'Dragon Mineur', health: 150, strength: 28, defense: 15, gold: 150, xp: 150 }
+    { name: 'Rat Géant', icon: '🐀', health: 30, strength: 8, defense: 2, gold: 15, xp: 25 },
+    { name: 'Gobelin', icon: '👺', health: 50, strength: 12, defense: 4, gold: 25, xp: 40 },
+    { name: 'Araignée Géante', icon: '🕷️', health: 55, strength: 13, defense: 5, gold: 30, xp: 45 },
+    { name: 'Squelette', icon: '💀', health: 60, strength: 15, defense: 6, gold: 35, xp: 50 },
+    { name: 'Orc', icon: '👹', health: 80, strength: 18, defense: 8, gold: 50, xp: 70 },
+    { name: 'Bandit', icon: '🗡️', health: 75, strength: 17, defense: 7, gold: 45, xp: 65 },
+    { name: 'Loup-Garou', icon: '🐺', health: 100, strength: 22, defense: 10, gold: 75, xp: 90 },
+    { name: 'Zombie', icon: '🧟', health: 90, strength: 20, defense: 9, gold: 60, xp: 80 },
+    { name: 'Sorcier Noir', icon: '🧙', health: 110, strength: 24, defense: 12, gold: 90, xp: 100 },
+    { name: 'Dragon Mineur', icon: '🐉', health: 150, strength: 28, defense: 15, gold: 150, xp: 150 }
 ];
 
 // Shop items (functions will be set by game-logic module)
 export const shopItems = [
-    { name: 'Potion de Soin', description: 'Restaure 50 HP', cost: 30, effect: null },
-    { name: 'Épée en Acier', description: '+5 Force', cost: 100, effect: null },
-    { name: 'Armure de Cuir', description: '+3 Défense', cost: 80, effect: null },
-    { name: 'Grande Potion', description: 'Restaure 100 HP', cost: 60, effect: null },
-    { name: 'Épée Enchantée', description: '+10 Force', cost: 250, effect: null },
-    { name: 'Bouclier de Fer', description: '+5 Défense', cost: 200, effect: null }
+    { name: 'Potion de Soin', icon: '🧪', description: 'Restaure 50 HP', cost: 30, effect: null },
+    { name: 'Épée en Acier', icon: '⚔️', description: '+5 Force', cost: 100, effect: null },
+    { name: 'Armure de Cuir', icon: '🛡️', description: '+3 Défense', cost: 80, effect: null },
+    { name: 'Grande Potion', icon: '⚗️', description: 'Restaure 100 HP', cost: 60, effect: null },
+    { name: 'Épée Enchantée', icon: '🗡️', description: '+10 Force', cost: 250, effect: null },
+    { name: 'Bouclier de Fer', icon: '🛡️', description: '+5 Défense', cost: 200, effect: null }
+];
+
+// NPCs
+export const npcs = [
+    { 
+        name: 'Sage Mystérieux',
+        icon: '🧙‍♂️',
+        dialogue: 'Je sens en toi un grand potentiel, jeune aventurier. Chaque combat te rendra plus fort !',
+        reward: null
+    },
+    { 
+        name: 'Forgeron',
+        icon: '⚒️',
+        dialogue: 'Mes armes sont les meilleures du royaume ! Visite ma boutique si tu as de l\'or.',
+        reward: null
+    },
+    { 
+        name: 'Prêtre',
+        icon: '⛪',
+        dialogue: 'Que la lumière te guide dans les ténèbres du donjon. Tiens, prends cette bénédiction !',
+        reward: { type: 'heal', amount: 30 }
+    },
+    { 
+        name: 'Chasseur de Trésors',
+        icon: '🗺️',
+        dialogue: 'J\'ai trouvé quelques pièces d\'or en explorant. Tiens, prends-les, j\'en ai assez !',
+        reward: { type: 'gold', amount: 25 }
+    },
+    { 
+        name: 'Vieux Guerrier',
+        icon: '🛡️',
+        dialogue: 'La défense est tout aussi importante que l\'attaque. N\'oublie jamais cela !',
+        reward: null
+    }
 ];

@@ -72,6 +72,7 @@
                 </div>
                 <div class="game-actions">
                     <button onclick="startGame()">🗡️ Commencer l'Aventure</button>
+                    <button onclick="restoreSaveFromStart()" id="restoreSaveBtn" style="display: none;">📥 Restaurer une Partie</button>
                 </div>
             </div>
 
@@ -82,9 +83,11 @@
                 </div>
                 <div class="game-actions">
                     <button onclick="explore()">🗺️ Explorer le Donjon</button>
+                    <button onclick="meetNPC()">💬 Rencontrer un PNJ</button>
                     <button onclick="showShop()">🏪 Visiter le Marchand</button>
                     <button onclick="rest()">🛌 Dormir à l'Auberge</button>
                     <button onclick="showStats()">📊 Voir Statistiques</button>
+                    <button onclick="showLeaderboard()">🏆 Classement</button>
                 </div>
             </div>
 
@@ -158,6 +161,29 @@
                 </div>
                 <div class="game-actions">
                     <button onclick="showStats()">🚪 Retour</button>
+                </div>
+            </div>
+
+            <!-- NPC Screen -->
+            <div id="npcScreen" class="game-screen">
+                <div class="story-text">
+                    <h3 id="npcName">PNJ</h3>
+                    <div id="npcDialogue"></div>
+                </div>
+                <div class="game-actions">
+                    <button onclick="showMain()">🚪 Retour</button>
+                </div>
+            </div>
+
+            <!-- Leaderboard Screen -->
+            <div id="leaderboardScreen" class="game-screen">
+                <div class="story-text">
+                    <h3>🏆 Classement des Héros</h3>
+                    <p>Les plus grands héros du royaume de Valoria :</p>
+                    <div id="leaderboardList"></div>
+                </div>
+                <div class="game-actions">
+                    <button onclick="showMain()">🚪 Retour</button>
                 </div>
             </div>
 

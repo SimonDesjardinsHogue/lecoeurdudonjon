@@ -43,7 +43,8 @@ export function updateUI() {
 // Update enemy UI
 export function updateEnemyUI() {
     const e = gameState.currentEnemy;
-    document.getElementById('enemyName').textContent = e.name;
+    const icon = e.icon || '👹';
+    document.getElementById('enemyName').textContent = `${icon} ${e.name}`;
     document.getElementById('enemyHealth').textContent = `HP: ${e.health}/${e.maxHealth}`;
     
     const healthPercent = (e.health / e.maxHealth) * 100;

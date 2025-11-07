@@ -1,5 +1,5 @@
 // Game Logic Module
-import { gameState, shopItems } from './game-state.js';
+import { gameState, shopItems, npcs } from './game-state.js';
 import { updateUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame, loadGame } from './save-load.js';
 
@@ -52,6 +52,13 @@ export function init() {
     initializeShopItems();
     checkEnergyRegeneration();
     updateUI();
+    
+    // Show restore button if save exists
+    const hasSave = localStorage.getItem('lecoeurdudonjon_save');
+    const restoreBtn = document.getElementById('restoreSaveBtn');
+    if (hasSave && restoreBtn) {
+        restoreBtn.style.display = 'inline-block';
+    }
 }
 
 // Start new game
@@ -85,7 +92,7 @@ export function rest() {
     if (p.gold >= cost) {
         p.gold -= cost;
         p.health = p.maxHealth;
-        p.energy = p.maxEnergy;
+        p.energy = 0;  // Set energy to 0 - player must wait until 6 AM Toronto time
         
         // Set last sleep time to current Toronto time
         const now = new Date();
@@ -94,7 +101,23 @@ export function rest() {
         
         saveGame();
         updateUI();
-        alert('Vous dormez à l\'auberge jusqu\'au lendemain à 6h00 du matin. Votre santé et votre énergie sont complètement restaurées ! (-20 or)');
+        
+        // Calculate next 6 AM
+        const next6AM = new Date(torontoTime);
+        next6AM.setHours(6, 0, 0, 0);
+        if (torontoTime.getHours() >= 6) {
+            next6AM.setDate(next6AM.getDate() + 1);
+        }
+        
+        const options = { 
+            timeZone: 'America/Toronto',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        };
+        const next6AMString = next6AM.toLocaleString('fr-FR', options);
+        
+        alert(`Vous dormez à l'auberge jusqu'à demain 6h00 du matin (heure de Toronto). Votre santé est restaurée ! Vous pourrez reprendre l'aventure à ${next6AMString}. (-20 or)`);
     } else {
         alert('Vous n\'avez pas assez d\'or pour dormir à l\'auberge ! (Coût: 20 or)');
     }
@@ -129,9 +152,10 @@ export function showShop() {
     shopItems.forEach((item, index) => {
         const itemDiv = document.createElement('div');
         itemDiv.className = 'shop-item';
+        const icon = item.icon || '📦';
         itemDiv.innerHTML = `
             <div class="shop-item-info">
-                <strong>${item.name}</strong><br>
+                <strong>${icon} ${item.name}</strong><br>
                 <small>${item.description}</small>
             </div>
             <div class="shop-item-price">${item.cost} 💰</div>
@@ -237,5 +261,166 @@ export function resetGame() {
         document.getElementById('nameInput').value = '';
         showScreen('startScreen');
         updateUI();
+        
+        // Show restore button if save exists
+        const restoreBtn = document.getElementById('restoreSaveBtn');
+        if (restoreBtn) {
+            restoreBtn.style.display = 'inline-block';
+        }
     }
+}
+
+// Restore save from start screen
+export function restoreSaveFromStart() {
+    const saved = localStorage.getItem('lecoeurdudonjon_save');
+    if (saved && gameState.player.name) {
+        showScreen('mainScreen');
+        updateUI();
+    } else {
+        alert('Aucune partie sauvegardée trouvée !');
+    }
+}
+
+// Meet a random NPC
+export function meetNPC() {
+    const npc = npcs[Math.floor(Math.random() * npcs.length)];
+    showScreen('npcScreen');
+    
+    const npcNameEl = document.getElementById('npcName');
+    const npcDialogueEl = document.getElementById('npcDialogue');
+    
+    npcNameEl.textContent = `${npc.icon} ${npc.name}`;
+    
+    const dialogueContainer = document.createElement('div');
+    dialogueContainer.className = 'shop-item';
+    dialogueContainer.style.display = 'block';
+    
+    const dialogue = document.createElement('p');
+    dialogue.textContent = `"${npc.dialogue}"`;
+    dialogue.style.fontStyle = 'italic';
+    dialogue.style.marginBottom = '15px';
+    dialogueContainer.appendChild(dialogue);
+    
+    // Apply reward if any
+    if (npc.reward) {
+        const p = gameState.player;
+        let rewardText = '';
+        
+        if (npc.reward.type === 'heal') {
+            const healAmount = Math.min(npc.reward.amount, p.maxHealth - p.health);
+            p.health = Math.min(p.maxHealth, p.health + npc.reward.amount);
+            rewardText = `Vous avez été soigné de ${healAmount} HP !`;
+        } else if (npc.reward.type === 'gold') {
+            p.gold += npc.reward.amount;
+            rewardText = `Vous avez reçu ${npc.reward.amount} pièces d'or !`;
+        }
+        
+        const rewardPara = document.createElement('p');
+        rewardPara.textContent = `✨ ${rewardText}`;
+        rewardPara.style.color = '#51cf66';
+        rewardPara.style.fontWeight = 'bold';
+        dialogueContainer.appendChild(rewardPara);
+        
+        saveGame();
+        updateUI();
+    }
+    
+    npcDialogueEl.innerHTML = '';
+    npcDialogueEl.appendChild(dialogueContainer);
+}
+
+// Show leaderboard
+export function showLeaderboard() {
+    showScreen('leaderboardScreen');
+    
+    // Get all saved players from leaderboard storage
+    const leaderboardData = localStorage.getItem('lecoeurdudonjon_leaderboard');
+    let players = [];
+    
+    if (leaderboardData) {
+        try {
+            players = JSON.parse(leaderboardData);
+        } catch (e) {
+            console.error('Error loading leaderboard:', e);
+        }
+    }
+    
+    // Add current player to leaderboard if they have a name
+    if (gameState.player.name) {
+        const currentPlayer = {
+            name: gameState.player.name,
+            level: gameState.player.level,
+            kills: gameState.player.kills,
+            strength: gameState.player.strength,
+            defense: gameState.player.defense,
+            score: calculatePlayerScore(gameState.player)
+        };
+        
+        // Check if player already exists in leaderboard
+        const existingIndex = players.findIndex(p => p.name === currentPlayer.name);
+        if (existingIndex >= 0) {
+            // Update if current score is higher
+            if (currentPlayer.score > players[existingIndex].score) {
+                players[existingIndex] = currentPlayer;
+            }
+        } else {
+            players.push(currentPlayer);
+        }
+        
+        // Save updated leaderboard
+        localStorage.setItem('lecoeurdudonjon_leaderboard', JSON.stringify(players));
+    }
+    
+    // Sort players by score (highest first)
+    players.sort((a, b) => b.score - a.score);
+    
+    // Display leaderboard
+    const leaderboardList = document.getElementById('leaderboardList');
+    leaderboardList.innerHTML = '';
+    
+    if (players.length === 0) {
+        const emptyMsg = document.createElement('p');
+        emptyMsg.textContent = 'Aucun héros n\'a encore été enregistré dans les annales du royaume.';
+        emptyMsg.style.fontStyle = 'italic';
+        emptyMsg.style.color = '#999';
+        leaderboardList.appendChild(emptyMsg);
+    } else {
+        players.slice(0, 10).forEach((player, index) => {
+            const playerDiv = document.createElement('div');
+            playerDiv.className = 'shop-item';
+            playerDiv.style.display = 'flex';
+            playerDiv.style.justifyContent = 'space-between';
+            playerDiv.style.alignItems = 'center';
+            playerDiv.style.marginBottom = '10px';
+            
+            // Add medal for top 3
+            let medal = '';
+            if (index === 0) medal = '🥇 ';
+            else if (index === 1) medal = '🥈 ';
+            else if (index === 2) medal = '🥉 ';
+            else medal = `${index + 1}. `;
+            
+            const nameSection = document.createElement('div');
+            nameSection.innerHTML = `
+                <strong>${medal}${player.name}</strong><br>
+                <small>Niveau ${player.level} | ${player.kills} victoires</small>
+            `;
+            
+            const statsSection = document.createElement('div');
+            statsSection.style.textAlign = 'right';
+            statsSection.innerHTML = `
+                <div style="color: #DAA520; font-weight: bold;">${player.score} pts</div>
+                <small>⚔️ ${player.strength} | 🛡️ ${player.defense}</small>
+            `;
+            
+            playerDiv.appendChild(nameSection);
+            playerDiv.appendChild(statsSection);
+            leaderboardList.appendChild(playerDiv);
+        });
+    }
+}
+
+// Calculate player score for leaderboard
+function calculatePlayerScore(player) {
+    return (player.level * 100) + (player.kills * 50) + (player.strength * 10) + (player.defense * 5);
 }
