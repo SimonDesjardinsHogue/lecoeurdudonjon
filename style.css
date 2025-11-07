@@ -262,6 +262,12 @@ button:disabled {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.shop-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .shop-item-disabled {
@@ -281,6 +287,23 @@ button:disabled {
     color: #DAA520;
     font-weight: bold;
     margin-right: 15px;
+}
+
+/* Rarity glow effects */
+.shop-item.rarity-commun {
+    /* Common items use default styling */
+}
+
+.shop-item.rarity-rare {
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
+
+.shop-item.rarity-epique {
+    box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+}
+
+.shop-item.rarity-legendaire {
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
 }
 
 input[type="text"] {

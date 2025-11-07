@@ -1,5 +1,5 @@
 // Game Logic Module
-import { gameState, shopItems, rareItems, npcs } from './game-state.js';
+import { gameState, shopItems, rareItems, npcs, rarities, generateRandomStats, statNames, hasRandomStats } from './game-state.js';
 import { updateUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame, loadGame } from './save-load.js';
 import { characterClasses, applyCharacterClass } from './character-classes.js';
@@ -384,6 +384,31 @@ export function showShop(filterCategory = 'all', filterByClass = false) {
             // Find the original index in shopItems array
             const originalIndex = shopItems.indexOf(item);
             
+            // Generate random stats for preview (not applied until purchase)
+            const previewStats = hasRandomStats(item) ? generateRandomStats(item.rarity) : null;
+            
+            // Check if item has rarity and apply styling
+            let rarityInfo = '';
+            let rarityColor = '#f0f0f0';
+            if (item.rarity && rarities[item.rarity]) {
+                const rarityData = rarities[item.rarity];
+                rarityColor = rarityData.color;
+                rarityInfo = `<span style="color: ${rarityColor}; font-weight: bold;">[${rarityData.name}]</span><br>`;
+                itemDiv.style.borderColor = rarityColor;
+                itemDiv.style.borderWidth = '2px';
+                // Add CSS class for rarity-based styling
+                itemDiv.classList.add(`rarity-${item.rarity}`);
+            }
+            
+            // Build random stats description
+            let randomStatsInfo = '';
+            if (previewStats && Object.keys(previewStats).length > 0) {
+                const statsText = Object.entries(previewStats)
+                    .map(([stat, value]) => `+${value} ${statNames[stat]}`)
+                    .join(', ');
+                randomStatsInfo = `<br><small style="color: ${rarityColor};">✨ ${statsText}</small>`;
+            }
+            
             // Check if item has class restriction
             let classInfo = '';
             let isDisabled = false;
@@ -400,8 +425,9 @@ export function showShop(filterCategory = 'all', filterByClass = false) {
             
             itemDiv.innerHTML = `
                 <div class="shop-item-info">
-                    <strong>${icon} ${item.name}</strong><br>
-                    <small>${item.description}</small>${classInfo}
+                    <strong style="color: ${rarityColor};">${icon} ${item.name}</strong><br>
+                    ${rarityInfo}
+                    <small>${item.description}</small>${randomStatsInfo}${classInfo}
                 </div>
                 <div class="shop-item-price">${item.cost} 💰</div>
                 <button onclick="window.buyItem(${originalIndex})" ${isDisabled ? 'disabled' : ''}>Acheter</button>
@@ -427,6 +453,16 @@ export function buyItem(index) {
         p.gold -= item.cost;
         item.effect();
         
+        // Generate and apply random stats for rare+ items at purchase time
+        const randomStats = hasRandomStats(item) ? generateRandomStats(item.rarity) : null;
+        if (randomStats && Object.keys(randomStats).length > 0) {
+            Object.entries(randomStats).forEach(([stat, value]) => {
+                if (p[stat] !== undefined) {
+                    p[stat] += value;
+                }
+            });
+        }
+        
         // Play purchase sound
         audioManager.playSound('purchase');
         
@@ -439,7 +475,16 @@ export function buyItem(index) {
         
         saveGame();
         updateUI();
-        alert(`Vous avez acheté ${item.name} !`);
+        
+        // Build confirmation message with random stats
+        let message = `Vous avez acheté ${item.name} !`;
+        if (randomStats && Object.keys(randomStats).length > 0) {
+            const statsText = Object.entries(randomStats)
+                .map(([stat, value]) => `+${value} ${statNames[stat]}`)
+                .join(', ');
+            message += `\n✨ Bonus: ${statsText}`;
+        }
+        alert(message);
         
         // Refresh shop with current filter state
         // Null checks are needed because this function may be called when shop screen is not active

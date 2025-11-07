@@ -46,6 +46,57 @@ export const enemies = [
     { name: 'Dragon Mineur', icon: '🐉', health: 150, strength: 28, defense: 15, gold: 150, xp: 150 }
 ];
 
+// Rarity system definitions
+export const rarities = {
+    commun: { name: 'Commun', color: '#9CA3AF', statBonus: 0 },
+    rare: { name: 'Rare', color: '#3B82F6', statBonus: 1 },
+    epique: { name: 'Épique', color: '#A855F7', statBonus: 2 },
+    legendaire: { name: 'Légendaire', color: '#F59E0B', statBonus: 3 }
+};
+
+// Stat names for display
+export const statNames = {
+    strength: 'Force',
+    defense: 'Défense',
+    dexterity: 'Dextérité',
+    constitution: 'Constitution',
+    intelligence: 'Intelligence',
+    wisdom: 'Sagesse',
+    charisma: 'Charisme'
+};
+
+// Check if item has random stats based on rarity
+export function hasRandomStats(item) {
+    return item.rarity && item.rarity !== 'commun';
+}
+
+// Generate random bonus stats for rare+ items
+export function generateRandomStats(rarity) {
+    if (rarity === 'commun') return null;
+    
+    const bonusRange = rarities[rarity].statBonus;
+    const stats = ['strength', 'defense', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+    const randomStats = {};
+    
+    // Number of random stats based on rarity
+    const numStats = rarity === 'rare' ? 1 : rarity === 'epique' ? 2 : 3;
+    
+    // Fisher-Yates shuffle algorithm for proper randomization
+    const shuffled = [...stats];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    
+    // Pick random stats
+    for (let i = 0; i < numStats; i++) {
+        const stat = shuffled[i];
+        randomStats[stat] = Math.floor(Math.random() * bonusRange) + 1;
+    }
+    
+    return randomStats;
+}
+
 // Shop items (functions will be set by game-logic module)
 // Categories: heal, damage, energy, exp, equipment
 export const shopItems = [
@@ -80,54 +131,54 @@ export const shopItems = [
     { name: 'Potion d\'Expérience Majeure', icon: '✨', description: '+120 XP', cost: 130, category: 'exp', type: 'potion', strength: 'strong', effect: null },
     
     // Weapons for Guerrier (Warrior) - 8 tiers
-    { name: 'Épée Rouillée', icon: '⚔️', description: '+1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 1, effect: null },
-    { name: 'Épée en Fer', icon: '⚔️', description: '+3 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 3, effect: null },
-    { name: 'Épée en Acier', icon: '⚔️', description: '+5 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 5, effect: null },
-    { name: 'Épée Enchantée', icon: '⚔️', description: '+7 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 7, effect: null },
-    { name: 'Épée Flamboyante', icon: '⚔️', description: '+9 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 9, effect: null },
-    { name: 'Épée Runique', icon: '⚔️', description: '+10 Force', cost: 400, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 10, effect: null },
-    { name: 'Épée Légendaire', icon: '⚔️', description: '+12 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 12, effect: null },
-    { name: 'Épée Divine', icon: '⚔️', description: '+15 Force', cost: 750, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 15, effect: null },
+    { name: 'Épée Rouillée', icon: '⚔️', description: '+1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 1, rarity: 'commun', effect: null },
+    { name: 'Épée en Fer', icon: '⚔️', description: '+3 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 3, rarity: 'commun', effect: null },
+    { name: 'Épée en Acier', icon: '⚔️', description: '+5 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 5, rarity: 'rare', effect: null },
+    { name: 'Épée Enchantée', icon: '⚔️', description: '+7 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 7, rarity: 'rare', effect: null },
+    { name: 'Épée Flamboyante', icon: '⚔️', description: '+9 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 9, rarity: 'epique', effect: null },
+    { name: 'Épée Runique', icon: '⚔️', description: '+10 Force', cost: 400, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 10, rarity: 'epique', effect: null },
+    { name: 'Épée Légendaire', icon: '⚔️', description: '+12 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 12, rarity: 'legendaire', effect: null },
+    { name: 'Épée Divine', icon: '⚔️', description: '+15 Force', cost: 750, category: 'equipment', type: 'weapon', classRestriction: 'guerrier', bonus: 15, rarity: 'legendaire', effect: null },
     
     // Weapons for Archer - 8 tiers
-    { name: 'Arc Basique', icon: '🏹', description: '+1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 1, effect: null },
-    { name: 'Arc Court', icon: '🏹', description: '+3 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 3, effect: null },
-    { name: 'Arc Long', icon: '🏹', description: '+5 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 5, effect: null },
-    { name: 'Arc Composite', icon: '🏹', description: '+7 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 7, effect: null },
-    { name: 'Arc Elfique', icon: '🏹', description: '+9 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 9, effect: null },
-    { name: 'Arc Runique', icon: '🏹', description: '+10 Force', cost: 400, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 10, effect: null },
-    { name: 'Arc Légendaire', icon: '🏹', description: '+12 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 12, effect: null },
-    { name: 'Arc du Chasseur Divin', icon: '🏹', description: '+15 Force', cost: 750, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 15, effect: null },
+    { name: 'Arc Basique', icon: '🏹', description: '+1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 1, rarity: 'commun', effect: null },
+    { name: 'Arc Court', icon: '🏹', description: '+3 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 3, rarity: 'commun', effect: null },
+    { name: 'Arc Long', icon: '🏹', description: '+5 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 5, rarity: 'rare', effect: null },
+    { name: 'Arc Composite', icon: '🏹', description: '+7 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 7, rarity: 'rare', effect: null },
+    { name: 'Arc Elfique', icon: '🏹', description: '+9 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 9, rarity: 'epique', effect: null },
+    { name: 'Arc Runique', icon: '🏹', description: '+10 Force', cost: 400, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 10, rarity: 'epique', effect: null },
+    { name: 'Arc Légendaire', icon: '🏹', description: '+12 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 12, rarity: 'legendaire', effect: null },
+    { name: 'Arc du Chasseur Divin', icon: '🏹', description: '+15 Force', cost: 750, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 15, rarity: 'legendaire', effect: null },
     
     // Weapons for Magicien (Mage) - 8 tiers
-    { name: 'Bâton de Bois', icon: '🪄', description: '+1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 1, effect: null },
-    { name: 'Bâton d\'Apprenti', icon: '🪄', description: '+3 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 3, effect: null },
-    { name: 'Bâton Mystique', icon: '🪄', description: '+5 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 5, effect: null },
-    { name: 'Bâton Enchanté', icon: '🪄', description: '+7 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 7, effect: null },
-    { name: 'Bâton de Pouvoir', icon: '🪄', description: '+9 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 9, effect: null },
-    { name: 'Bâton Runique', icon: '🪄', description: '+10 Force', cost: 400, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 10, effect: null },
-    { name: 'Bâton Légendaire', icon: '🪄', description: '+12 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 12, effect: null },
-    { name: 'Bâton de l\'Archimage', icon: '🪄', description: '+15 Force', cost: 750, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 15, effect: null },
+    { name: 'Bâton de Bois', icon: '🪄', description: '+1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 1, rarity: 'commun', effect: null },
+    { name: 'Bâton d\'Apprenti', icon: '🪄', description: '+3 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 3, rarity: 'commun', effect: null },
+    { name: 'Bâton Mystique', icon: '🪄', description: '+5 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 5, rarity: 'rare', effect: null },
+    { name: 'Bâton Enchanté', icon: '🪄', description: '+7 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 7, rarity: 'rare', effect: null },
+    { name: 'Bâton de Pouvoir', icon: '🪄', description: '+9 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 9, rarity: 'epique', effect: null },
+    { name: 'Bâton Runique', icon: '🪄', description: '+10 Force', cost: 400, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 10, rarity: 'epique', effect: null },
+    { name: 'Bâton Légendaire', icon: '🪄', description: '+12 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 12, rarity: 'legendaire', effect: null },
+    { name: 'Bâton de l\'Archimage', icon: '🪄', description: '+15 Force', cost: 750, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 15, rarity: 'legendaire', effect: null },
     
     // Weapons for Rogue - 8 tiers
-    { name: 'Dague Émoussée', icon: '🗡️', description: '+1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 1, effect: null },
-    { name: 'Dague Affûtée', icon: '🗡️', description: '+3 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 3, effect: null },
-    { name: 'Dague en Acier', icon: '🗡️', description: '+5 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 5, effect: null },
-    { name: 'Dague Empoisonnée', icon: '🗡️', description: '+7 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 7, effect: null },
-    { name: 'Dague de l\'Ombre', icon: '🗡️', description: '+9 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 9, effect: null },
-    { name: 'Dague Runique', icon: '🗡️', description: '+10 Force', cost: 400, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 10, effect: null },
-    { name: 'Dague Légendaire', icon: '🗡️', description: '+12 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 12, effect: null },
-    { name: 'Dague de l\'Assassin Suprême', icon: '🗡️', description: '+15 Force', cost: 750, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 15, effect: null },
+    { name: 'Dague Émoussée', icon: '🗡️', description: '+1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 1, rarity: 'commun', effect: null },
+    { name: 'Dague Affûtée', icon: '🗡️', description: '+3 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 3, rarity: 'commun', effect: null },
+    { name: 'Dague en Acier', icon: '🗡️', description: '+5 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 5, rarity: 'rare', effect: null },
+    { name: 'Dague Empoisonnée', icon: '🗡️', description: '+7 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 7, rarity: 'rare', effect: null },
+    { name: 'Dague de l\'Ombre', icon: '🗡️', description: '+9 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 9, rarity: 'epique', effect: null },
+    { name: 'Dague Runique', icon: '🗡️', description: '+10 Force', cost: 400, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 10, rarity: 'epique', effect: null },
+    { name: 'Dague Légendaire', icon: '🗡️', description: '+12 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 12, rarity: 'legendaire', effect: null },
+    { name: 'Dague de l\'Assassin Suprême', icon: '🗡️', description: '+15 Force', cost: 750, category: 'equipment', type: 'weapon', classRestriction: 'rogue', bonus: 15, rarity: 'legendaire', effect: null },
     
     // Armors (8 tiers)
-    { name: 'Armure en Tissu', icon: '🛡️', description: '+1 Défense', cost: 35, category: 'equipment', type: 'armor', bonus: 1, effect: null },
-    { name: 'Armure de Cuir', icon: '🛡️', description: '+3 Défense', cost: 70, category: 'equipment', type: 'armor', bonus: 3, effect: null },
-    { name: 'Armure Clouée', icon: '🛡️', description: '+5 Défense', cost: 115, category: 'equipment', type: 'armor', bonus: 5, effect: null },
-    { name: 'Cotte de Mailles', icon: '🛡️', description: '+7 Défense', cost: 180, category: 'equipment', type: 'armor', bonus: 7, effect: null },
-    { name: 'Armure d\'Acier', icon: '🛡️', description: '+9 Défense', cost: 265, category: 'equipment', type: 'armor', bonus: 9, effect: null },
-    { name: 'Armure Enchantée', icon: '🛡️', description: '+10 Défense', cost: 370, category: 'equipment', type: 'armor', bonus: 10, effect: null },
-    { name: 'Armure Runique', icon: '🛡️', description: '+12 Défense', cost: 510, category: 'equipment', type: 'armor', bonus: 12, effect: null },
-    { name: 'Armure Divine', icon: '🛡️', description: '+15 Défense', cost: 700, category: 'equipment', type: 'armor', bonus: 15, effect: null }
+    { name: 'Armure en Tissu', icon: '🛡️', description: '+1 Défense', cost: 35, category: 'equipment', type: 'armor', bonus: 1, rarity: 'commun', effect: null },
+    { name: 'Armure de Cuir', icon: '🛡️', description: '+3 Défense', cost: 70, category: 'equipment', type: 'armor', bonus: 3, rarity: 'commun', effect: null },
+    { name: 'Armure Clouée', icon: '🛡️', description: '+5 Défense', cost: 115, category: 'equipment', type: 'armor', bonus: 5, rarity: 'rare', effect: null },
+    { name: 'Cotte de Mailles', icon: '🛡️', description: '+7 Défense', cost: 180, category: 'equipment', type: 'armor', bonus: 7, rarity: 'rare', effect: null },
+    { name: 'Armure d\'Acier', icon: '🛡️', description: '+9 Défense', cost: 265, category: 'equipment', type: 'armor', bonus: 9, rarity: 'epique', effect: null },
+    { name: 'Armure Enchantée', icon: '🛡️', description: '+10 Défense', cost: 370, category: 'equipment', type: 'armor', bonus: 10, rarity: 'epique', effect: null },
+    { name: 'Armure Runique', icon: '🛡️', description: '+12 Défense', cost: 510, category: 'equipment', type: 'armor', bonus: 12, rarity: 'legendaire', effect: null },
+    { name: 'Armure Divine', icon: '🛡️', description: '+15 Défense', cost: 700, category: 'equipment', type: 'armor', bonus: 15, rarity: 'legendaire', effect: null }
 ];
 
 // Rare items for wandering merchant
