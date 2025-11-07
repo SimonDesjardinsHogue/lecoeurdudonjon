@@ -1,5 +1,5 @@
 // Game Logic Module
-import { gameState, shopItems, npcs } from './game-state.js';
+import { gameState, shopItems, rareItems, npcs } from './game-state.js';
 import { updateUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame, loadGame } from './save-load.js';
 import { characterClasses, applyCharacterClass } from './character-classes.js';
@@ -34,6 +34,31 @@ export function initializeShopItems() {
     shopItems[14].effect = () => { gameState.player.strength += 10; };  // Épée Enchantée
     shopItems[15].effect = () => { gameState.player.defense += 3; };  // Armure de Cuir
     shopItems[16].effect = () => { gameState.player.defense += 5; };  // Bouclier de Fer
+    
+    // Rare items
+    rareItems[0].effect = () => { // Élixir de Résurrection
+        gameState.player.health = gameState.player.maxHealth;
+        gameState.player.energy = gameState.player.maxEnergy;
+    };
+    rareItems[1].effect = () => { gameState.player.strength += 12; }; // Potion de Géant
+    rareItems[2].effect = () => { // Armure Runique
+        const p = gameState.player;
+        p.defense += 8;
+        p.strength += 2;
+        p.dexterity += 2;
+        p.constitution += 2;
+        p.intelligence += 2;
+        p.wisdom += 2;
+        p.charisma += 2;
+    };
+    rareItems[3].effect = () => { // Amulette de Fortune
+        gameState.player.gold += 100;
+        gameState.player.charisma += 5;
+    };
+    rareItems[4].effect = () => { // Grimoire Ancien
+        gameState.player.intelligence += 10;
+        addExperience(200);
+    };
 }
 
 // Check energy regeneration (6:00 AM Toronto time)
@@ -366,6 +391,7 @@ export function resetGame() {
         gameState.player.energy = 100;
         gameState.player.maxEnergy = 100;
         gameState.player.lastSleepTime = null;
+        gameState.player.bossesDefeated = 0;
         
         // Reset combat state
         gameState.currentEnemy = null;
@@ -399,6 +425,13 @@ export function restoreSaveFromStart() {
 // Meet a random NPC
 export function meetNPC() {
     const npc = npcs[Math.floor(Math.random() * npcs.length)];
+    
+    // Check if it's the wandering merchant
+    if (npc.special === 'wandering_merchant') {
+        meetWanderingMerchant();
+        return;
+    }
+    
     showScreen('npcScreen');
     
     const npcNameEl = document.getElementById('npcName');
@@ -538,4 +571,65 @@ export function showLeaderboard() {
 // Calculate player score for leaderboard
 function calculatePlayerScore(player) {
     return (player.level * 100) + (player.kills * 50) + (player.strength * 10) + (player.defense * 5);
+}
+
+// Meet wandering merchant with rare items
+export function meetWanderingMerchant() {
+    showScreen('shopScreen');
+    const shopDiv = document.getElementById('shopItems');
+    shopDiv.innerHTML = '';
+    
+    // Add merchant description
+    const merchantDesc = document.createElement('div');
+    merchantDesc.className = 'story-text';
+    merchantDesc.innerHTML = `
+        <p>🧙‍♂️ <strong>Marchand Itinérant</strong></p>
+        <p>Un mystérieux marchand ambulant apparaît devant vous. "J'ai des objets rares et puissants... à des prix élevés bien sûr !"</p>
+    `;
+    shopDiv.appendChild(merchantDesc);
+    
+    // Display rare items
+    rareItems.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'shop-item';
+        const icon = item.icon || '📦';
+        
+        itemDiv.innerHTML = `
+            <div class="shop-item-info">
+                <strong style="color: #FFD700;">${icon} ${item.name} (RARE)</strong><br>
+                <small>${item.description}</small>
+            </div>
+            <div class="shop-item-price">${item.cost} 💰</div>
+            <button onclick="window.buyRareItem(${index})">Acheter</button>
+        `;
+        shopDiv.appendChild(itemDiv);
+    });
+    
+    // Add return button
+    const returnDiv = document.createElement('div');
+    returnDiv.className = 'game-actions';
+    returnDiv.innerHTML = '<button onclick="window.showMain()">🚪 Retour</button>';
+    shopDiv.appendChild(returnDiv);
+}
+
+// Buy rare item
+export function buyRareItem(index) {
+    const item = rareItems[index];
+    const p = gameState.player;
+    
+    if (p.gold >= item.cost) {
+        p.gold -= item.cost;
+        item.effect();
+        
+        // Play purchase sound
+        audioManager.playSound('purchase');
+        
+        checkLevelUp();
+        saveGame();
+        updateUI();
+        alert(`Vous avez acheté ${item.name} !`);
+        meetWanderingMerchant(); // Refresh merchant shop
+    } else {
+        alert(`Vous n'avez pas assez d'or ! (Coût: ${item.cost} or)`);
+    }
 }

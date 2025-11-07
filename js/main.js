@@ -1,5 +1,5 @@
 // Main Entry Point Module
-import { init, startGame, rest, showShop, showStats, showSaveOptions, showMain, resetGame, buyItem, restoreSaveFromStart, meetNPC, showLeaderboard } from './game-logic.js';
+import { init, startGame, rest, showShop, showStats, showSaveOptions, showMain, resetGame, buyItem, restoreSaveFromStart, meetNPC, showLeaderboard, buyRareItem } from './game-logic.js';
 import { explore, attack, defend, flee } from './combat.js';
 import { exportSave, importSave } from './save-load.js';
 import { audioManager } from './audio.js';
@@ -60,6 +60,7 @@ window.flee = function() {
 window.rest = rest;
 window.showShop = showShop;
 window.buyItem = buyItem;
+window.buyRareItem = buyRareItem;
 window.showStats = showStats;
 window.showSaveOptions = showSaveOptions;
 window.exportSave = exportSave;
