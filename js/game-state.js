@@ -69,8 +69,8 @@ export const shopItems = [
     { name: 'Potion d\'Expérience Majeure', icon: '✨', description: '+120 XP', cost: 130, category: 'exp', type: 'potion', strength: 'strong', effect: null },
     
     // Equipment (weapons and armor)
-    { name: 'Épée en Acier', icon: '⚔️', description: '+5 Force', cost: 100, category: 'equipment', type: 'equipment', effect: null },
-    { name: 'Épée Enchantée', icon: '🗡️', description: '+10 Force', cost: 250, category: 'equipment', type: 'equipment', effect: null },
+    { name: 'Épée en Acier', icon: '⚔️', description: '+5 Force', cost: 100, category: 'damage', type: 'equipment', effect: null },
+    { name: 'Épée Enchantée', icon: '🗡️', description: '+10 Force', cost: 250, category: 'damage', type: 'equipment', effect: null },
     { name: 'Armure de Cuir', icon: '🛡️', description: '+3 Classe d\'armure', cost: 80, category: 'equipment', type: 'equipment', effect: null },
     { name: 'Bouclier de Fer', icon: '🛡️', description: '+5 Classe d\'armure', cost: 200, category: 'equipment', type: 'equipment', effect: null }
 ];
