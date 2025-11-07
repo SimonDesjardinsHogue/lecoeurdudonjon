@@ -8,32 +8,85 @@ import { particleSystem } from './particles.js';
 
 // Set up shop item effects
 export function initializeShopItems() {
-    // Healing potions
-    shopItems[0].effect = () => healPlayer(30);  // Petite Potion de Soin
-    shopItems[1].effect = () => healPlayer(50);  // Potion de Soin
-    shopItems[2].effect = () => healPlayer(100);  // Grande Potion de Soin
-    shopItems[3].effect = () => healPlayer(200);  // Potion de Soin Suprême
+    // Healing potions (8 tiers)
+    shopItems[0].effect = () => healPlayer(20);   // Potion de Soin Minuscule
+    shopItems[1].effect = () => healPlayer(40);   // Petite Potion de Soin
+    shopItems[2].effect = () => healPlayer(60);   // Potion de Soin
+    shopItems[3].effect = () => healPlayer(90);   // Grande Potion de Soin
+    shopItems[4].effect = () => healPlayer(120);  // Potion de Soin Majeure
+    shopItems[5].effect = () => healPlayer(160);  // Potion de Soin Suprême
+    shopItems[6].effect = () => healPlayer(220);  // Potion de Soin Ultime
+    shopItems[7].effect = () => healPlayer(300);  // Élixir de Soin Divin
     
-    // Damage potions
-    shopItems[4].effect = () => { gameState.player.strength += 3; };  // Potion de Force Mineure
-    shopItems[5].effect = () => { gameState.player.strength += 5; };  // Potion de Force
-    shopItems[6].effect = () => { gameState.player.strength += 8; };  // Potion de Force Majeure
+    // Damage potions (8 tiers)
+    shopItems[8].effect = () => { gameState.player.strength += 1; };   // Potion de Force Minuscule
+    shopItems[9].effect = () => { gameState.player.strength += 3; };   // Potion de Force Mineure
+    shopItems[10].effect = () => { gameState.player.strength += 5; };  // Potion de Force
+    shopItems[11].effect = () => { gameState.player.strength += 7; };  // Potion de Force Supérieure
+    shopItems[12].effect = () => { gameState.player.strength += 9; };  // Potion de Force Majeure
+    shopItems[13].effect = () => { gameState.player.strength += 10; }; // Potion de Force Extrême
+    shopItems[14].effect = () => { gameState.player.strength += 12; }; // Potion de Force Titanesque
+    shopItems[15].effect = () => { gameState.player.strength += 15; }; // Potion de Force Divine
     
-    // Energy potions
-    shopItems[7].effect = () => restoreEnergy(30);  // Potion d'Énergie Mineure
-    shopItems[8].effect = () => restoreEnergy(50);  // Potion d'Énergie
-    shopItems[9].effect = () => restoreEnergy(100);  // Potion d'Énergie Majeure
+    // Energy potions (3 tiers)
+    shopItems[16].effect = () => restoreEnergy(30);  // Potion d'Énergie Mineure
+    shopItems[17].effect = () => restoreEnergy(50);  // Potion d'Énergie
+    shopItems[18].effect = () => restoreEnergy(100); // Potion d'Énergie Majeure
     
-    // Experience potions
-    shopItems[10].effect = () => addExperience(30);  // Potion d'Expérience Mineure
-    shopItems[11].effect = () => addExperience(60);  // Potion d'Expérience
-    shopItems[12].effect = () => addExperience(120);  // Potion d'Expérience Majeure
+    // Experience potions (3 tiers)
+    shopItems[19].effect = () => addExperience(30);  // Potion d'Expérience Mineure
+    shopItems[20].effect = () => addExperience(60);  // Potion d'Expérience
+    shopItems[21].effect = () => addExperience(120); // Potion d'Expérience Majeure
     
-    // Equipment
-    shopItems[13].effect = () => { gameState.player.strength += 5; };  // Épée en Acier
-    shopItems[14].effect = () => { gameState.player.strength += 10; };  // Épée Enchantée
-    shopItems[15].effect = () => { gameState.player.defense += 3; };  // Armure de Cuir
-    shopItems[16].effect = () => { gameState.player.defense += 5; };  // Bouclier de Fer
+    // Weapons for Guerrier (8 tiers)
+    shopItems[22].effect = () => { gameState.player.strength += 1; };  // Épée Rouillée
+    shopItems[23].effect = () => { gameState.player.strength += 3; };  // Épée en Fer
+    shopItems[24].effect = () => { gameState.player.strength += 5; };  // Épée en Acier
+    shopItems[25].effect = () => { gameState.player.strength += 7; };  // Épée Enchantée
+    shopItems[26].effect = () => { gameState.player.strength += 9; };  // Épée Flamboyante
+    shopItems[27].effect = () => { gameState.player.strength += 10; }; // Épée Runique
+    shopItems[28].effect = () => { gameState.player.strength += 12; }; // Épée Légendaire
+    shopItems[29].effect = () => { gameState.player.strength += 15; }; // Épée Divine
+    
+    // Weapons for Archer (8 tiers)
+    shopItems[30].effect = () => { gameState.player.strength += 1; };  // Arc Basique
+    shopItems[31].effect = () => { gameState.player.strength += 3; };  // Arc Court
+    shopItems[32].effect = () => { gameState.player.strength += 5; };  // Arc Long
+    shopItems[33].effect = () => { gameState.player.strength += 7; };  // Arc Composite
+    shopItems[34].effect = () => { gameState.player.strength += 9; };  // Arc Elfique
+    shopItems[35].effect = () => { gameState.player.strength += 10; }; // Arc Runique
+    shopItems[36].effect = () => { gameState.player.strength += 12; }; // Arc Légendaire
+    shopItems[37].effect = () => { gameState.player.strength += 15; }; // Arc du Chasseur Divin
+    
+    // Weapons for Magicien (8 tiers)
+    shopItems[38].effect = () => { gameState.player.strength += 1; };  // Bâton de Bois
+    shopItems[39].effect = () => { gameState.player.strength += 3; };  // Bâton d'Apprenti
+    shopItems[40].effect = () => { gameState.player.strength += 5; };  // Bâton Mystique
+    shopItems[41].effect = () => { gameState.player.strength += 7; };  // Bâton Enchanté
+    shopItems[42].effect = () => { gameState.player.strength += 9; };  // Bâton de Pouvoir
+    shopItems[43].effect = () => { gameState.player.strength += 10; }; // Bâton Runique
+    shopItems[44].effect = () => { gameState.player.strength += 12; }; // Bâton Légendaire
+    shopItems[45].effect = () => { gameState.player.strength += 15; }; // Bâton de l'Archimage
+    
+    // Weapons for Rogue (8 tiers)
+    shopItems[46].effect = () => { gameState.player.strength += 1; };  // Dague Émoussée
+    shopItems[47].effect = () => { gameState.player.strength += 3; };  // Dague Affûtée
+    shopItems[48].effect = () => { gameState.player.strength += 5; };  // Dague en Acier
+    shopItems[49].effect = () => { gameState.player.strength += 7; };  // Dague Empoisonnée
+    shopItems[50].effect = () => { gameState.player.strength += 9; };  // Dague de l'Ombre
+    shopItems[51].effect = () => { gameState.player.strength += 10; }; // Dague Runique
+    shopItems[52].effect = () => { gameState.player.strength += 12; }; // Dague Légendaire
+    shopItems[53].effect = () => { gameState.player.strength += 15; }; // Dague de l'Assassin Suprême
+    
+    // Armors (8 tiers)
+    shopItems[54].effect = () => { gameState.player.defense += 1; };  // Armure en Tissu
+    shopItems[55].effect = () => { gameState.player.defense += 3; };  // Armure de Cuir
+    shopItems[56].effect = () => { gameState.player.defense += 5; };  // Armure Clouée
+    shopItems[57].effect = () => { gameState.player.defense += 7; };  // Cotte de Mailles
+    shopItems[58].effect = () => { gameState.player.defense += 9; };  // Armure d'Acier
+    shopItems[59].effect = () => { gameState.player.defense += 10; }; // Armure Enchantée
+    shopItems[60].effect = () => { gameState.player.defense += 12; }; // Armure Runique
+    shopItems[61].effect = () => { gameState.player.defense += 15; }; // Armure Divine
     
     // Rare items
     rareItems[0].effect = () => { // Élixir de Résurrection
@@ -279,13 +332,29 @@ export function showShop(filterCategory = 'all') {
             // Find the original index in shopItems array
             const originalIndex = shopItems.indexOf(item);
             
+            // Check if item has class restriction
+            let classInfo = '';
+            let isDisabled = false;
+            if (item.classRestriction) {
+                const className = item.classRestriction === 'guerrier' ? 'Guerrier' : 
+                                 item.classRestriction === 'archer' ? 'Archer' : 
+                                 item.classRestriction === 'magicien' ? 'Magicien' : 'Rogue';
+                classInfo = `<br><small style="color: #DAA520;">Pour: ${className}</small>`;
+                
+                // Disable if player is not this class
+                if (item.classRestriction !== gameState.player.class) {
+                    isDisabled = true;
+                    itemDiv.style.opacity = '0.5';
+                }
+            }
+            
             itemDiv.innerHTML = `
                 <div class="shop-item-info">
                     <strong>${icon} ${item.name}</strong><br>
-                    <small>${item.description}</small>
+                    <small>${item.description}</small>${classInfo}
                 </div>
                 <div class="shop-item-price">${item.cost} 💰</div>
-                <button onclick="window.buyItem(${originalIndex})">Acheter</button>
+                <button onclick="window.buyItem(${originalIndex})" ${isDisabled ? 'disabled style="cursor: not-allowed; opacity: 0.6;"' : ''}>Acheter</button>
             `;
             shopDiv.appendChild(itemDiv);
         });
@@ -296,6 +365,12 @@ export function showShop(filterCategory = 'all') {
 export function buyItem(index) {
     const item = shopItems[index];
     const p = gameState.player;
+    
+    // Check class restriction for weapons
+    if (item.classRestriction && item.classRestriction !== p.class) {
+        alert(`Cet objet est réservé à la classe ${item.classRestriction === 'guerrier' ? 'Guerrier' : item.classRestriction === 'archer' ? 'Archer' : item.classRestriction === 'magicien' ? 'Magicien' : 'Rogue'} !`);
+        return;
+    }
     
     if (p.gold >= item.cost) {
         p.gold -= item.cost;
