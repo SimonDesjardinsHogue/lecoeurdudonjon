@@ -244,6 +244,20 @@
             border-top: 2px solid #8B4513;
             font-size: 0.8em;
             color: #999;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .save-indicator {
+            color: #51cf66;
+            font-size: 0.9em;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .save-indicator.show {
+            opacity: 1;
         }
     </style>
 </head>
@@ -358,7 +372,40 @@
                 </div>
                 <div class="game-actions">
                     <button onclick="showMain()">🚪 Retour</button>
+                    <button onclick="showSaveOptions()">💾 Sauvegardes</button>
                     <button onclick="resetGame()" style="background: linear-gradient(135deg, #8B0000 0%, #660000 100%);">🔄 Nouvelle Partie</button>
+                </div>
+            </div>
+
+            <!-- Save Options Screen -->
+            <div id="saveOptionsScreen" class="game-screen">
+                <div class="story-text">
+                    <h3>💾 Gestion des Sauvegardes</h3>
+                    <p>Votre partie est automatiquement sauvegardée dans votre navigateur. Utilisez les options ci-dessous pour gérer vos sauvegardes :</p>
+                    
+                    <div class="shop-item" style="display: block; margin-top: 20px;">
+                        <h4 style="color: #DAA520;">📤 Exporter la Sauvegarde</h4>
+                        <p>Obtenez un code de sauvegarde que vous pouvez copier et utiliser sur n'importe quel appareil.</p>
+                        <button onclick="exportSave()" style="margin-top: 10px;">Générer le Code</button>
+                        <div id="exportResult" style="margin-top: 10px;"></div>
+                    </div>
+                    
+                    <div class="shop-item" style="display: block; margin-top: 20px;">
+                        <h4 style="color: #DAA520;">📥 Importer une Sauvegarde</h4>
+                        <p>Entrez un code de sauvegarde pour restaurer votre progression.</p>
+                        <input type="text" id="importCode" placeholder="Collez votre code ici" style="width: 100%; max-width: 100%;">
+                        <button onclick="importSave()" style="margin-top: 10px;">Restaurer</button>
+                        <div id="importResult" style="margin-top: 10px;"></div>
+                    </div>
+                    
+                    <div class="shop-item" style="display: block; margin-top: 20px;">
+                        <h4 style="color: #DAA520;">☁️ Sauvegarde Automatique</h4>
+                        <p>Statut: <span id="autoSaveStatus" style="color: #51cf66;">✓ Active</span></p>
+                        <p style="font-size: 0.9em; color: #999;">Les sauvegardes sont automatiquement enregistrées dans votre navigateur après chaque action.</p>
+                    </div>
+                </div>
+                <div class="game-actions">
+                    <button onclick="showStats()">🚪 Retour</button>
                 </div>
             </div>
 
@@ -378,7 +425,8 @@
         </div>
 
         <div class="game-footer">
-            Le Coeur du Donjon - Un jeu inspiré par Legend of the Red Dragon
+            <span>Le Coeur du Donjon - Un jeu inspiré par Legend of the Red Dragon</span>
+            <span class="save-indicator" id="saveIndicator">💾 Sauvegardé</span>
         </div>
     </div>
 
@@ -728,6 +776,97 @@
             `;
         }
 
+        // Show save options
+        function showSaveOptions() {
+            showScreen('saveOptionsScreen');
+            document.getElementById('exportResult').innerHTML = '';
+            document.getElementById('importResult').innerHTML = '';
+            document.getElementById('importCode').value = '';
+        }
+
+        // Export save
+        function exportSave() {
+            try {
+                const saveData = JSON.stringify(gameState);
+                const encoded = btoa(encodeURIComponent(saveData));
+                
+                const resultDiv = document.getElementById('exportResult');
+                resultDiv.innerHTML = `
+                    <div style="background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 5px; margin-top: 10px;">
+                        <p style="color: #51cf66; margin-bottom: 10px;">✓ Code généré avec succès !</p>
+                        <textarea readonly style="width: 100%; max-width: 100%; height: 100px; background: rgba(0, 0, 0, 0.7); color: #f0f0f0; border: 1px solid #8B4513; padding: 10px; font-family: 'Courier New', monospace; font-size: 0.8em; border-radius: 5px;">${encoded}</textarea>
+                        <button onclick="copySaveCode('${encoded}')" style="margin-top: 10px;">📋 Copier le Code</button>
+                    </div>
+                `;
+            } catch (e) {
+                document.getElementById('exportResult').innerHTML = `<p style="color: #ff6b6b;">❌ Erreur lors de l'export: ${e.message}</p>`;
+            }
+        }
+
+        // Copy save code to clipboard
+        function copySaveCode(code) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(code).then(() => {
+                    alert('Code copié dans le presse-papiers !');
+                }).catch(() => {
+                    fallbackCopy(code);
+                });
+            } else {
+                fallbackCopy(code);
+            }
+        }
+
+        // Fallback copy method
+        function fallbackCopy(text) {
+            const textarea = document.createElement('textarea');
+            textarea.value = text;
+            textarea.style.position = 'fixed';
+            textarea.style.opacity = '0';
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                alert('Code copié dans le presse-papiers !');
+            } catch (e) {
+                alert('Impossible de copier automatiquement. Veuillez copier le code manuellement.');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        // Import save
+        function importSave() {
+            const code = document.getElementById('importCode').value.trim();
+            const resultDiv = document.getElementById('importResult');
+            
+            if (!code) {
+                resultDiv.innerHTML = `<p style="color: #ff6b6b;">❌ Veuillez entrer un code de sauvegarde.</p>`;
+                return;
+            }
+            
+            try {
+                const decoded = decodeURIComponent(atob(code));
+                const loadedState = JSON.parse(decoded);
+                
+                // Validate the loaded state
+                if (!loadedState.player || !loadedState.player.name) {
+                    throw new Error('Code de sauvegarde invalide');
+                }
+                
+                // Restore the game state
+                gameState = loadedState;
+                saveGame();
+                updateUI();
+                
+                resultDiv.innerHTML = `<p style="color: #51cf66;">✓ Sauvegarde restaurée avec succès ! Bienvenue, ${gameState.player.name} !</p>`;
+                
+                setTimeout(() => {
+                    showScreen('mainScreen');
+                }, 2000);
+            } catch (e) {
+                resultDiv.innerHTML = `<p style="color: #ff6b6b;">❌ Code invalide ou corrompu. Veuillez vérifier et réessayer.</p>`;
+            }
+        }
+
         // Show main screen
         function showMain() {
             showScreen('mainScreen');
@@ -765,6 +904,18 @@
         // Save game
         function saveGame() {
             localStorage.setItem('lecoeurdudonjon_save', JSON.stringify(gameState));
+            showSaveIndicator();
+        }
+
+        // Show save indicator
+        function showSaveIndicator() {
+            const indicator = document.getElementById('saveIndicator');
+            if (indicator) {
+                indicator.classList.add('show');
+                setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 2000);
+            }
         }
 
         // Load game

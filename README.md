@@ -66,6 +66,19 @@ Achetez des améliorations et des potions :
 
 Le jeu sauvegarde automatiquement votre progression dans le navigateur (localStorage). Vous pouvez fermer la page et revenir plus tard pour continuer votre aventure.
 
+#### 💾 Système de Sauvegarde Multi-Appareils
+
+Le jeu propose maintenant un système de sauvegarde avancé :
+
+- **Sauvegarde Automatique** : Votre progression est automatiquement sauvegardée après chaque action
+- **Export/Import** : Générez un code de sauvegarde pour transférer votre progression sur un autre appareil
+- **Indicateur Visuel** : Une icône 💾 apparaît brièvement en bas de l'écran lors de chaque sauvegarde
+
+Pour accéder aux options de sauvegarde :
+1. Allez dans le menu "Voir Statistiques"
+2. Cliquez sur "Sauvegardes"
+3. Exportez votre code de sauvegarde ou importez-en un existant
+
 ## 🛠️ Technologie
 
 - **HTML5** : Structure du jeu
@@ -83,9 +96,20 @@ Le jeu sauvegarde automatiquement votre progression dans le navigateur (localSto
 ## 🚀 Déploiement
 
 Le jeu est entièrement côté client et peut être :
-- Hébergé sur GitHub Pages
+- Hébergé sur GitHub Pages (déploiement automatique configuré)
 - Déployé sur n'importe quel serveur web statique
 - Ouvert localement dans un navigateur
+
+### Hébergement sur GitHub Pages
+
+Le jeu est automatiquement déployé sur GitHub Pages à chaque push sur la branche `main`. Le workflow de déploiement est configuré dans `.github/workflows/deploy.yml`.
+
+Pour activer GitHub Pages sur votre propre fork :
+1. Allez dans les paramètres du dépôt
+2. Section "Pages" → Source : "GitHub Actions"
+3. Le site sera accessible à `https://[votre-nom-utilisateur].github.io/lecoeurdudonjon/`
+
+### Test Local
 
 Pour tester localement :
 ```bash
