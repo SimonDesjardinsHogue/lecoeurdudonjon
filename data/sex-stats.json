@@ -1,0 +1,20 @@
+{
+  "sex_stats": {
+    "male": {
+      "FOR": 10,
+      "DEX": 10,
+      "CON": 11,
+      "INT": 11,
+      "SAG": 9,
+      "CHA": 9
+    },
+    "female": {
+      "FOR": 9,
+      "DEX": 11,
+      "CON": 10,
+      "INT": 10,
+      "SAG": 10,
+      "CHA": 10
+    }
+  }
+}
