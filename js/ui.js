@@ -1,5 +1,5 @@
 // UI Management Module
-import { gameState } from './game-state.js';
+import { gameState, getStatModifier } from './game-state.js';
 import { getPlayerSkills, isSkillOnCooldown, getSkillCooldown } from './skills.js';
 
 // Show specific screen
@@ -28,13 +28,24 @@ export function updateUI() {
     document.getElementById('playerLevel').textContent = p.level;
     document.getElementById('playerGold').textContent = p.gold + ' 💰';
     document.getElementById('playerHealth').textContent = `${p.health}/${p.maxHealth}`;
-    document.getElementById('playerStrength').textContent = p.strength;
-    document.getElementById('playerDefense').textContent = p.defense;
-    document.getElementById('playerDexterity').textContent = p.dexterity;
-    document.getElementById('playerConstitution').textContent = p.constitution;
-    document.getElementById('playerIntelligence').textContent = p.intelligence;
-    document.getElementById('playerWisdom').textContent = p.wisdom;
-    document.getElementById('playerCharisma').textContent = p.charisma;
+    
+    // Display stats with modifiers
+    const strengthMod = getStatModifier(p.strength);
+    const defenseMod = getStatModifier(p.defense);
+    const dexterityMod = getStatModifier(p.dexterity);
+    const constitutionMod = getStatModifier(p.constitution);
+    const intelligenceMod = getStatModifier(p.intelligence);
+    const wisdomMod = getStatModifier(p.wisdom);
+    const charismaMod = getStatModifier(p.charisma);
+    
+    document.getElementById('playerStrength').textContent = `${p.strength} (${strengthMod >= 0 ? '+' : ''}${strengthMod})`;
+    document.getElementById('playerDefense').textContent = `${p.defense} (${defenseMod >= 0 ? '+' : ''}${defenseMod})`;
+    document.getElementById('playerDexterity').textContent = `${p.dexterity} (${dexterityMod >= 0 ? '+' : ''}${dexterityMod})`;
+    document.getElementById('playerConstitution').textContent = `${p.constitution} (${constitutionMod >= 0 ? '+' : ''}${constitutionMod})`;
+    document.getElementById('playerIntelligence').textContent = `${p.intelligence} (${intelligenceMod >= 0 ? '+' : ''}${intelligenceMod})`;
+    document.getElementById('playerWisdom').textContent = `${p.wisdom} (${wisdomMod >= 0 ? '+' : ''}${wisdomMod})`;
+    document.getElementById('playerCharisma').textContent = `${p.charisma} (${charismaMod >= 0 ? '+' : ''}${charismaMod})`;
+    
     document.getElementById('playerXP').textContent = `${p.xp}/${p.xpToLevel}`;
     document.getElementById('playerEnergy').textContent = `${p.energy}/${p.maxEnergy}`;
     

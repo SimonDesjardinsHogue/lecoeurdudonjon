@@ -1,5 +1,5 @@
 // Combat System Module
-import { gameState, enemies, bosses, legendaryItems, randomEvents, riddles, moralChoices } from './game-state.js';
+import { gameState, enemies, bosses, legendaryItems, randomEvents, riddles, moralChoices, getStatModifier } from './game-state.js';
 import { updateUI, updateEnemyUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame } from './save-load.js';
 import { checkLevelUp, meetNPC } from './game-logic.js';
@@ -280,7 +280,9 @@ export function attack() {
     }
     
     // Player attacks
-    const playerDamage = Math.max(1, p.strength - e.defense + Math.floor(Math.random() * 5));
+    const strengthMod = getStatModifier(p.strength);
+    const enemyDefenseMod = getStatModifier(e.defense);
+    const playerDamage = Math.max(1, p.strength + strengthMod - (e.defense + enemyDefenseMod) + Math.floor(Math.random() * 5));
     e.health -= playerDamage;
     addCombatLog(`Vous infligez ${playerDamage} dégâts au ${e.name} !`, 'damage');
     
@@ -364,6 +366,7 @@ export function enemyAttack() {
     }
     
     let defense = p.defense;
+    const playerDefenseMod = getStatModifier(p.defense);
     if (gameState.defending) {
         defense *= 2;
         gameState.defending = false;
@@ -397,8 +400,9 @@ export function enemyAttack() {
             case 'triple_attack':
                 // Hydra attacks three times
                 addCombatLog(`${e.name} attaque avec ses trois têtes !`, 'info');
+                const enemyStrengthMod = getStatModifier(e.strength);
                 for (let i = 0; i < 3; i++) {
-                    const damage = Math.max(1, Math.floor(e.strength / 2) - defense + Math.floor(Math.random() * 3));
+                    const damage = Math.max(1, Math.floor(e.strength / 2) + Math.floor(enemyStrengthMod / 2) - (defense + playerDefenseMod) + Math.floor(Math.random() * 3));
                     p.health -= damage;
                     addCombatLog(`Tête ${i + 1} inflige ${damage} dégâts !`, 'damage');
                     
@@ -420,7 +424,9 @@ export function enemyAttack() {
             case 'fire_burst':
                 // Demon ignores 50% of defense
                 const reducedDefense = Math.floor(defense * 0.5);
-                const fireDamage = Math.max(1, e.strength - reducedDefense + Math.floor(Math.random() * 8));
+                const reducedDefenseMod = Math.floor(playerDefenseMod * 0.5);
+                const enemyStrengthModFire = getStatModifier(e.strength);
+                const fireDamage = Math.max(1, e.strength + enemyStrengthModFire - (reducedDefense + reducedDefenseMod) + Math.floor(Math.random() * 8));
                 p.health -= fireDamage;
                 addCombatLog(`${e.name} lance une explosion de flammes ! ${fireDamage} dégâts !`, 'damage');
                 
@@ -440,7 +446,8 @@ export function enemyAttack() {
             
             case 'breath_weapon':
                 // Dragon breath massive damage
-                const breathDamage = Math.max(1, Math.floor(e.strength * 1.5) - defense + Math.floor(Math.random() * 10));
+                const enemyStrengthModBreath = getStatModifier(e.strength);
+                const breathDamage = Math.max(1, Math.floor(e.strength * 1.5) + Math.floor(enemyStrengthModBreath * 1.5) - (defense + playerDefenseMod) + Math.floor(Math.random() * 10));
                 p.health -= breathDamage;
                 addCombatLog(`${e.name} crache son souffle destructeur ! ${breathDamage} dégâts !`, 'damage');
                 
@@ -461,7 +468,8 @@ export function enemyAttack() {
     }
     
     // Normal attack
-    let enemyDamage = Math.max(1, e.strength - defense + Math.floor(Math.random() * 5));
+    const enemyStrengthMod = getStatModifier(e.strength);
+    let enemyDamage = Math.max(1, e.strength + enemyStrengthMod - (defense + playerDefenseMod) + Math.floor(Math.random() * 5));
     
     // Apply mana shield buff if active
     enemyDamage = applyShieldBuff(enemyDamage);
