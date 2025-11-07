@@ -3,6 +3,8 @@ import { gameState, enemies } from './game-state.js';
 import { updateUI, updateEnemyUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame } from './save-load.js';
 import { checkLevelUp, meetNPC } from './game-logic.js';
+import { audioManager } from './audio.js';
+import { particleSystem } from './particles.js';
 
 // Start exploring the dungeon
 export function explore() {
@@ -51,6 +53,13 @@ export function attack() {
     const p = gameState.player;
     const e = gameState.currentEnemy;
     
+    // Play attack sound and show particles
+    audioManager.playSound('attack');
+    const enemyInfoElement = document.getElementById('enemyInfo');
+    if (enemyInfoElement) {
+        particleSystem.createAttackEffect(enemyInfoElement);
+    }
+    
     // Player attacks
     const playerDamage = Math.max(1, p.strength - e.defense + Math.floor(Math.random() * 5));
     e.health -= playerDamage;
@@ -62,6 +71,12 @@ export function attack() {
         p.xp += e.xp;
         p.kills++;
         addCombatLog(`Victoire ! Vous gagnez ${e.gold} or et ${e.xp} XP !`, 'victory');
+        
+        // Play victory sound and show particles
+        audioManager.playSound('victory');
+        if (enemyInfoElement) {
+            particleSystem.createVictoryEffect(enemyInfoElement);
+        }
         
         checkLevelUp();
         
@@ -103,6 +118,13 @@ export function enemyAttack() {
     p.health -= enemyDamage;
     addCombatLog(`Le ${e.name} vous inflige ${enemyDamage} dégâts !`, 'damage');
     
+    // Play hit sound and show particles
+    audioManager.playSound('hit');
+    const playerStatsElement = document.getElementById('gameStats');
+    if (playerStatsElement) {
+        particleSystem.createHitEffect(playerStatsElement);
+    }
+    
     if (p.health <= 0) {
         // Defeat
         p.health = 0;
@@ -128,6 +150,13 @@ export function defend() {
     gameState.defending = true;
     addCombatLog('Vous prenez une position défensive !', 'info');
     
+    // Play defend sound and show particles
+    audioManager.playSound('defend');
+    const playerStatsElement = document.getElementById('gameStats');
+    if (playerStatsElement) {
+        particleSystem.createDefenseEffect(playerStatsElement);
+    }
+    
     setTimeout(() => {
         enemyAttack();
     }, 1000);
@@ -140,6 +169,10 @@ export function flee() {
     const fleeChance = Math.random();
     if (fleeChance > 0.5) {
         addCombatLog('Vous fuyez le combat !', 'info');
+        
+        // Play flee sound
+        audioManager.playSound('flee');
+        
         setTimeout(() => {
             gameState.inCombat = false;
             showScreen('mainScreen');

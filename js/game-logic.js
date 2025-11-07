@@ -3,6 +3,8 @@ import { gameState, shopItems, npcs } from './game-state.js';
 import { updateUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame, loadGame } from './save-load.js';
 import { characterClasses, applyCharacterClass } from './character-classes.js';
+import { audioManager } from './audio.js';
+import { particleSystem } from './particles.js';
 
 // Set up shop item effects
 export function initializeShopItems() {
@@ -111,7 +113,18 @@ export function startGame() {
 // Heal player
 export function healPlayer(amount) {
     const p = gameState.player;
+    const oldHealth = p.health;
     p.health = Math.min(p.maxHealth, p.health + amount);
+    
+    // Only play sound and particles if actually healed
+    if (p.health > oldHealth) {
+        audioManager.playSound('heal');
+        const healthElement = document.getElementById('playerHealth');
+        if (healthElement) {
+            particleSystem.createHealEffect(healthElement.parentElement);
+        }
+    }
+    
     saveGame();
     updateUI();
 }
@@ -187,6 +200,11 @@ export function checkLevelUp() {
         p.defense += 3;
         
         addCombatLog(`🎉 Niveau supérieur ! Vous êtes maintenant niveau ${p.level} !`, 'victory');
+        
+        // Play level up sound and show particles
+        audioManager.playSound('levelup');
+        particleSystem.createLevelUpEffect();
+        
         saveGame();
         updateUI();
     }
@@ -257,6 +275,10 @@ export function buyItem(index) {
     if (p.gold >= item.cost) {
         p.gold -= item.cost;
         item.effect();
+        
+        // Play purchase sound
+        audioManager.playSound('purchase');
+        
         saveGame();
         updateUI();
         alert(`Vous avez acheté ${item.name} !`);
