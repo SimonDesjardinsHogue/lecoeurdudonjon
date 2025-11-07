@@ -98,6 +98,7 @@ body {
     color: #DAA520;
     font-size: 0.8em;
     margin-bottom: 5px;
+    text-decoration: underline;
 }
 
 .stat-value {

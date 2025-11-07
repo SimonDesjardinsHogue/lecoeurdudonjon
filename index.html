@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#8B4513">
-    <meta name="description" content="Un conte médiéval et fantastique inspiré par Legend of the Red Dragon">
+    <meta name="description" content="Une quête légendaire de courage et d'honneur inspirée par Legend of the Red Dragon">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Coeur du Dragon">
@@ -16,7 +16,7 @@
     <div class="game-container">
         <div class="game-header">
             <h1>⚔️ Le Coeur du Dragon ⚔️</h1>
-            <div class="subtitle">Un conte médiéval et fantastique</div>
+            <div class="subtitle">Une quête légendaire de courage et d'honneur</div>
             <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="Activer/Désactiver le son">
                 🔊
             </button>
@@ -80,7 +80,7 @@
                 </div>
             </div>
 
-            <!-- Groupe 3: Progression (Niveau et Expérience) -->
+            <!-- Groupe 3: Progression (Niveau, Expérience et Or) -->
             <div class="stat-box stat-group-progression">
                 <div class="stat-label">Progression</div>
                 <div class="progression-stats">
@@ -95,13 +95,11 @@
                     <div class="xp-bar">
                         <div class="xp-fill" id="xpFill" style="width: 0%;"></div>
                     </div>
+                    <div class="progression-item" style="margin-top: 10px;">
+                        <span class="progression-label">Or</span>
+                        <span class="stat-value" id="playerGold">0 💰</span>
+                    </div>
                 </div>
-            </div>
-
-            <!-- Or (séparé) -->
-            <div class="stat-box">
-                <div class="stat-label">Or</div>
-                <div class="stat-value" id="playerGold">0 💰</div>
             </div>
 
             <!-- Caractéristiques -->

@@ -1,6 +1,6 @@
 # ⚔️ Le Coeur du Dragon ⚔️
 
-Un conte médiéval et fantastique inspiré par Legend of the Red Dragon.
+Une quête légendaire de courage et d'honneur inspirée par Legend of the Red Dragon.
 
 ![Game Screenshot](https://github.com/user-attachments/assets/589cfd57-3726-44ea-b8e6-5f2b63bcc5c9)
 
