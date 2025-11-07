@@ -2,6 +2,9 @@
 export const gameState = {
     player: {
         name: '',
+        class: 'guerrier',
+        className: 'Guerrier',
+        classIcon: '⚔️',
         level: 1,
         health: 100,
         maxHealth: 100,

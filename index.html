@@ -70,6 +70,43 @@
                     <label for="nameInput" style="display: block; margin-bottom: 10px;">Entrez votre nom :</label>
                     <input type="text" id="nameInput" placeholder="Nom du héros" maxlength="20">
                 </div>
+                <div style="margin: 20px 0;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: bold;">Choisissez votre classe :</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <label class="class-option">
+                            <input type="radio" name="characterClass" value="guerrier" checked>
+                            <span class="class-label">
+                                <strong>⚔️ Guerrier</strong><br>
+                                <small>PV: 120 | Force: 12 | Défense: 8</small><br>
+                                <small style="color: #999;">Robuste et résistant</small>
+                            </span>
+                        </label>
+                        <label class="class-option">
+                            <input type="radio" name="characterClass" value="magicien">
+                            <span class="class-label">
+                                <strong>🧙 Magicien</strong><br>
+                                <small>PV: 80 | Force: 15 | Défense: 3</small><br>
+                                <small style="color: #999;">Puissant mais fragile</small>
+                            </span>
+                        </label>
+                        <label class="class-option">
+                            <input type="radio" name="characterClass" value="archer">
+                            <span class="class-label">
+                                <strong>🏹 Archer</strong><br>
+                                <small>PV: 100 | Force: 13 | Défense: 5</small><br>
+                                <small style="color: #999;">Équilibré et précis</small>
+                            </span>
+                        </label>
+                        <label class="class-option">
+                            <input type="radio" name="characterClass" value="rogue">
+                            <span class="class-label">
+                                <strong>🗡️ Rogue</strong><br>
+                                <small>PV: 90 | Force: 14 | Défense: 4</small><br>
+                                <small style="color: #999;">Agile et furtif</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
                 <div class="game-actions">
                     <button onclick="startGame()">🗡️ Commencer l'Aventure</button>
                     <button onclick="restoreSaveFromStart()" id="restoreSaveBtn" style="display: none;">📥 Restaurer une Partie</button>
