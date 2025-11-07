@@ -80,7 +80,7 @@ body {
 
 .game-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 10px;
     padding: 15px;
     background: rgba(139, 69, 19, 0.2);
@@ -399,6 +399,121 @@ input[type="text"]:focus {
     grid-column: span 1;
 }
 
+/* Character Info Group Styling */
+.stat-group-character {
+    grid-column: span 1;
+}
+
+.character-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 8px;
+}
+
+.char-info-line {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 3px 0;
+}
+
+.char-info-label {
+    color: #DAA520;
+    font-size: 0.85em;
+}
+
+/* Combat Stats Group Styling */
+.stat-group-combat {
+    grid-column: span 1;
+}
+
+.combat-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.combat-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.combat-icon {
+    font-size: 2em;
+    flex-shrink: 0;
+    width: 40px;
+    text-align: center;
+}
+
+.combat-stat-content {
+    flex: 1;
+}
+
+.combat-stat-label {
+    color: #DAA520;
+    font-size: 0.75em;
+    margin-bottom: 3px;
+}
+
+/* Progression Group Styling */
+.stat-group-progression {
+    grid-column: span 1;
+}
+
+.progression-stats {
+    margin-top: 8px;
+}
+
+.progression-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.progression-label {
+    color: #DAA520;
+    font-size: 0.85em;
+}
+
+/* Game Actions Grid Layout */
+.game-actions-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.actions-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.actions-column-title {
+    font-weight: bold;
+    color: #DAA520;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+    text-align: center;
+    padding: 8px;
+    background: rgba(139, 69, 19, 0.3);
+    border-radius: 5px;
+    border: 1px solid #8B4513;
+}
+
+.actions-column button {
+    min-width: auto;
+}
+
+/* Characteristics Group Styling */
+.characteristics-group {
+    grid-column: span 1;
+}
+
 .characteristics-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -547,6 +662,22 @@ input[type="text"]:focus {
 
     .game-actions {
         gap: 8px;
+    }
+
+    /* Game actions grid for mobile */
+    .game-actions-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .actions-column-title {
+        font-size: 1em;
+    }
+
+    /* Combat stats on mobile */
+    .combat-icon {
+        font-size: 1.5em;
+        width: 30px;
     }
 
     /* Class selection on mobile */
