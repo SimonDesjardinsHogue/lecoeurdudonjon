@@ -27,19 +27,11 @@
                 <div class="stat-value" id="playerGold">0 💰</div>
             </div>
             <div class="stat-box">
-                <div class="stat-label">Santé</div>
+                <div class="stat-label">Points de vie</div>
                 <div class="stat-value" id="playerHealth">100/100</div>
                 <div class="health-bar">
                     <div class="health-fill" id="healthFill" style="width: 100%;"></div>
                 </div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Force</div>
-                <div class="stat-value" id="playerStrength">10</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-label">Défense</div>
-                <div class="stat-value" id="playerDefense">5</div>
             </div>
             <div class="stat-box">
                 <div class="stat-label">Énergie</div>
@@ -54,6 +46,39 @@
                 <div class="xp-bar">
                     <div class="xp-fill" id="xpFill" style="width: 0%;"></div>
                 </div>
+            </div>
+            <div class="stat-box characteristics-group">
+                <div class="stat-label">Caractéristiques</div>
+                <div class="characteristics-grid">
+                    <div class="characteristic">
+                        <span class="char-label">FOR</span>
+                        <span class="char-value" id="playerStrength">10</span>
+                    </div>
+                    <div class="characteristic">
+                        <span class="char-label">DEX</span>
+                        <span class="char-value" id="playerDexterity">10</span>
+                    </div>
+                    <div class="characteristic">
+                        <span class="char-label">CON</span>
+                        <span class="char-value" id="playerConstitution">10</span>
+                    </div>
+                    <div class="characteristic">
+                        <span class="char-label">INT</span>
+                        <span class="char-value" id="playerIntelligence">10</span>
+                    </div>
+                    <div class="characteristic">
+                        <span class="char-label">SAG</span>
+                        <span class="char-value" id="playerWisdom">10</span>
+                    </div>
+                    <div class="characteristic">
+                        <span class="char-label">CHA</span>
+                        <span class="char-value" id="playerCharisma">10</span>
+                    </div>
+                </div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">Classe d'armure</div>
+                <div class="stat-value" id="playerDefense">5</div>
             </div>
         </div>
 
@@ -77,7 +102,7 @@
                             <input type="radio" name="characterClass" value="guerrier" checked>
                             <span class="class-label">
                                 <strong>⚔️ Guerrier</strong><br>
-                                <small>PV: 120 | Force: 12 | Défense: 8</small><br>
+                                <small>PV: 120 | FOR: 12 | CA: 8</small><br>
                                 <small style="color: #999;">Robuste et résistant</small>
                             </span>
                         </label>
@@ -85,7 +110,7 @@
                             <input type="radio" name="characterClass" value="magicien">
                             <span class="class-label">
                                 <strong>🧙 Magicien</strong><br>
-                                <small>PV: 80 | Force: 15 | Défense: 3</small><br>
+                                <small>PV: 80 | FOR: 15 | CA: 3</small><br>
                                 <small style="color: #999;">Puissant mais fragile</small>
                             </span>
                         </label>
@@ -93,7 +118,7 @@
                             <input type="radio" name="characterClass" value="archer">
                             <span class="class-label">
                                 <strong>🏹 Archer</strong><br>
-                                <small>PV: 100 | Force: 13 | Défense: 5</small><br>
+                                <small>PV: 100 | FOR: 13 | CA: 5</small><br>
                                 <small style="color: #999;">Équilibré et précis</small>
                             </span>
                         </label>
@@ -101,7 +126,7 @@
                             <input type="radio" name="characterClass" value="rogue">
                             <span class="class-label">
                                 <strong>🗡️ Rogue</strong><br>
-                                <small>PV: 90 | Force: 14 | Défense: 4</small><br>
+                                <small>PV: 90 | FOR: 14 | CA: 4</small><br>
                                 <small style="color: #999;">Agile et furtif</small>
                             </span>
                         </label>

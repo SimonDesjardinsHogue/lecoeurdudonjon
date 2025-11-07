@@ -4,10 +4,15 @@ export const characterClasses = {
     guerrier: {
         name: 'Guerrier',
         icon: '⚔️',
-        description: 'Un combattant robuste avec une grande santé et défense',
+        description: 'Un combattant robuste avec beaucoup de points de vie et une bonne classe d\'armure',
         maxHealth: 120,
         strength: 12,
         defense: 8,
+        dexterity: 10,
+        constitution: 14,
+        intelligence: 8,
+        wisdom: 10,
+        charisma: 10,
         maxEnergy: 100
     },
     magicien: {
@@ -17,6 +22,11 @@ export const characterClasses = {
         maxHealth: 80,
         strength: 15,
         defense: 3,
+        dexterity: 10,
+        constitution: 8,
+        intelligence: 16,
+        wisdom: 14,
+        charisma: 12,
         maxEnergy: 100
     },
     archer: {
@@ -26,15 +36,25 @@ export const characterClasses = {
         maxHealth: 100,
         strength: 13,
         defense: 5,
+        dexterity: 16,
+        constitution: 12,
+        intelligence: 10,
+        wisdom: 12,
+        charisma: 10,
         maxEnergy: 100
     },
     rogue: {
         name: 'Rogue',
         icon: '🗡️',
-        description: 'Un assassin agile avec une force élevée mais peu de santé',
+        description: 'Un assassin agile avec une force élevée mais peu de points de vie',
         maxHealth: 90,
         strength: 14,
         defense: 4,
+        dexterity: 16,
+        constitution: 10,
+        intelligence: 12,
+        wisdom: 10,
+        charisma: 14,
         maxEnergy: 100
     }
 };
@@ -54,6 +74,11 @@ export function applyCharacterClass(player, classKey) {
     player.health = charClass.maxHealth;
     player.strength = charClass.strength;
     player.defense = charClass.defense;
+    player.dexterity = charClass.dexterity;
+    player.constitution = charClass.constitution;
+    player.intelligence = charClass.intelligence;
+    player.wisdom = charClass.wisdom;
+    player.charisma = charClass.charisma;
     player.maxEnergy = charClass.maxEnergy;
     player.energy = charClass.maxEnergy;
 }

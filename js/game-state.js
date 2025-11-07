@@ -10,6 +10,11 @@ export const gameState = {
         maxHealth: 100,
         strength: 10,
         defense: 5,
+        dexterity: 10,
+        constitution: 10,
+        intelligence: 10,
+        wisdom: 10,
+        charisma: 10,
         gold: 50,
         xp: 0,
         xpToLevel: 100,
@@ -65,8 +70,8 @@ export const shopItems = [
     // Equipment (weapons and armor)
     { name: 'Épée en Acier', icon: '⚔️', description: '+5 Force', cost: 100, category: 'damage', type: 'equipment', effect: null },
     { name: 'Épée Enchantée', icon: '🗡️', description: '+10 Force', cost: 250, category: 'damage', type: 'equipment', effect: null },
-    { name: 'Armure de Cuir', icon: '🛡️', description: '+3 Défense', cost: 80, category: 'equipment', type: 'equipment', effect: null },
-    { name: 'Bouclier de Fer', icon: '🛡️', description: '+5 Défense', cost: 200, category: 'equipment', type: 'equipment', effect: null }
+    { name: 'Armure de Cuir', icon: '🛡️', description: '+3 Classe d\'armure', cost: 80, category: 'equipment', type: 'equipment', effect: null },
+    { name: 'Bouclier de Fer', icon: '🛡️', description: '+5 Classe d\'armure', cost: 200, category: 'equipment', type: 'equipment', effect: null }
 ];
 
 // NPCs
@@ -98,7 +103,7 @@ export const npcs = [
     { 
         name: 'Vieux Guerrier',
         icon: '🛡️',
-        dialogue: 'La défense est tout aussi importante que l\'attaque. N\'oublie jamais cela !',
+        dialogue: 'La classe d\'armure est tout aussi importante que l\'attaque. N\'oublie jamais cela !',
         reward: null
     }
 ];

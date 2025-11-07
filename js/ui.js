@@ -24,6 +24,11 @@ export function updateUI() {
     document.getElementById('playerHealth').textContent = `${p.health}/${p.maxHealth}`;
     document.getElementById('playerStrength').textContent = p.strength;
     document.getElementById('playerDefense').textContent = p.defense;
+    document.getElementById('playerDexterity').textContent = p.dexterity;
+    document.getElementById('playerConstitution').textContent = p.constitution;
+    document.getElementById('playerIntelligence').textContent = p.intelligence;
+    document.getElementById('playerWisdom').textContent = p.wisdom;
+    document.getElementById('playerCharisma').textContent = p.charisma;
     document.getElementById('playerXP').textContent = `${p.xp}/${p.xpToLevel}`;
     document.getElementById('playerEnergy').textContent = `${p.energy}/${p.maxEnergy}`;
     

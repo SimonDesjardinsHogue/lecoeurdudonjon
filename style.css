@@ -299,3 +299,38 @@ input[type="text"]:focus {
     display: block;
     margin-bottom: 5px;
 }
+
+/* Characteristics Group Styling */
+.characteristics-group {
+    grid-column: span 1;
+}
+
+.characteristics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.characteristic {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px;
+    border-radius: 3px;
+    border: 1px solid rgba(139, 69, 19, 0.5);
+}
+
+.char-label {
+    font-size: 0.7em;
+    color: #DAA520;
+    font-weight: bold;
+}
+
+.char-value {
+    font-size: 1em;
+    font-weight: bold;
+    color: #f0f0f0;
+}
+

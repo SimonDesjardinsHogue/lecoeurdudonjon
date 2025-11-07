@@ -166,7 +166,7 @@ export function rest() {
         };
         const next6AMString = next6AM.toLocaleString('fr-FR', options);
         
-        alert(`Vous dormez à l'auberge jusqu'à demain 6h00 du matin (heure de Toronto). Votre santé est restaurée ! Vous pourrez reprendre l'aventure à ${next6AMString}. (-20 or)`);
+        alert(`Vous dormez à l'auberge jusqu'à demain 6h00 du matin (heure de Toronto). Vos points de vie sont restaurés ! Vous pourrez reprendre l'aventure à ${next6AMString}. (-20 or)`);
     } else {
         alert('Vous n\'avez pas assez d\'or pour dormir à l\'auberge ! (Coût: 20 or)');
     }
@@ -290,10 +290,15 @@ export function showStats() {
     container.appendChild(createStatParagraph('Nom', p.name));
     container.appendChild(createStatParagraph('Classe', `${p.classIcon} ${p.className}`));
     container.appendChild(createStatParagraph('Niveau', p.level));
-    container.appendChild(createStatParagraph('Santé', `${p.health}/${p.maxHealth}`));
+    container.appendChild(createStatParagraph('Points de vie', `${p.health}/${p.maxHealth}`));
     container.appendChild(createStatParagraph('Énergie', `${p.energy}/${p.maxEnergy}`));
     container.appendChild(createStatParagraph('Force', p.strength));
-    container.appendChild(createStatParagraph('Défense', p.defense));
+    container.appendChild(createStatParagraph('Dextérité', p.dexterity));
+    container.appendChild(createStatParagraph('Constitution', p.constitution));
+    container.appendChild(createStatParagraph('Intelligence', p.intelligence));
+    container.appendChild(createStatParagraph('Sagesse', p.wisdom));
+    container.appendChild(createStatParagraph('Charisme', p.charisma));
+    container.appendChild(createStatParagraph('Classe d\'armure', p.defense));
     container.appendChild(createStatParagraph('Or', p.gold));
     container.appendChild(createStatParagraph('Expérience', `${p.xp}/${p.xpToLevel}`));
     container.appendChild(createStatParagraph('Ennemis vaincus', p.kills));
