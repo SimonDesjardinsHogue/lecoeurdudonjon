@@ -296,7 +296,14 @@
                 <div class="stat-label">Défense</div>
                 <div class="stat-value" id="playerDefense">5</div>
             </div>
-            <div class="stat-box" style="grid-column: span 2;">
+            <div class="stat-box">
+                <div class="stat-label">Énergie</div>
+                <div class="stat-value" id="playerEnergy">100/100</div>
+                <div class="health-bar">
+                    <div class="health-fill" id="energyFill" style="width: 100%; background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);"></div>
+                </div>
+            </div>
+            <div class="stat-box">
                 <div class="stat-label">Expérience</div>
                 <div class="stat-value" id="playerXP">0/100</div>
                 <div class="xp-bar">
@@ -331,7 +338,7 @@
                 <div class="game-actions">
                     <button onclick="explore()">🗺️ Explorer le Donjon</button>
                     <button onclick="showShop()">🏪 Visiter le Marchand</button>
-                    <button onclick="rest()">🛌 Se Reposer</button>
+                    <button onclick="rest()">🛌 Dormir à l'Auberge</button>
                     <button onclick="showStats()">📊 Voir Statistiques</button>
                 </div>
             </div>
@@ -444,7 +451,10 @@
                 xp: 0,
                 xpToLevel: 100,
                 kills: 0,
-                gamesPlayed: 0
+                gamesPlayed: 0,
+                energy: 100,
+                maxEnergy: 100,
+                lastSleepTime: null
             },
             currentEnemy: null,
             inCombat: false,
@@ -471,9 +481,57 @@
             { name: 'Bouclier de Fer', description: '+5 Défense', cost: 200, effect: () => { gameState.player.defense += 5; } }
         ];
 
+        // Check energy regeneration (6:00 AM Toronto time)
+        function checkEnergyRegeneration() {
+            const p = gameState.player;
+            
+            // If player hasn't slept yet, return
+            if (!p.lastSleepTime) {
+                return;
+            }
+            
+            // Get current time in Toronto timezone (EST/EDT - UTC-5 or UTC-4)
+            const now = new Date();
+            const torontoTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+            const lastSleep = new Date(p.lastSleepTime);
+            
+            // Calculate the next 6 AM after last sleep
+            const nextRegeneration = new Date(lastSleep);
+            nextRegeneration.setHours(6, 0, 0, 0);
+            
+            // If last sleep was after 6 AM, add one day
+            if (lastSleep.getHours() >= 6) {
+                nextRegeneration.setDate(nextRegeneration.getDate() + 1);
+            }
+            
+            // Check if current time is past the regeneration time
+            if (torontoTime >= nextRegeneration) {
+                // Regenerate energy to full
+                p.energy = p.maxEnergy;
+                p.lastSleepTime = torontoTime.toISOString();
+                saveGame();
+                updateUI();
+            }
+        }
+        
+        // Consume energy for an action
+        function consumeEnergy(amount) {
+            const p = gameState.player;
+            p.energy = Math.max(0, p.energy - amount);
+            saveGame();
+            updateUI();
+            return p.energy >= 0;
+        }
+        
+        // Check if player has enough energy
+        function hasEnoughEnergy(amount) {
+            return gameState.player.energy >= amount;
+        }
+
         // Initialize game
         function init() {
             loadGame();
+            checkEnergyRegeneration();
             updateUI();
         }
 
@@ -516,6 +574,7 @@
             document.getElementById('playerStrength').textContent = p.strength;
             document.getElementById('playerDefense').textContent = p.defense;
             document.getElementById('playerXP').textContent = `${p.xp}/${p.xpToLevel}`;
+            document.getElementById('playerEnergy').textContent = `${p.energy}/${p.maxEnergy}`;
             
             // Update health bar
             const healthPercent = (p.health / p.maxHealth) * 100;
@@ -524,10 +583,23 @@
             // Update XP bar
             const xpPercent = (p.xp / p.xpToLevel) * 100;
             document.getElementById('xpFill').style.width = xpPercent + '%';
+            
+            // Update energy bar
+            const energyPercent = (p.energy / p.maxEnergy) * 100;
+            document.getElementById('energyFill').style.width = energyPercent + '%';
         }
 
         // Explore dungeon
         function explore() {
+            // Check if player has enough energy to explore
+            if (!hasEnoughEnergy(10)) {
+                alert('Vous êtes trop fatigué pour explorer le donjon ! Allez dormir à l\'auberge pour récupérer votre énergie.');
+                return;
+            }
+            
+            // Consume energy for exploring
+            consumeEnergy(10);
+            
             // Random encounter - select enemy based on player level but ensure we don't exceed array bounds
             const maxEnemyIndex = Math.min(enemies.length - 1, gameState.player.level);
             const enemyTemplate = enemies[Math.floor(Math.random() * (maxEnemyIndex + 1))];
@@ -694,7 +766,7 @@
             }
         }
 
-        // Rest
+        // Rest (now includes sleeping and energy restoration)
         function rest() {
             const p = gameState.player;
             const cost = 20;
@@ -702,11 +774,18 @@
             if (p.gold >= cost) {
                 p.gold -= cost;
                 p.health = p.maxHealth;
+                p.energy = p.maxEnergy;
+                
+                // Set last sleep time to current Toronto time
+                const now = new Date();
+                const torontoTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+                p.lastSleepTime = torontoTime.toISOString();
+                
                 saveGame();
                 updateUI();
-                alert('Vous vous reposez à l\'auberge. Votre santé est complètement restaurée ! (-20 or)');
+                alert('Vous dormez à l\'auberge jusqu\'au lendemain à 6h00 du matin. Votre santé et votre énergie sont complètement restaurées ! (-20 or)');
             } else {
-                alert('Vous n\'avez pas assez d\'or pour vous reposer à l\'auberge ! (Coût: 20 or)');
+                alert('Vous n\'avez pas assez d\'or pour dormir à l\'auberge ! (Coût: 20 or)');
             }
         }
 
@@ -766,6 +845,7 @@
                     <p><strong>Nom:</strong> ${p.name}</p>
                     <p><strong>Niveau:</strong> ${p.level}</p>
                     <p><strong>Santé:</strong> ${p.health}/${p.maxHealth}</p>
+                    <p><strong>Énergie:</strong> ${p.energy}/${p.maxEnergy}</p>
                     <p><strong>Force:</strong> ${p.strength}</p>
                     <p><strong>Défense:</strong> ${p.defense}</p>
                     <p><strong>Or:</strong> ${p.gold}</p>
@@ -894,6 +974,17 @@
                     }
                 }
                 
+                // Add energy properties if they don't exist (for backwards compatibility)
+                if (!('energy' in loadedState.player)) {
+                    loadedState.player.energy = 100;
+                }
+                if (!('maxEnergy' in loadedState.player)) {
+                    loadedState.player.maxEnergy = 100;
+                }
+                if (!('lastSleepTime' in loadedState.player)) {
+                    loadedState.player.lastSleepTime = null;
+                }
+                
                 // Validate property types for all player properties
                 if (typeof loadedState.player.name !== 'string' || 
                     typeof loadedState.player.level !== 'number' ||
@@ -905,7 +996,9 @@
                     typeof loadedState.player.xp !== 'number' ||
                     typeof loadedState.player.xpToLevel !== 'number' ||
                     typeof loadedState.player.kills !== 'number' ||
-                    typeof loadedState.player.gamesPlayed !== 'number') {
+                    typeof loadedState.player.gamesPlayed !== 'number' ||
+                    typeof loadedState.player.energy !== 'number' ||
+                    typeof loadedState.player.maxEnergy !== 'number') {
                     throw new Error('Invalid player data types');
                 }
                 
@@ -974,7 +1067,10 @@
                         xp: 0,
                         xpToLevel: 100,
                         kills: 0,
-                        gamesPlayed: gamesPlayed
+                        gamesPlayed: gamesPlayed,
+                        energy: 100,
+                        maxEnergy: 100,
+                        lastSleepTime: null
                     },
                     currentEnemy: null,
                     inCombat: false,
@@ -1010,6 +1106,17 @@
             if (saved) {
                 try {
                     gameState = JSON.parse(saved);
+                    
+                    // Add energy properties if they don't exist (for backwards compatibility)
+                    if (!gameState.player.hasOwnProperty('energy')) {
+                        gameState.player.energy = 100;
+                    }
+                    if (!gameState.player.hasOwnProperty('maxEnergy')) {
+                        gameState.player.maxEnergy = 100;
+                    }
+                    if (!gameState.player.hasOwnProperty('lastSleepTime')) {
+                        gameState.player.lastSleepTime = null;
+                    }
                 } catch (e) {
                     console.error('Error loading save:', e);
                 }
