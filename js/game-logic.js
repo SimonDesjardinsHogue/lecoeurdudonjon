@@ -6,6 +6,11 @@ import { characterClasses, applyCharacterClass } from './character-classes.js';
 import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 
+// Helper function to get class display name
+function getClassDisplayName(classKey) {
+    return characterClasses[classKey]?.name || classKey;
+}
+
 // Set up shop item effects
 export function initializeShopItems() {
     // Healing potions (8 tiers)
@@ -336,15 +341,13 @@ export function showShop(filterCategory = 'all') {
             let classInfo = '';
             let isDisabled = false;
             if (item.classRestriction) {
-                const className = item.classRestriction === 'guerrier' ? 'Guerrier' : 
-                                 item.classRestriction === 'archer' ? 'Archer' : 
-                                 item.classRestriction === 'magicien' ? 'Magicien' : 'Rogue';
+                const className = getClassDisplayName(item.classRestriction);
                 classInfo = `<br><small style="color: #DAA520;">Pour: ${className}</small>`;
                 
                 // Disable if player is not this class
                 if (item.classRestriction !== gameState.player.class) {
                     isDisabled = true;
-                    itemDiv.style.opacity = '0.5';
+                    itemDiv.classList.add('shop-item-disabled');
                 }
             }
             
@@ -354,7 +357,7 @@ export function showShop(filterCategory = 'all') {
                     <small>${item.description}</small>${classInfo}
                 </div>
                 <div class="shop-item-price">${item.cost} 💰</div>
-                <button onclick="window.buyItem(${originalIndex})" ${isDisabled ? 'disabled style="cursor: not-allowed; opacity: 0.6;"' : ''}>Acheter</button>
+                <button onclick="window.buyItem(${originalIndex})" ${isDisabled ? 'disabled' : ''}>Acheter</button>
             `;
             shopDiv.appendChild(itemDiv);
         });
@@ -368,7 +371,8 @@ export function buyItem(index) {
     
     // Check class restriction for weapons
     if (item.classRestriction && item.classRestriction !== p.class) {
-        alert(`Cet objet est réservé à la classe ${item.classRestriction === 'guerrier' ? 'Guerrier' : item.classRestriction === 'archer' ? 'Archer' : item.classRestriction === 'magicien' ? 'Magicien' : 'Rogue'} !`);
+        const className = getClassDisplayName(item.classRestriction);
+        alert(`Cet objet est réservé à la classe ${className} !`);
         return;
     }
     

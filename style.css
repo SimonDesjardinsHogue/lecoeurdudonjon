@@ -235,6 +235,15 @@ button:disabled {
     align-items: center;
 }
 
+.shop-item-disabled {
+    opacity: 0.5;
+}
+
+.shop-item-disabled button {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
 .shop-item-info {
     flex: 1;
 }
