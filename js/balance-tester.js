@@ -24,7 +24,7 @@ function createSimulatedPlayer(classKey, raceKey = 'humain') {
         intelligence: 10,
         wisdom: 10,
         charisma: 10,
-        gold: 50,
+        gold: 75,
         xp: 0,
         xpToLevel: 100,
         kills: 0,

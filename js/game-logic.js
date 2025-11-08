@@ -593,7 +593,7 @@ export function resetGame() {
         gameState.player.intelligence = 10;
         gameState.player.wisdom = 10;
         gameState.player.charisma = 10;
-        gameState.player.gold = 50;
+        gameState.player.gold = 75;
         gameState.player.xp = 0;
         gameState.player.xpToLevel = 100;
         gameState.player.kills = 0;
