@@ -112,21 +112,32 @@ Pour accéder aux options de sauvegarde :
 
 ## 🛠️ Technologie
 
-Le jeu utilise une **architecture modulaire** basée sur des modules ES6 JavaScript pour une meilleure maintenabilité et évolutivité.
+Le jeu utilise une **architecture modulaire améliorée** basée sur des modules ES6 JavaScript pour une meilleure maintenabilité et évolutivité.
 
 - **HTML5** : Structure du jeu
 - **CSS3** : Style médiéval/fantastique avec gradients et animations
-- **JavaScript ES6 Modules** : Architecture modulaire
-  - `game-state.js` : État centralisé du jeu
-  - `game-logic.js` : Logique métier principale
-  - `combat.js` : Système de combat
-  - `ui.js` : Gestion de l'interface
-  - `save-load.js` : Persistance des données
-  - `character-classes.js` : Système de classes
-  - `audio.js` : Gestion audio
-  - `particles.js` : Effets visuels
-  - `keyboard-handler.js` : Raccourcis clavier
+- **JavaScript ES6 Modules** : Architecture modulaire organisée
+  - `js/data/` : Données du jeu (ennemis, items, NPCs, événements)
+    - `enemies.js` : Ennemis et boss
+    - `shop-items.js` : Items de boutique
+    - `npcs.js` : Personnages non-joueurs
+    - `metals.js` : Métaux précieux
+    - `events.js` : Événements aléatoires
+    - `game-constants.js` : Constantes et fonctions utilitaires
+  - `js/core/` : Modules centraux
+    - `game-state.js` : État centralisé du jeu
+  - `js/` : Logique et systèmes
+    - `game-logic.js` : Logique métier principale
+    - `combat.js` : Système de combat
+    - `ui.js` : Gestion de l'interface
+    - `save-load.js` : Persistance des données
+    - `character-classes.js` : Système de classes
+    - `audio.js` : Gestion audio
+    - `particles.js` : Effets visuels
+    - `keyboard-handler.js` : Raccourcis clavier
 - **LocalStorage** : Sauvegarde automatique
+
+📖 Pour plus de détails sur l'architecture, consultez [js/README.md](js/README.md)
 
 ### 👨‍💻 Développement et Contribution
 
