@@ -92,6 +92,12 @@ export function updateEnemyUI() {
         enemyArmorElement.textContent = `CA: ${e.defense} (${defenseMod >= 0 ? '+' : ''}${defenseMod})`;
     }
     
+    // Remove fade-out class from previous combat to ensure health bar is visible
+    const enemyInfoElement = document.getElementById('enemyInfo');
+    if (enemyInfoElement) {
+        enemyInfoElement.classList.remove('fade-out');
+    }
+    
     // Ensure health bar is always visible by checking element exists and health values are valid
     const healthFillElement = document.getElementById('enemyHealthFill');
     if (healthFillElement && e.maxHealth > 0) {
