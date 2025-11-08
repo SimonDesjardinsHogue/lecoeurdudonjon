@@ -187,12 +187,15 @@ export function updateCombatInventoryUI() {
     if (!container) return;
     
     const p = gameState.player;
-    if (!p.inventory || p.inventory.length === 0) {
-        container.innerHTML = '';
+    const currentSlots = p.inventory ? p.inventory.length : 0;
+    const maxSlots = 4;
+    
+    if (currentSlots === 0) {
+        container.innerHTML = `<div style="margin-bottom: 10px; color: #DAA520; font-weight: bold;">🎒 Sac (0/4):</div><div style="color: #888; font-style: italic; font-size: 0.9em;">Aucun objet</div>`;
         return;
     }
     
-    container.innerHTML = '<div style="margin-bottom: 10px; color: #DAA520; font-weight: bold;">🎒 Sac (Potions):</div>';
+    container.innerHTML = `<div style="margin-bottom: 10px; color: #DAA520; font-weight: bold;">🎒 Sac (${currentSlots}/4):</div>`;
     const inventoryDiv = document.createElement('div');
     inventoryDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 5px;';
     

@@ -268,8 +268,10 @@
                     </div>
                 </div>
                 <div class="combat-log" id="combatLog"></div>
-                <div id="skillsContainer" style="margin: 15px 0;"></div>
-                <div id="combatInventoryContainer" style="margin: 15px 0;"></div>
+                <div style="display: flex; gap: 15px; margin: 15px 0; flex-wrap: wrap;">
+                    <div id="skillsContainer" style="flex: 1; min-width: 200px;"></div>
+                    <div id="combatInventoryContainer" style="flex: 1; min-width: 200px;"></div>
+                </div>
                 <div class="game-actions">
                     <button onclick="attack()">⚔️ Attaquer (A)</button>
                     <button onclick="defend()">🛡️ Défendre (D)</button>
