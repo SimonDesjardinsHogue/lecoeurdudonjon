@@ -385,6 +385,16 @@ export function enemyAttack() {
         return;
     }
     
+    // Check for natural dodge based on dexterity
+    const dexterityMod = getStatModifier(p.dexterity);
+    // Base dodge chance: 5% + (dexterity modifier * 2%)
+    const baseDodgeChance = 0.05 + (dexterityMod * 0.02);
+    if (Math.random() < baseDodgeChance) {
+        addCombatLog(`⚡ Vous esquivez l'attaque avec agilité !`, 'special');
+        updateUI();
+        return;
+    }
+    
     let defense = p.defense;
     const playerDefenseMod = getStatModifier(p.defense);
     if (gameState.defending) {
@@ -575,8 +585,14 @@ export function defend() {
 export function flee() {
     if (!gameState.inCombat) return;
     
-    const fleeChance = Math.random();
-    if (fleeChance > 0.5) {
+    const p = gameState.player;
+    
+    // Charisma improves flee chance: base 50% + (charisma modifier * 5%)
+    const charismaMod = getStatModifier(p.charisma);
+    const baseFleeChance = 0.5 + (charismaMod * 0.05);
+    const fleeChance = Math.min(0.9, Math.max(0.1, baseFleeChance)); // Cap between 10% and 90%
+    
+    if (Math.random() < fleeChance) {
         addCombatLog('Vous fuyez le combat !', 'info');
         
         // Track successful escape for achievements

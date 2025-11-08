@@ -1,5 +1,5 @@
 // Game Logic Module
-import { gameState, shopItems, rareItems, npcs, rarities, generateRandomStats, statNames, hasRandomStats, metals } from './game-state.js';
+import { gameState, shopItems, rareItems, npcs, rarities, generateRandomStats, statNames, hasRandomStats, metals, getStatModifier } from './game-state.js';
 import { updateUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame, loadGame } from './save-load.js';
 import { characterClasses, applyCharacterClass } from './character-classes.js';
@@ -227,7 +227,13 @@ export function startGame() {
 export function healPlayer(amount) {
     const p = gameState.player;
     const oldHealth = p.health;
-    p.health = Math.min(p.maxHealth, p.health + amount);
+    
+    // Wisdom increases healing effectiveness: +5% per wisdom modifier point
+    const wisdomMod = getStatModifier(p.wisdom);
+    const healingBonus = 1 + (wisdomMod * 0.05);
+    const finalAmount = Math.floor(amount * healingBonus);
+    
+    p.health = Math.min(p.maxHealth, p.health + finalAmount);
     
     // Only play sound and particles if actually healed
     if (p.health > oldHealth) {
@@ -245,7 +251,13 @@ export function healPlayer(amount) {
 // Restore energy
 export function restoreEnergy(amount) {
     const p = gameState.player;
-    p.energy = Math.min(p.maxEnergy, p.energy + amount);
+    
+    // Wisdom increases energy restoration: +5% per wisdom modifier point
+    const wisdomMod = getStatModifier(p.wisdom);
+    const energyBonus = 1 + (wisdomMod * 0.05);
+    const finalAmount = Math.floor(amount * energyBonus);
+    
+    p.energy = Math.min(p.maxEnergy, p.energy + finalAmount);
     saveGame();
     updateUI();
 }
@@ -437,13 +449,24 @@ export function showShop(filterCategory = 'all', filterByClass = false) {
                 }
             }
             
+            // Calculate discounted price based on charisma
+            const charismaMod = getStatModifier(gameState.player.charisma);
+            const discount = Math.min(0.20, Math.max(0, charismaMod * 0.02));
+            const finalCost = Math.floor(item.cost * (1 - discount));
+            
+            // Build price display with discount info
+            let priceDisplay = `${finalCost} 💰`;
+            if (discount > 0) {
+                priceDisplay = `<span style="text-decoration: line-through; color: #888;">${item.cost}</span> ${finalCost} 💰<br><small style="color: #51cf66;">-${Math.floor(discount * 100)}% (Charisme)</small>`;
+            }
+            
             itemDiv.innerHTML = `
                 <div class="shop-item-info">
                     <strong style="color: ${rarityColor};">${icon} ${item.name}</strong><br>
                     ${rarityInfo}
                     <small>${item.description}</small>${randomStatsInfo}${classInfo}
                 </div>
-                <div class="shop-item-price">${item.cost} 💰</div>
+                <div class="shop-item-price">${priceDisplay}</div>
                 <button onclick="window.buyItem(${originalIndex})" ${isDisabled ? 'disabled' : ''}>Acheter</button>
             `;
             shopDiv.appendChild(itemDiv);
@@ -463,8 +486,13 @@ export function buyItem(index) {
         return;
     }
     
-    if (p.gold >= item.cost) {
-        p.gold -= item.cost;
+    // Charisma reduces shop prices: -2% per charisma modifier point (max 20% discount)
+    const charismaMod = getStatModifier(p.charisma);
+    const discount = Math.min(0.20, Math.max(0, charismaMod * 0.02));
+    const finalCost = Math.floor(item.cost * (1 - discount));
+    
+    if (p.gold >= finalCost) {
+        p.gold -= finalCost;
         item.effect();
         
         // Generate and apply random stats for rare+ items at purchase time
@@ -492,6 +520,10 @@ export function buyItem(index) {
         
         // Build confirmation message with random stats
         let message = `Vous avez acheté ${item.name} !`;
+        if (discount > 0) {
+            const savedGold = item.cost - finalCost;
+            message += ` (Réduction de ${Math.floor(discount * 100)}% grâce à votre charisme: -${savedGold} or)`;
+        }
         if (randomStats && Object.keys(randomStats).length > 0) {
             const statsText = Object.entries(randomStats)
                 .map(([stat, value]) => `+${value} ${statNames[stat]}`)
@@ -508,7 +540,7 @@ export function buyItem(index) {
         const currentClassFilter = classFilter ? classFilter.checked : false;
         showShop(currentCategory, currentClassFilter);
     } else {
-        alert(`Vous n'avez pas assez d'or ! (Coût: ${item.cost} or)`);
+        alert(`Vous n'avez pas assez d'or ! (Coût: ${finalCost} or)`);
     }
 }
 
@@ -676,13 +708,26 @@ export function meetNPC() {
         const p = gameState.player;
         let rewardText = '';
         
+        // Charisma increases NPC rewards: +10% per charisma modifier point
+        const charismaMod = getStatModifier(p.charisma);
+        const rewardBonus = 1 + (charismaMod * 0.10);
+        
         if (npc.reward.type === 'heal') {
-            const healAmount = Math.min(npc.reward.amount, p.maxHealth - p.health);
-            p.health = Math.min(p.maxHealth, p.health + npc.reward.amount);
+            const baseHealAmount = npc.reward.amount;
+            const bonusHealAmount = Math.floor(baseHealAmount * rewardBonus);
+            const healAmount = Math.min(bonusHealAmount, p.maxHealth - p.health);
+            p.health = Math.min(p.maxHealth, p.health + bonusHealAmount);
             rewardText = `Vous avez été soigné de ${healAmount} HP !`;
+            if (charismaMod > 0) {
+                rewardText += ` (+${Math.floor((rewardBonus - 1) * 100)}% grâce à votre charisme)`;
+            }
         } else if (npc.reward.type === 'gold') {
-            p.gold += npc.reward.amount;
-            rewardText = `Vous avez reçu ${npc.reward.amount} pièces d'or !`;
+            const bonusGoldAmount = Math.floor(npc.reward.amount * rewardBonus);
+            p.gold += bonusGoldAmount;
+            rewardText = `Vous avez reçu ${bonusGoldAmount} pièces d'or !`;
+            if (charismaMod > 0) {
+                rewardText += ` (+${Math.floor((rewardBonus - 1) * 100)}% grâce à votre charisme)`;
+            }
         }
         
         const rewardPara = document.createElement('p');
