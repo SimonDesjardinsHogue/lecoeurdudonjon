@@ -144,15 +144,28 @@ function simulateCombat(player, enemy) {
         // Player attacks
         const strengthMod = getStatModifier(player.strength);
         const enemyDefenseMod = getStatModifier(enemyCopy.defense);
-        const playerDamage = Math.max(1, player.strength + strengthMod - (enemyCopy.defense + enemyDefenseMod) + Math.floor(Math.random() * 5));
+        
+        // Use same damage variance as combat.js: -3 to +10
+        const damageVariance = Math.floor(Math.random() * 14) - 3;
+        let playerDamage = Math.max(1, player.strength + strengthMod - (enemyCopy.defense + enemyDefenseMod) + damageVariance);
+        
+        // Critical hit chance (10%)
+        if (Math.random() < 0.10) {
+            playerDamage = Math.floor(playerDamage * 1.5);
+        }
+        
         enemyCopy.health -= playerDamage;
         
         if (enemyCopy.health <= 0) {
-            // Victory - Apply 5% gold bonus
-            const goldEarned = Math.round(enemy.gold * 1.05);
+            // Victory - Add randomness to rewards (80% to 120% of base values)
+            const goldMultiplier = 0.80 + Math.random() * 0.40;
+            const xpMultiplier = 0.80 + Math.random() * 0.40;
+            const goldEarned = Math.round(enemy.gold * goldMultiplier);
+            const xpEarned = Math.round(enemy.xp * xpMultiplier);
+            
             player.gold += goldEarned;
             player.totalGoldEarned += goldEarned;
-            player.xp += enemy.xp;
+            player.xp += xpEarned;
             player.kills++;
             player.combatsWon++;
             checkLevelUp(player);
@@ -162,7 +175,10 @@ function simulateCombat(player, enemy) {
         // Enemy attacks
         const enemyStrengthMod = getStatModifier(enemyCopy.strength);
         const playerDefenseMod = getStatModifier(player.defense);
-        const enemyDamage = Math.max(1, enemyCopy.strength + enemyStrengthMod - (player.defense + playerDefenseMod) + Math.floor(Math.random() * 5));
+        
+        // Use same damage variance as combat.js: -3 to +10
+        const enemyDamageVariance = Math.floor(Math.random() * 14) - 3;
+        const enemyDamage = Math.max(1, enemyCopy.strength + enemyStrengthMod - (player.defense + playerDefenseMod) + enemyDamageVariance);
         player.health -= enemyDamage;
         
         if (player.health <= 0) {

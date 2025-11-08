@@ -7,7 +7,7 @@ export const randomEvents = [
         icon: '💰',
         description: 'Vous découvrez un coffre rempli de pièces d\'or !',
         effect: (p) => {
-            const gold = 50 + Math.floor(Math.random() * 100);
+            const gold = 30 + Math.floor(Math.random() * 150);
             p.gold += gold;
             return `Vous gagnez ${gold} pièces d\'or !`;
         }
@@ -18,7 +18,7 @@ export const randomEvents = [
         icon: '💎',
         description: 'Une gemme magique brille dans l\'obscurité...',
         effect: (p) => {
-            const xp = 50 + Math.floor(Math.random() * 50);
+            const xp = 30 + Math.floor(Math.random() * 90);
             p.xp += xp;
             return `Vous absorbez son énergie et gagnez ${xp} XP !`;
         }
@@ -29,7 +29,8 @@ export const randomEvents = [
         icon: '🗡️',
         description: 'Vous déclenchez un piège caché !',
         effect: (p) => {
-            const damage = Math.max(1, 20 - p.defense);
+            const baseDamage = 15 + Math.floor(Math.random() * 20);
+            const damage = Math.max(1, baseDamage - p.defense);
             p.health = Math.max(1, p.health - damage);
             return `Vous perdez ${damage} HP !`;
         }
@@ -40,7 +41,8 @@ export const randomEvents = [
         icon: '☠️',
         description: 'Une brume toxique emplit la pièce !',
         effect: (p) => {
-            const damage = Math.max(1, 15 - Math.floor(p.constitution / 2));
+            const baseDamage = 10 + Math.floor(Math.random() * 15);
+            const damage = Math.max(1, baseDamage - Math.floor(p.constitution / 2));
             p.health = Math.max(1, p.health - damage);
             return `Vous perdez ${damage} HP à cause du poison !`;
         }
@@ -51,7 +53,8 @@ export const randomEvents = [
         icon: '⛲',
         description: 'Vous trouvez une fontaine aux eaux cristallines...',
         effect: (p) => {
-            const healing = Math.floor(p.maxHealth * 0.5);
+            const healingPercent = 0.40 + Math.random() * 0.30; // 40% to 70%
+            const healing = Math.floor(p.maxHealth * healingPercent);
             p.health = Math.min(p.maxHealth, p.health + healing);
             return `Vous buvez l\'eau et récupérez ${healing} HP !`;
         }
@@ -74,17 +77,17 @@ export const riddles = [
     {
         question: 'Je parle sans bouche et j\'entends sans oreilles. Je n\'ai pas de corps, mais je prends vie avec le vent. Qui suis-je ?',
         answers: ['écho', 'echo', 'l\'écho', "l'écho"],
-        reward: { gold: 100, xp: 75 }
+        getReward: () => ({ gold: 80 + Math.floor(Math.random() * 40), xp: 60 + Math.floor(Math.random() * 30) })
     },
     {
         question: 'Plus on m\'enlève, plus je deviens grand. Que suis-je ?',
         answers: ['trou', 'un trou', 'le trou'],
-        reward: { gold: 80, xp: 60 }
+        getReward: () => ({ gold: 65 + Math.floor(Math.random() * 30), xp: 50 + Math.floor(Math.random() * 20) })
     },
     {
         question: 'Je suis toujours devant toi mais tu ne peux jamais me voir. Qui suis-je ?',
         answers: ['futur', 'avenir', 'le futur', 'l\'avenir', "l'avenir"],
-        reward: { gold: 90, xp: 70 }
+        getReward: () => ({ gold: 75 + Math.floor(Math.random() * 30), xp: 60 + Math.floor(Math.random() * 20) })
     }
 ];
 
@@ -98,8 +101,9 @@ export const moralChoices = [
                 effect: (p) => {
                     if (p.gold >= 50) {
                         p.gold -= 50;
-                        p.charisma += 2;
-                        return 'Vous aidez le mendiant. Votre charisme augmente de 2 ! (-50 or)';
+                        const charismaBonus = 1 + Math.floor(Math.random() * 3); // 1-3 charisma
+                        p.charisma += charismaBonus;
+                        return `Vous aidez le mendiant. Votre charisme augmente de ${charismaBonus} ! (-50 or)`;
                     } else {
                         return 'Vous n\'avez pas assez d\'or...';
                     }
@@ -120,17 +124,20 @@ export const moralChoices = [
             {
                 text: 'Prendre l\'or',
                 effect: (p) => {
-                    p.gold += 75;
+                    const goldFound = 60 + Math.floor(Math.random() * 40); // 60-100 gold
+                    p.gold += goldFound;
                     p.wisdom -= 1;
-                    return 'Vous prenez l\'or. Vous gagnez 75 pièces d\'or mais votre sagesse diminue de 1.';
+                    return `Vous prenez l\'or. Vous gagnez ${goldFound} pièces d\'or mais votre sagesse diminue de 1.`;
                 }
             },
             {
                 text: 'Laisser l\'or et prier pour le défunt',
                 effect: (p) => {
-                    p.wisdom += 2;
-                    p.xp += 50;
-                    return 'Vous respectez les morts. Votre sagesse augmente de 2 et vous gagnez 50 XP.';
+                    const wisdomBonus = 1 + Math.floor(Math.random() * 2); // 1-2 wisdom
+                    const xpBonus = 40 + Math.floor(Math.random() * 30); // 40-70 XP
+                    p.wisdom += wisdomBonus;
+                    p.xp += xpBonus;
+                    return `Vous respectez les morts. Votre sagesse augmente de ${wisdomBonus} et vous gagnez ${xpBonus} XP.`;
                 }
             }
         ]

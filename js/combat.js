@@ -129,9 +129,10 @@ function checkRiddleAnswer(riddle) {
     const p = gameState.player;
     
     if (riddle.answers.includes(answer)) {
-        p.gold += riddle.reward.gold;
-        p.xp += riddle.reward.xp;
-        resultDiv.innerHTML = `<p style="color: #51cf66; font-weight: bold;">✓ Correct ! Vous gagnez ${riddle.reward.gold} or et ${riddle.reward.xp} XP !</p>`;
+        const reward = riddle.getReward();
+        p.gold += reward.gold;
+        p.xp += reward.xp;
+        resultDiv.innerHTML = `<p style="color: #51cf66; font-weight: bold;">✓ Correct ! Vous gagnez ${reward.gold} or et ${reward.xp} XP !</p>`;
         checkLevelUp();
     } else {
         resultDiv.innerHTML = `<p style="color: #ff6b6b; font-weight: bold;">✗ Incorrect... La bonne réponse était : ${riddle.answers[0]}</p>`;
@@ -282,14 +283,33 @@ export function attack() {
     // Player attacks
     const strengthMod = getStatModifier(p.strength);
     const enemyDefenseMod = getStatModifier(e.defense);
-    const playerDamage = Math.max(1, p.strength + strengthMod - (e.defense + enemyDefenseMod) + Math.floor(Math.random() * 5));
+    
+    // Calculate base damage with increased randomness: -3 to +10
+    const damageVariance = Math.floor(Math.random() * 14) - 3;
+    let playerDamage = Math.max(1, p.strength + strengthMod - (e.defense + enemyDefenseMod) + damageVariance);
+    
+    // Critical hit chance (10%)
+    const criticalChance = Math.random();
+    let isCritical = false;
+    if (criticalChance < 0.10) {
+        playerDamage = Math.floor(playerDamage * 1.5);
+        isCritical = true;
+    }
+    
     e.health -= playerDamage;
-    addCombatLog(`Vous infligez ${playerDamage} dégâts au ${e.name} !`, 'damage');
+    
+    if (isCritical) {
+        addCombatLog(`💥 COUP CRITIQUE ! Vous infligez ${playerDamage} dégâts au ${e.name} !`, 'victory');
+    } else {
+        addCombatLog(`Vous infligez ${playerDamage} dégâts au ${e.name} !`, 'damage');
+    }
     
     if (e.health <= 0) {
-        // Victory
-        const goldEarned = Math.round(e.gold * 1.05);
-        const xpEarned = e.xp;
+        // Victory - Add randomness to rewards (80% to 120% of base values)
+        const goldMultiplier = 0.80 + Math.random() * 0.40;
+        const xpMultiplier = 0.80 + Math.random() * 0.40;
+        const goldEarned = Math.round(e.gold * goldMultiplier);
+        const xpEarned = Math.round(e.xp * xpMultiplier);
         
         p.gold += goldEarned;
         p.xp += xpEarned;
@@ -376,15 +396,16 @@ export function enemyAttack() {
     if (e.isBoss && e.ability) {
         switch (e.ability) {
             case 'regeneration':
-                // Troll regenerates 10 HP each turn
-                e.health = Math.min(e.maxHealth, e.health + 10);
-                addCombatLog(`${e.name} se régénère de 10 HP !`, 'info');
+                // Troll regenerates 8-15 HP each turn
+                const regenAmount = 8 + Math.floor(Math.random() * 8);
+                e.health = Math.min(e.maxHealth, e.health + regenAmount);
+                addCombatLog(`${e.name} se régénère de ${regenAmount} HP !`, 'info');
                 updateEnemyUI();
                 break;
             
             case 'life_drain':
-                // Liche drains life
-                const drainAmount = 15;
+                // Liche drains life (12-20 HP)
+                const drainAmount = 12 + Math.floor(Math.random() * 9);
                 p.health -= drainAmount;
                 e.health = Math.min(e.maxHealth, e.health + drainAmount);
                 addCombatLog(`${e.name} vous draine de ${drainAmount} HP et se soigne !`, 'damage');
@@ -402,7 +423,8 @@ export function enemyAttack() {
                 addCombatLog(`${e.name} attaque avec ses trois têtes !`, 'info');
                 const enemyStrengthMod = getStatModifier(e.strength);
                 for (let i = 0; i < 3; i++) {
-                    const damage = Math.max(1, Math.floor(e.strength / 2) + Math.floor(enemyStrengthMod / 2) - (defense + playerDefenseMod) + Math.floor(Math.random() * 3));
+                    const damageVariance = Math.floor(Math.random() * 10) - 2;
+                    const damage = Math.max(1, Math.floor(e.strength / 2) + Math.floor(enemyStrengthMod / 2) - (defense + playerDefenseMod) + damageVariance);
                     p.health -= damage;
                     addCombatLog(`Tête ${i + 1} inflige ${damage} dégâts !`, 'damage');
                     
@@ -426,7 +448,8 @@ export function enemyAttack() {
                 const reducedDefense = Math.floor(defense * 0.5);
                 const reducedDefenseMod = Math.floor(playerDefenseMod * 0.5);
                 const enemyStrengthModFire = getStatModifier(e.strength);
-                const fireDamage = Math.max(1, e.strength + enemyStrengthModFire - (reducedDefense + reducedDefenseMod) + Math.floor(Math.random() * 8));
+                const fireDamageVariance = Math.floor(Math.random() * 16) - 3;
+                const fireDamage = Math.max(1, e.strength + enemyStrengthModFire - (reducedDefense + reducedDefenseMod) + fireDamageVariance);
                 p.health -= fireDamage;
                 addCombatLog(`${e.name} lance une explosion de flammes ! ${fireDamage} dégâts !`, 'damage');
                 
@@ -447,7 +470,8 @@ export function enemyAttack() {
             case 'breath_weapon':
                 // Dragon breath massive damage
                 const enemyStrengthModBreath = getStatModifier(e.strength);
-                const breathDamage = Math.max(1, Math.floor(e.strength * 1.5) + Math.floor(enemyStrengthModBreath * 1.5) - (defense + playerDefenseMod) + Math.floor(Math.random() * 10));
+                const breathDamageVariance = Math.floor(Math.random() * 20) - 5;
+                const breathDamage = Math.max(1, Math.floor(e.strength * 1.5) + Math.floor(enemyStrengthModBreath * 1.5) - (defense + playerDefenseMod) + breathDamageVariance);
                 p.health -= breathDamage;
                 addCombatLog(`${e.name} crache son souffle destructeur ! ${breathDamage} dégâts !`, 'damage');
                 
@@ -469,7 +493,10 @@ export function enemyAttack() {
     
     // Normal attack
     const enemyStrengthMod = getStatModifier(e.strength);
-    let enemyDamage = Math.max(1, e.strength + enemyStrengthMod - (defense + playerDefenseMod) + Math.floor(Math.random() * 5));
+    
+    // Calculate base damage with increased randomness: -3 to +10
+    const damageVariance = Math.floor(Math.random() * 14) - 3;
+    let enemyDamage = Math.max(1, e.strength + enemyStrengthMod - (defense + playerDefenseMod) + damageVariance);
     
     // Apply mana shield buff if active
     enemyDamage = applyShieldBuff(enemyDamage);
