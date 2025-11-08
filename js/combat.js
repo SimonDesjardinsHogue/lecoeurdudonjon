@@ -1,6 +1,6 @@
 // Combat System Module
-import { gameState, enemies, bosses, legendaryItems, randomEvents, riddles, moralChoices, getStatModifier } from './game-state.js';
-import { updateUI, updateEnemyUI, addCombatLog, showScreen } from './ui.js';
+import { gameState, enemies, bosses, legendaryItems, randomEvents, riddles, moralChoices, getStatModifier, shopItems } from './game-state.js';
+import { updateUI, updateEnemyUI, addCombatLog, showScreen, updateCombatInventoryUI } from './ui.js';
 import { saveGame } from './save-load.js';
 import { checkLevelUp, meetNPC } from './game-logic.js';
 import { audioManager } from './audio.js';
@@ -627,30 +627,27 @@ export function useCombatPotion(inventoryIndex) {
     }
     
     const inventoryItem = p.inventory[inventoryIndex];
+    const shopItem = shopItems[inventoryItem.shopIndex];
     
-    // Import shopItems directly from game-state to access the effect
-    import('./game-state.js').then(module => {
-        const shopItem = module.shopItems[inventoryItem.shopIndex];
+    if (shopItem && shopItem.effect) {
+        // Use the potion
+        shopItem.effect();
         
-        if (shopItem && shopItem.effect) {
-            // Use the potion
-            shopItem.effect();
-            
-            // Remove from inventory
-            p.inventory.splice(inventoryIndex, 1);
-            
-            // Log the action
-            addCombatLog(`Vous utilisez ${inventoryItem.name} !`, 'special');
-            
-            saveGame();
-            updateUI();
-            
-            // Enemy attacks after player uses potion
-            setTimeout(() => {
-                if (gameState.inCombat) {
-                    enemyAttack();
-                }
-            }, 1000);
-        }
-    });
+        // Remove from inventory
+        p.inventory.splice(inventoryIndex, 1);
+        
+        // Log the action
+        addCombatLog(`Vous utilisez ${inventoryItem.name} !`, 'special');
+        
+        saveGame();
+        updateUI();
+        updateCombatInventoryUI();
+        
+        // Enemy attacks after player uses potion
+        setTimeout(() => {
+            if (gameState.inCombat) {
+                enemyAttack();
+            }
+        }, 1000);
+    }
 }
