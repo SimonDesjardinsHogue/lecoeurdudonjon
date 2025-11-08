@@ -8,11 +8,11 @@ import { enemies, bosses, getStatModifier } from './game-state.js';
 import { shopItems } from './data/shop-items.js';
 
 // Create a simulated player
-function createSimulatedPlayer(classKey) {
+function createSimulatedPlayer(classKey, raceKey = 'humain') {
     const player = {
-        name: `Test_${classKey}`,
+        name: `Test_${classKey}_${raceKey}`,
         gender: 'male',
-        race: 'humain',
+        race: raceKey,
         class: classKey,
         level: 1,
         health: 100,
@@ -40,10 +40,10 @@ function createSimulatedPlayer(classKey) {
         metals: { or: 0, platine: 0, argent: 0, cuivre: 0 }
     };
     
-    // Apply character class
+    // Apply character class and race
     applySexBaseStats(player, 'male');
     applyCharacterClass(player, classKey);
-    applyRaceModifiers(player, 'humain');
+    applyRaceModifiers(player, raceKey);
     
     return player;
 }
@@ -179,8 +179,8 @@ function simulateCombat(player, enemy) {
 }
 
 // Simulate a single game
-function simulateGame(classKey, maxCombats = 50) {
-    const player = createSimulatedPlayer(classKey);
+function simulateGame(classKey, raceKey = 'humain', maxCombats = 50) {
+    const player = createSimulatedPlayer(classKey, raceKey);
     
     for (let i = 0; i < maxCombats; i++) {
         // Try to purchase items if we have gold
@@ -227,6 +227,7 @@ function simulateGame(classKey, maxCombats = 50) {
     
     return {
         class: classKey,
+        race: raceKey,
         finalLevel: player.level,
         kills: player.kills,
         deaths: player.deaths,
@@ -240,44 +241,75 @@ function simulateGame(classKey, maxCombats = 50) {
         finalStrength: player.strength,
         finalDefense: player.defense,
         finalHealth: player.maxHealth,
+        finalDexterity: player.dexterity,
+        finalConstitution: player.constitution,
         winRate: player.combatsWon / (player.combatsWon + player.combatsLost)
     };
 }
 
 // Run balance tests
-export function runBalanceTests(iterations = 1000) {
+export function runBalanceTests(iterations = 2500) {
     const results = {
-        guerrier: [],
-        magicien: [],
-        archer: [],
-        rogue: []
+        byClass: {
+            guerrier: [],
+            magicien: [],
+            archer: [],
+            rogue: []
+        },
+        byRace: {
+            humain: [],
+            elfe: [],
+            nain: []
+        },
+        byCombination: {}
     };
     
     const classes = ['guerrier', 'magicien', 'archer', 'rogue'];
+    const races = ['humain', 'elfe', 'nain'];
     
-    console.log('Starting balance tests...');
+    console.log(`Starting balance tests with ${iterations} iterations per class-race combination...`);
+    console.log(`Total simulations: ${classes.length * races.length * iterations} (${classes.length} classes × ${races.length} races × ${iterations} games)`);
+    
+    let totalGames = 0;
+    const totalSimulations = classes.length * races.length * iterations;
     
     for (const classKey of classes) {
-        console.log(`Testing ${classKey}...`);
-        
-        for (let i = 0; i < iterations; i++) {
-            if (i % 100 === 0) {
-                console.log(`  ${classKey}: ${i}/${iterations} simulations completed`);
-            }
+        for (const raceKey of races) {
+            const comboKey = `${classKey}_${raceKey}`;
+            results.byCombination[comboKey] = [];
             
-            const result = simulateGame(classKey);
-            results[classKey].push(result);
+            console.log(`Testing ${classKey} + ${raceKey}...`);
+            
+            for (let i = 0; i < iterations; i++) {
+                if (i % 100 === 0) {
+                    totalGames = (classes.indexOf(classKey) * races.length + races.indexOf(raceKey)) * iterations + i;
+                    const progress = ((totalGames / totalSimulations) * 100).toFixed(1);
+                    console.log(`  Progress: ${progress}% (${totalGames}/${totalSimulations}) - ${classKey}+${raceKey}: ${i}/${iterations}`);
+                }
+                
+                const result = simulateGame(classKey, raceKey);
+                results.byClass[classKey].push(result);
+                results.byRace[raceKey].push(result);
+                results.byCombination[comboKey].push(result);
+            }
         }
     }
+    
+    console.log(`Completed all ${totalSimulations} simulations!`);
     
     return analyzeResults(results);
 }
 
 // Analyze and format results
 function analyzeResults(results) {
-    const analysis = {};
+    const analysis = {
+        byClass: {},
+        byRace: {},
+        byCombination: {}
+    };
     
-    for (const [classKey, games] of Object.entries(results)) {
+    // Analyze by class
+    for (const [classKey, games] of Object.entries(results.byClass)) {
         const stats = {
             class: classKey,
             className: characterClasses[classKey].name,
@@ -294,13 +326,76 @@ function analyzeResults(results) {
             avgStrength: average(games.map(g => g.finalStrength)),
             avgDefense: average(games.map(g => g.finalDefense)),
             avgHealth: average(games.map(g => g.finalHealth)),
+            avgDexterity: average(games.map(g => g.finalDexterity)),
+            avgConstitution: average(games.map(g => g.finalConstitution)),
             maxLevel: Math.max(...games.map(g => g.finalLevel)),
             minLevel: Math.min(...games.map(g => g.finalLevel)),
             maxKills: Math.max(...games.map(g => g.kills)),
             minKills: Math.min(...games.map(g => g.kills))
         };
         
-        analysis[classKey] = stats;
+        analysis.byClass[classKey] = stats;
+    }
+    
+    // Analyze by race
+    for (const [raceKey, games] of Object.entries(results.byRace)) {
+        const stats = {
+            race: raceKey,
+            raceName: characterRaces[raceKey].name,
+            gamesPlayed: games.length,
+            avgLevel: average(games.map(g => g.finalLevel)),
+            avgKills: average(games.map(g => g.kills)),
+            avgDeaths: average(games.map(g => g.deaths)),
+            avgWinRate: average(games.map(g => g.winRate)),
+            avgBossesDefeated: average(games.map(g => g.bossesDefeated)),
+            avgGoldEarned: average(games.map(g => g.totalGoldEarned)),
+            avgGoldSpent: average(games.map(g => g.totalGoldSpent)),
+            avgFinalGold: average(games.map(g => g.finalGold)),
+            avgItemsPurchased: average(games.map(g => g.itemsPurchased)),
+            avgStrength: average(games.map(g => g.finalStrength)),
+            avgDefense: average(games.map(g => g.finalDefense)),
+            avgHealth: average(games.map(g => g.finalHealth)),
+            avgDexterity: average(games.map(g => g.finalDexterity)),
+            avgConstitution: average(games.map(g => g.finalConstitution)),
+            maxLevel: Math.max(...games.map(g => g.finalLevel)),
+            minLevel: Math.min(...games.map(g => g.finalLevel)),
+            maxKills: Math.max(...games.map(g => g.kills)),
+            minKills: Math.min(...games.map(g => g.kills))
+        };
+        
+        analysis.byRace[raceKey] = stats;
+    }
+    
+    // Analyze by combination
+    for (const [comboKey, games] of Object.entries(results.byCombination)) {
+        const [classKey, raceKey] = comboKey.split('_');
+        const stats = {
+            class: classKey,
+            race: raceKey,
+            className: characterClasses[classKey].name,
+            raceName: characterRaces[raceKey].name,
+            gamesPlayed: games.length,
+            avgLevel: average(games.map(g => g.finalLevel)),
+            avgKills: average(games.map(g => g.kills)),
+            avgDeaths: average(games.map(g => g.deaths)),
+            avgWinRate: average(games.map(g => g.winRate)),
+            avgBossesDefeated: average(games.map(g => g.bossesDefeated)),
+            avgGoldEarned: average(games.map(g => g.totalGoldEarned)),
+            avgGoldSpent: average(games.map(g => g.totalGoldSpent)),
+            avgFinalGold: average(games.map(g => g.finalGold)),
+            avgItemsPurchased: average(games.map(g => g.itemsPurchased)),
+            avgStrength: average(games.map(g => g.finalStrength)),
+            avgDefense: average(games.map(g => g.finalDefense)),
+            avgHealth: average(games.map(g => g.finalHealth)),
+            avgDexterity: average(games.map(g => g.finalDexterity)),
+            avgConstitution: average(games.map(g => g.finalConstitution)),
+            maxLevel: Math.max(...games.map(g => g.finalLevel)),
+            minLevel: Math.min(...games.map(g => g.finalLevel)),
+            maxKills: Math.max(...games.map(g => g.kills)),
+            minKills: Math.min(...games.map(g => g.kills))
+        };
+        
+        analysis.byCombination[comboKey] = stats;
     }
     
     return generateBalanceReport(analysis);
@@ -315,36 +410,48 @@ function average(arr) {
 function generateBalanceReport(analysis) {
     const report = {
         summary: {},
-        classStats: analysis,
-        balanceScore: {},
+        classStats: analysis.byClass,
+        raceStats: analysis.byRace,
+        combinationStats: analysis.byCombination,
+        balanceScore: { byClass: {}, byRace: {} },
         suggestions: []
     };
     
-    // Calculate overall metrics
-    const allClasses = Object.values(analysis);
+    // Calculate overall metrics for classes
+    const allClasses = Object.values(analysis.byClass);
     const avgLevelOverall = average(allClasses.map(c => c.avgLevel));
     const avgWinRateOverall = average(allClasses.map(c => c.avgWinRate));
     const avgKillsOverall = average(allClasses.map(c => c.avgKills));
+    
+    // Calculate overall metrics for races
+    const allRaces = Object.values(analysis.byRace);
+    const avgLevelOverallRace = average(allRaces.map(r => r.avgLevel));
+    const avgWinRateOverallRace = average(allRaces.map(r => r.avgWinRate));
+    const avgKillsOverallRace = average(allRaces.map(r => r.avgKills));
+    
+    // Calculate total simulations
+    const totalSimulations = Object.values(analysis.byCombination).reduce((sum, c) => sum + c.gamesPlayed, 0);
     
     report.summary = {
         avgLevel: avgLevelOverall.toFixed(2),
         avgWinRate: (avgWinRateOverall * 100).toFixed(2) + '%',
         avgKills: avgKillsOverall.toFixed(2),
-        totalSimulations: allClasses.reduce((sum, c) => sum + c.gamesPlayed, 0)
+        totalSimulations: totalSimulations
     };
     
-    // Calculate balance scores (deviation from average)
-    for (const [classKey, stats] of Object.entries(analysis)) {
+    // Calculate balance scores for classes (deviation from average)
+    for (const [classKey, stats] of Object.entries(analysis.byClass)) {
         const levelDeviation = Math.abs(stats.avgLevel - avgLevelOverall) / avgLevelOverall;
         const winRateDeviation = Math.abs(stats.avgWinRate - avgWinRateOverall) / avgWinRateOverall;
         const killsDeviation = Math.abs(stats.avgKills - avgKillsOverall) / avgKillsOverall;
         
         const balanceScore = 100 - ((levelDeviation + winRateDeviation + killsDeviation) / 3 * 100);
-        report.balanceScore[classKey] = balanceScore.toFixed(2);
+        report.balanceScore.byClass[classKey] = balanceScore.toFixed(2);
         
         // Generate suggestions based on performance
         if (stats.avgWinRate < avgWinRateOverall * 0.9) {
             report.suggestions.push({
+                category: 'class',
                 class: classKey,
                 type: 'underpowered',
                 metric: 'winRate',
@@ -354,6 +461,7 @@ function generateBalanceReport(analysis) {
         
         if (stats.avgWinRate > avgWinRateOverall * 1.1) {
             report.suggestions.push({
+                category: 'class',
                 class: classKey,
                 type: 'overpowered',
                 metric: 'winRate',
@@ -363,6 +471,7 @@ function generateBalanceReport(analysis) {
         
         if (stats.avgLevel < avgLevelOverall * 0.9) {
             report.suggestions.push({
+                category: 'class',
                 class: classKey,
                 type: 'progression',
                 metric: 'level',
@@ -372,6 +481,7 @@ function generateBalanceReport(analysis) {
         
         if (stats.avgDeaths > avgKillsOverall * 0.3) {
             report.suggestions.push({
+                category: 'class',
                 class: classKey,
                 type: 'survivability',
                 metric: 'deaths',
@@ -381,6 +491,7 @@ function generateBalanceReport(analysis) {
         
         if (stats.avgGoldEarned - stats.avgGoldSpent < 50) {
             report.suggestions.push({
+                category: 'class',
                 class: classKey,
                 type: 'economy',
                 metric: 'gold',
@@ -389,9 +500,51 @@ function generateBalanceReport(analysis) {
         }
     }
     
+    // Calculate balance scores for races
+    for (const [raceKey, stats] of Object.entries(analysis.byRace)) {
+        const levelDeviation = Math.abs(stats.avgLevel - avgLevelOverallRace) / avgLevelOverallRace;
+        const winRateDeviation = Math.abs(stats.avgWinRate - avgWinRateOverallRace) / avgWinRateOverallRace;
+        const killsDeviation = Math.abs(stats.avgKills - avgKillsOverallRace) / avgKillsOverallRace;
+        
+        const balanceScore = 100 - ((levelDeviation + winRateDeviation + killsDeviation) / 3 * 100);
+        report.balanceScore.byRace[raceKey] = balanceScore.toFixed(2);
+        
+        // Generate suggestions based on performance
+        if (stats.avgWinRate < avgWinRateOverallRace * 0.95) {
+            report.suggestions.push({
+                category: 'race',
+                race: raceKey,
+                type: 'underpowered',
+                metric: 'winRate',
+                suggestion: `${stats.raceName} a un taux de victoire inférieur à la moyenne (${(stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverallRace * 100).toFixed(1)}%). Suggestion: Ajuster les modificateurs de race (+1 constitution ou +1 dextérité).`
+            });
+        }
+        
+        if (stats.avgWinRate > avgWinRateOverallRace * 1.05) {
+            report.suggestions.push({
+                category: 'race',
+                race: raceKey,
+                type: 'overpowered',
+                metric: 'winRate',
+                suggestion: `${stats.raceName} a un taux de victoire supérieur à la moyenne (${(stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverallRace * 100).toFixed(1)}%). Suggestion: Réduire légèrement les modificateurs de race (-1 constitution ou -1 dextérité).`
+            });
+        }
+        
+        if (stats.avgLevel < avgLevelOverallRace * 0.95) {
+            report.suggestions.push({
+                category: 'race',
+                race: raceKey,
+                type: 'progression',
+                metric: 'level',
+                suggestion: `${stats.raceName} atteint des niveaux inférieurs à la moyenne (${stats.avgLevel.toFixed(1)} vs ${avgLevelOverallRace.toFixed(1)}). Suggestion: Augmenter le modificateur de constitution de +1.`
+            });
+        }
+    }
+    
     // Overall game balance suggestions
     if (avgWinRateOverall < 0.6) {
         report.suggestions.push({
+            category: 'game',
             class: 'all',
             type: 'difficulty',
             metric: 'overall',
@@ -401,6 +554,7 @@ function generateBalanceReport(analysis) {
     
     if (avgWinRateOverall > 0.85) {
         report.suggestions.push({
+            category: 'game',
             class: 'all',
             type: 'difficulty',
             metric: 'overall',
@@ -419,7 +573,7 @@ export function formatReportAsHTML(report) {
     html += '<div class="report-section">';
     html += '<h3>📊 Résumé Global</h3>';
     html += '<div class="shop-item" style="display: block;">';
-    html += `<p><strong>Total de simulations:</strong> ${report.summary.totalSimulations}</p>`;
+    html += `<p><strong>Total de simulations:</strong> ${report.summary.totalSimulations.toLocaleString()}</p>`;
     html += `<p><strong>Niveau moyen atteint:</strong> ${report.summary.avgLevel}</p>`;
     html += `<p><strong>Taux de victoire moyen:</strong> ${report.summary.avgWinRate}</p>`;
     html += `<p><strong>Ennemis vaincus (moyenne):</strong> ${report.summary.avgKills}</p>`;
@@ -431,6 +585,7 @@ export function formatReportAsHTML(report) {
     html += '<table class="balance-table" style="width: 100%; border-collapse: collapse; margin-top: 10px;">';
     html += '<thead><tr style="background: rgba(218, 165, 32, 0.3);">';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Classe</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Parties</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Niveau Moy.</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Taux Victoire</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Kills Moy.</th>';
@@ -440,11 +595,12 @@ export function formatReportAsHTML(report) {
     html += '</tr></thead><tbody>';
     
     for (const [classKey, stats] of Object.entries(report.classStats)) {
-        const balanceScore = parseFloat(report.balanceScore[classKey]);
+        const balanceScore = parseFloat(report.balanceScore.byClass[classKey]);
         const scoreColor = balanceScore >= 90 ? '#51cf66' : balanceScore >= 80 ? '#DAA520' : '#ff6b6b';
         
         html += '<tr>';
         html += `<td style="padding: 8px; border: 1px solid #8B4513;"><strong>${stats.className}</strong></td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.gamesPlayed.toLocaleString()}</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgLevel.toFixed(2)}</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${(stats.avgWinRate * 100).toFixed(1)}%</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgKills.toFixed(1)}</td>`;
@@ -456,9 +612,42 @@ export function formatReportAsHTML(report) {
     
     html += '</tbody></table></div>';
     
-    // Detailed stats
+    // Race comparison table
     html += '<div class="report-section">';
-    html += '<h3>📈 Statistiques Détaillées</h3>';
+    html += '<h3>🧝 Comparaison des Races</h3>';
+    html += '<table class="balance-table" style="width: 100%; border-collapse: collapse; margin-top: 10px;">';
+    html += '<thead><tr style="background: rgba(218, 165, 32, 0.3);">';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Race</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Parties</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Niveau Moy.</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Taux Victoire</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Kills Moy.</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Morts Moy.</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Or Final</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Équilibre</th>';
+    html += '</tr></thead><tbody>';
+    
+    for (const [raceKey, stats] of Object.entries(report.raceStats)) {
+        const balanceScore = parseFloat(report.balanceScore.byRace[raceKey]);
+        const scoreColor = balanceScore >= 90 ? '#51cf66' : balanceScore >= 80 ? '#DAA520' : '#ff6b6b';
+        
+        html += '<tr>';
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;"><strong>${stats.raceName}</strong></td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.gamesPlayed.toLocaleString()}</td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgLevel.toFixed(2)}</td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;">${(stats.avgWinRate * 100).toFixed(1)}%</td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgKills.toFixed(1)}</td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgDeaths.toFixed(1)}</td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgFinalGold.toFixed(0)} 💰</td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513; color: ${scoreColor}; font-weight: bold;">${balanceScore.toFixed(0)}/100</td>`;
+        html += '</tr>';
+    }
+    
+    html += '</tbody></table></div>';
+    
+    // Detailed class stats
+    html += '<div class="report-section">';
+    html += '<h3>📈 Statistiques Détaillées des Classes</h3>';
     for (const [classKey, stats] of Object.entries(report.classStats)) {
         html += `<div class="shop-item" style="display: block; margin-bottom: 15px;">`;
         html += `<h4 style="color: #DAA520;">${characterClasses[classKey].icon} ${stats.className}</h4>`;
@@ -469,6 +658,32 @@ export function formatReportAsHTML(report) {
         html += `<div>Kills min: ${stats.minKills}</div>`;
         html += `<div>Force moyenne: ${stats.avgStrength.toFixed(1)}</div>`;
         html += `<div>Défense moyenne: ${stats.avgDefense.toFixed(1)}</div>`;
+        html += `<div>Dextérité moyenne: ${stats.avgDexterity.toFixed(1)}</div>`;
+        html += `<div>Constitution moyenne: ${stats.avgConstitution.toFixed(1)}</div>`;
+        html += `<div>PV moyens: ${stats.avgHealth.toFixed(0)}</div>`;
+        html += `<div>Boss vaincus: ${stats.avgBossesDefeated.toFixed(1)}</div>`;
+        html += `<div>Or gagné: ${stats.avgGoldEarned.toFixed(0)} 💰</div>`;
+        html += `<div>Or dépensé: ${stats.avgGoldSpent.toFixed(0)} 💰</div>`;
+        html += `<div>Objets achetés: ${stats.avgItemsPurchased.toFixed(1)}</div>`;
+        html += `</div></div>`;
+    }
+    html += '</div>';
+    
+    // Detailed race stats
+    html += '<div class="report-section">';
+    html += '<h3>📈 Statistiques Détaillées des Races</h3>';
+    for (const [raceKey, stats] of Object.entries(report.raceStats)) {
+        html += `<div class="shop-item" style="display: block; margin-bottom: 15px;">`;
+        html += `<h4 style="color: #DAA520;">${characterRaces[raceKey].icon} ${stats.raceName}</h4>`;
+        html += `<div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 0.9em;">`;
+        html += `<div>Niveau max atteint: ${stats.maxLevel}</div>`;
+        html += `<div>Niveau min atteint: ${stats.minLevel}</div>`;
+        html += `<div>Kills max: ${stats.maxKills}</div>`;
+        html += `<div>Kills min: ${stats.minKills}</div>`;
+        html += `<div>Force moyenne: ${stats.avgStrength.toFixed(1)}</div>`;
+        html += `<div>Défense moyenne: ${stats.avgDefense.toFixed(1)}</div>`;
+        html += `<div>Dextérité moyenne: ${stats.avgDexterity.toFixed(1)}</div>`;
+        html += `<div>Constitution moyenne: ${stats.avgConstitution.toFixed(1)}</div>`;
         html += `<div>PV moyens: ${stats.avgHealth.toFixed(0)}</div>`;
         html += `<div>Boss vaincus: ${stats.avgBossesDefeated.toFixed(1)}</div>`;
         html += `<div>Or gagné: ${stats.avgGoldEarned.toFixed(0)} 💰</div>`;
@@ -487,26 +702,57 @@ export function formatReportAsHTML(report) {
         html += '<p style="color: #51cf66;">✓ Le jeu est bien équilibré ! Aucune amélioration majeure n\'est nécessaire.</p>';
         html += '</div>';
     } else {
-        // Group suggestions by class
-        const suggestionsByClass = {
-            all: [],
-            guerrier: [],
-            magicien: [],
-            archer: [],
-            rogue: []
+        // Group suggestions by category
+        const suggestionsByCategory = {
+            game: [],
+            class: { guerrier: [], magicien: [], archer: [], rogue: [] },
+            race: { humain: [], elfe: [], nain: [] }
         };
         
         report.suggestions.forEach(s => {
-            suggestionsByClass[s.class].push(s);
+            if (s.category === 'game') {
+                suggestionsByCategory.game.push(s);
+            } else if (s.category === 'class') {
+                suggestionsByCategory.class[s.class].push(s);
+            } else if (s.category === 'race') {
+                suggestionsByCategory.race[s.race].push(s);
+            }
         });
         
-        for (const [classKey, suggestions] of Object.entries(suggestionsByClass)) {
+        // Display game-wide suggestions
+        if (suggestionsByCategory.game.length > 0) {
+            html += `<div class="shop-item" style="display: block; margin-bottom: 15px;">`;
+            html += `<h4 style="color: #DAA520;">🎮 Suggestions Générales</h4>`;
+            html += '<ul style="margin: 10px 0; padding-left: 20px;">';
+            suggestionsByCategory.game.forEach(s => {
+                const color = s.type === 'difficulty' ? '#ffd93d' : '#51cf66';
+                html += `<li style="margin-bottom: 8px; color: ${color};">${s.suggestion}</li>`;
+            });
+            html += '</ul></div>';
+        }
+        
+        // Display class suggestions
+        for (const [classKey, suggestions] of Object.entries(suggestionsByCategory.class)) {
             if (suggestions.length === 0) continue;
             
-            const title = classKey === 'all' ? '🎮 Suggestions Générales' : `${characterClasses[classKey].icon} ${characterClasses[classKey].name}`;
+            html += `<div class="shop-item" style="display: block; margin-bottom: 15px;">`;
+            html += `<h4 style="color: #DAA520;">${characterClasses[classKey].icon} ${characterClasses[classKey].name}</h4>`;
+            html += '<ul style="margin: 10px 0; padding-left: 20px;">';
+            
+            suggestions.forEach(s => {
+                const color = s.type === 'overpowered' ? '#ff6b6b' : s.type === 'underpowered' ? '#ffd93d' : '#51cf66';
+                html += `<li style="margin-bottom: 8px; color: ${color};">${s.suggestion}</li>`;
+            });
+            
+            html += '</ul></div>';
+        }
+        
+        // Display race suggestions
+        for (const [raceKey, suggestions] of Object.entries(suggestionsByCategory.race)) {
+            if (suggestions.length === 0) continue;
             
             html += `<div class="shop-item" style="display: block; margin-bottom: 15px;">`;
-            html += `<h4 style="color: #DAA520;">${title}</h4>`;
+            html += `<h4 style="color: #DAA520;">${characterRaces[raceKey].icon} ${characterRaces[raceKey].name}</h4>`;
             html += '<ul style="margin: 10px 0; padding-left: 20px;">';
             
             suggestions.forEach(s => {

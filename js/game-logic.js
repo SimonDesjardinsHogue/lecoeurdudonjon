@@ -1230,7 +1230,7 @@ export async function runBalanceTest() {
         
         await new Promise(resolve => setTimeout(resolve, 100));
         
-        const report = runBalanceTests(1000);
+        const report = runBalanceTests(2500);
         
         progressBar.style.width = '75%';
         statusText.textContent = 'Génération du rapport...';
