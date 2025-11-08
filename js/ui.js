@@ -79,8 +79,24 @@ export function updateEnemyUI() {
     document.getElementById('enemyName').textContent = `${icon} ${e.name}`;
     document.getElementById('enemyHealth').textContent = `HP: ${e.health}/${e.maxHealth}`;
     
-    const healthPercent = (e.health / e.maxHealth) * 100;
-    document.getElementById('enemyHealthFill').style.width = healthPercent + '%';
+    // Add armor class display
+    const enemyArmorElement = document.getElementById('enemyArmor');
+    if (enemyArmorElement) {
+        const defenseMod = getStatModifier(e.defense);
+        enemyArmorElement.textContent = `CA: ${e.defense} (${defenseMod >= 0 ? '+' : ''}${defenseMod})`;
+    }
+    
+    // Ensure health bar is always visible by checking element exists and health values are valid
+    const healthFillElement = document.getElementById('enemyHealthFill');
+    if (healthFillElement && e.maxHealth > 0) {
+        const healthPercent = Math.max(0, Math.min(100, (e.health / e.maxHealth) * 100));
+        healthFillElement.style.width = healthPercent + '%';
+        // Ensure the health bar container is visible
+        const healthBarElement = healthFillElement.parentElement;
+        if (healthBarElement) {
+            healthBarElement.style.display = 'block';
+        }
+    }
 }
 
 // Add combat log message
