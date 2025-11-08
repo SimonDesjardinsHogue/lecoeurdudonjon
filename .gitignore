@@ -5,3 +5,4 @@ balance-report-*.html
 test-balance.js
 run-quick-test.js
 quick-balance-test-report.html
+verify-balance.js
