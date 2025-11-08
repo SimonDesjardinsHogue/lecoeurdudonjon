@@ -9,6 +9,7 @@ import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 import { initializeDailyQuests, checkDailyReset, updateQuestProgress, showDailyQuestsScreen } from './daily-quests.js';
 import { initAchievements, trackAchievementProgress, checkAchievements } from './achievements.js';
+import { runBalanceTests, formatReportAsHTML } from './balance-tester.js';
 
 // Helper function to get class display name
 function getClassDisplayName(classKey) {
@@ -1191,6 +1192,70 @@ export function showAchievements() {
         `;
         container.insertBefore(summary, container.firstChild);
     });
+}
+
+// Show balance test screen
+export function showBalanceTest() {
+    showScreen('balanceTestScreen');
+    
+    // Reset test results
+    document.getElementById('balanceTestResults').innerHTML = '';
+    document.getElementById('balanceTestProgress').style.display = 'none';
+    document.getElementById('startBalanceTestBtn').disabled = false;
+}
+
+// Run balance test
+export async function runBalanceTest() {
+    const startBtn = document.getElementById('startBalanceTestBtn');
+    const progressDiv = document.getElementById('balanceTestProgress');
+    const statusText = document.getElementById('balanceTestStatus');
+    const progressBar = document.getElementById('balanceTestProgressBar');
+    const resultsDiv = document.getElementById('balanceTestResults');
+    
+    // Disable button and show progress
+    startBtn.disabled = true;
+    progressDiv.style.display = 'block';
+    resultsDiv.innerHTML = '';
+    
+    try {
+        statusText.textContent = 'Démarrage des tests...';
+        progressBar.style.width = '0%';
+        
+        // Use setTimeout to allow UI to update
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Run tests with progress updates
+        statusText.textContent = 'Simulation en cours... (Cela peut prendre 10-30 secondes)';
+        progressBar.style.width = '25%';
+        
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        const report = runBalanceTests(1000);
+        
+        progressBar.style.width = '75%';
+        statusText.textContent = 'Génération du rapport...';
+        
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
+        // Format and display results
+        const htmlReport = formatReportAsHTML(report);
+        resultsDiv.innerHTML = htmlReport;
+        
+        progressBar.style.width = '100%';
+        statusText.textContent = '✓ Test terminé avec succès !';
+        
+        // Hide progress after a delay
+        setTimeout(() => {
+            progressDiv.style.display = 'none';
+            startBtn.disabled = false;
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Error running balance tests:', error);
+        statusText.textContent = '✗ Erreur lors du test: ' + error.message;
+        statusText.style.color = '#ff6b6b';
+        startBtn.disabled = false;
+    }
 }
 
 // Show daily quests (export for main.js)

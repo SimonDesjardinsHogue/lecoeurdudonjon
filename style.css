@@ -1089,3 +1089,43 @@ input[type="text"]:focus {
     border-bottom: 2px solid #8B4513;
     padding-bottom: 5px;
 }
+
+/* Balance Test Styles */
+.balance-report {
+    width: 100%;
+}
+
+.report-section {
+    margin-bottom: 30px;
+}
+
+.report-section h3 {
+    color: #DAA520;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+}
+
+.balance-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.balance-table th,
+.balance-table td {
+    padding: 10px;
+    border: 1px solid #8B4513;
+    text-align: center;
+}
+
+.balance-table th {
+    background: rgba(218, 165, 32, 0.3);
+    color: #DAA520;
+    font-weight: bold;
+}
+
+.balance-table tr:hover {
+    background: rgba(218, 165, 32, 0.1);
+}
+
