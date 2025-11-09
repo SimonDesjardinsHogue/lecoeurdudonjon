@@ -80,11 +80,61 @@ export function loadServerConfig() {
   if (savedUrl) {
     configureServer(savedUrl);
   } else {
-    // If no saved URL, use default but don't auto-enable
-    // User still needs to save/test to enable multiplayer
-    console.log('ℹ️ Aucune configuration sauvegardée. Défaut disponible:', DEFAULT_CONFIG.serverUrl);
+    // If no saved URL, auto-test default server
+    console.log('ℹ️ Aucune configuration sauvegardée. Test du serveur par défaut:', DEFAULT_CONFIG.serverUrl);
+    autoTestDefaultServer();
   }
 }
+
+// Auto-test default server connection
+async function autoTestDefaultServer() {
+  // Show connection banner with testing status
+  showConnectionBanner('testing');
+  
+  // Temporarily set server URL to test health (without enabling)
+  const tempServerUrl = 'http://' + DEFAULT_CONFIG.serverUrl;
+  networkState.serverUrl = tempServerUrl;
+  
+  const health = await checkServerHealth();
+  
+  if (health.success) {
+    // Server is accessible, auto-configure it
+    console.log('✓ Serveur par défaut accessible, configuration automatique');
+    configureServer(DEFAULT_CONFIG.serverUrl);
+    showConnectionBanner('connected');
+    
+    // Auto-hide success banner after 5 seconds
+    setTimeout(() => {
+      dismissConnectionBanner();
+    }, 5000);
+  } else {
+    // Server is not accessible, show retry option
+    console.log('⚠️ Serveur par défaut non accessible');
+    networkState.serverUrl = null;
+    networkState.enabled = false;
+    showConnectionBanner('error');
+  }
+}
+
+// Show connection banner with status
+function showConnectionBanner(status) {
+  if (typeof window.showConnectionNotification === 'function') {
+    window.showConnectionNotification(status);
+  }
+}
+
+// Dismiss connection banner
+function dismissConnectionBanner() {
+  if (typeof window.dismissConnectionNotification === 'function') {
+    window.dismissConnectionNotification();
+  }
+}
+
+// Retry connection to default server (exported for UI button)
+export async function retryDefaultServerConnection() {
+  await autoTestDefaultServer();
+}
+
 
 // Connect to server via WebSocket
 export function connectToServer() {

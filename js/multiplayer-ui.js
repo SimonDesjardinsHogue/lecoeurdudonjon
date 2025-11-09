@@ -126,3 +126,47 @@ function updateMultiplayerStatus() {
         statusElement.style.color = '#999';
     }
 }
+
+// Show connection notification banner
+export function showConnectionNotification(status) {
+    const banner = document.getElementById('connectionBanner');
+    const icon = document.getElementById('connectionBannerIcon');
+    const text = document.getElementById('connectionBannerText');
+    const retryBtn = document.getElementById('retryConnectionBtn');
+    const dismissBtn = document.getElementById('dismissConnectionBtn');
+    
+    if (!banner || !icon || !text) return;
+    
+    // Remove existing status classes
+    banner.classList.remove('connected', 'error');
+    
+    if (status === 'testing') {
+        icon.textContent = '🔄';
+        text.textContent = 'Test de connexion au serveur 192.168.68.61:3000...';
+        retryBtn.style.display = 'none';
+        dismissBtn.style.display = 'none';
+    } else if (status === 'connected') {
+        banner.classList.add('connected');
+        icon.textContent = '✅';
+        text.textContent = 'Connecté au serveur multijoueur 192.168.68.61:3000';
+        retryBtn.style.display = 'none';
+        dismissBtn.style.display = 'inline-block';
+    } else if (status === 'error') {
+        banner.classList.add('error');
+        icon.textContent = '⚠️';
+        text.textContent = 'Serveur 192.168.68.61:3000 non accessible';
+        retryBtn.style.display = 'inline-block';
+        dismissBtn.style.display = 'inline-block';
+    }
+    
+    banner.style.display = 'block';
+}
+
+// Dismiss connection notification banner
+export function dismissConnectionNotification() {
+    const banner = document.getElementById('connectionBanner');
+    if (banner) {
+        banner.style.display = 'none';
+    }
+}
+

@@ -144,6 +144,66 @@ body {
     font-size: 0.95em;
 }
 
+/* Connection Banner Styles */
+.connection-banner {
+    background: linear-gradient(135deg, #1565c0 0%, #1976d2 100%);
+    border-bottom: 2px solid #42a5f5;
+    padding: 10px 15px;
+}
+
+.connection-banner.connected {
+    background: linear-gradient(135deg, #2e7d32 0%, #388e3c 100%);
+    border-bottom: 2px solid #66bb6a;
+}
+
+.connection-banner.error {
+    background: linear-gradient(135deg, #c62828 0%, #d32f2f 100%);
+    border-bottom: 2px solid #ef5350;
+}
+
+.connection-banner-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    font-size: 0.9em;
+    flex-wrap: wrap;
+}
+
+.connection-banner-icon {
+    font-size: 1.2em;
+}
+
+.connection-banner-text {
+    color: #f0f0f0;
+    font-weight: 500;
+}
+
+.retry-connection-btn, .dismiss-connection-btn {
+    padding: 5px 12px;
+    font-size: 0.85em;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.retry-connection-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+}
+
+.dismiss-connection-btn {
+    padding: 3px 8px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.dismiss-connection-btn:hover {
+    background: rgba(0, 0, 0, 0.4);
+}
+
 .game-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

@@ -6,12 +6,17 @@ import { audioManager } from './audio.js';
 import { initKeyboardHandler } from './keyboard-handler.js';
 import { useSkill as useSkillFn } from './skills.js';
 import { updateUI, updateEnemyUI, updateSkillsUI, updateCombatInventoryUI, updateShopInventoryUI, toggleInventoryPanel, updateInventoryPanel, toggleEquipmentModal, updateEquipmentModal, updateEventBanner } from './ui.js';
-import { initNetwork, configureServer, getNetworkState, submitScore, fetchLeaderboard, checkServerHealth, requestLeaderboardUpdate } from './network.js';
-import { showMultiplayerSettings, saveServerConfig, testServerConnection, disableMultiplayer } from './multiplayer-ui.js';
+import { initNetwork, configureServer, getNetworkState, submitScore, fetchLeaderboard, checkServerHealth, requestLeaderboardUpdate, retryDefaultServerConnection } from './network.js';
+import { showMultiplayerSettings, saveServerConfig, testServerConnection, disableMultiplayer, showConnectionNotification, dismissConnectionNotification } from './multiplayer-ui.js';
 import * as scheduledEventsModule from './scheduled-events.js';
 
 // Make scheduled events module available globally for UI updates
 window.scheduledEventsModule = scheduledEventsModule;
+
+// Make connection notification functions available globally
+window.showConnectionNotification = showConnectionNotification;
+window.dismissConnectionNotification = dismissConnectionNotification;
+
 
 // Initialize audio context after user interaction
 function initAudio() {
@@ -198,6 +203,16 @@ window.showMultiplayerSettings = showMultiplayerSettings;
 window.saveServerConfig = saveServerConfig;
 window.testServerConnection = testServerConnection;
 window.disableMultiplayer = disableMultiplayer;
+
+// Expose retry connection function
+window.retryServerConnection = async function() {
+    await retryDefaultServerConnection();
+};
+
+// Expose dismiss banner function
+window.dismissConnectionBanner = function() {
+    dismissConnectionNotification();
+};
 
 // Expose admin functions
 window.showAdminLogin = showAdminLogin;
