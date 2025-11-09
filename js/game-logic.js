@@ -277,38 +277,54 @@ export function rest() {
     const p = gameState.player;
     const cost = 20;
     
-    if (p.gold >= cost) {
-        p.gold -= cost;
-        p.health = p.maxHealth;
-        p.energy = 0;  // Set energy to 0 - player must wait until 6 AM Toronto time
-        
-        // Set last sleep time to current Toronto time
-        const now = new Date();
-        const torontoTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
-        p.lastSleepTime = torontoTime.toISOString();
-        
-        saveGame();
-        updateUI();
-        
-        // Calculate next 6 AM
-        const next6AM = new Date(torontoTime);
-        next6AM.setHours(6, 0, 0, 0);
-        if (torontoTime.getHours() >= 6) {
-            next6AM.setDate(next6AM.getDate() + 1);
-        }
-        
-        const options = { 
-            timeZone: 'America/Toronto',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true
-        };
-        const next6AMString = next6AM.toLocaleString('fr-FR', options);
-        
-        alert(`Vous dormez à l'auberge jusqu'à demain 6h00 du matin (heure de Toronto). Vos points de vie sont restaurés ! Vous pourrez reprendre l'aventure à ${next6AMString}. (-20 or)`);
-    } else {
+    if (p.gold < cost) {
         alert('Vous n\'avez pas assez d\'or pour dormir à l\'auberge ! (Coût: 20 or)');
+        return;
     }
+    
+    // Build confirmation message
+    let confirmMessage = 'Voulez-vous dormir à l\'auberge pour 20 or ?\n\n';
+    confirmMessage += 'Vos points de vie seront restaurés.\n';
+    
+    // Add warning if player still has energy
+    if (p.energy > 0) {
+        confirmMessage += `\n⚠️ Attention : Vous avez encore ${p.energy} points d'énergie. Ils seront perdus si vous dormez maintenant.`;
+    }
+    
+    // Ask for confirmation
+    if (!confirm(confirmMessage)) {
+        return;  // User cancelled
+    }
+    
+    // Proceed with sleep
+    p.gold -= cost;
+    p.health = p.maxHealth;
+    p.energy = 0;  // Set energy to 0 - player must wait until 6 AM Toronto time
+    
+    // Set last sleep time to current Toronto time
+    const now = new Date();
+    const torontoTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+    p.lastSleepTime = torontoTime.toISOString();
+    
+    saveGame();
+    updateUI();
+    
+    // Calculate next 6 AM
+    const next6AM = new Date(torontoTime);
+    next6AM.setHours(6, 0, 0, 0);
+    if (torontoTime.getHours() >= 6) {
+        next6AM.setDate(next6AM.getDate() + 1);
+    }
+    
+    const options = { 
+        timeZone: 'America/Toronto',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    };
+    const next6AMString = next6AM.toLocaleString('fr-FR', options);
+    
+    alert(`Vous dormez à l'auberge jusqu'à demain 6h00 du matin (heure de Toronto). Vos points de vie sont restaurés ! Vous pourrez reprendre l'aventure à ${next6AMString}. (-20 or)`);
 }
 
 // Check level up
