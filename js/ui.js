@@ -46,6 +46,12 @@ export function updateUI() {
     
     document.getElementById('playerStrength').textContent = `${p.strength} (${strengthMod >= 0 ? '+' : ''}${strengthMod})`;
     document.getElementById('playerDefense').textContent = `${p.defense} (${defenseMod >= 0 ? '+' : ''}${defenseMod})`;
+    
+    // Update weapon damage display
+    const weaponDamage = p.weaponDamage || 0;
+    const totalDamage = weaponDamage + strengthMod;
+    document.getElementById('playerWeaponDamage').textContent = `${weaponDamage} (+${strengthMod >= 0 ? strengthMod : 0})`;
+    
     document.getElementById('playerDexterity').textContent = `${p.dexterity} (${dexterityMod >= 0 ? '+' : ''}${dexterityMod})`;
     document.getElementById('playerConstitution').textContent = `${p.constitution} (${constitutionMod >= 0 ? '+' : ''}${constitutionMod})`;
     document.getElementById('playerIntelligence').textContent = `${p.intelligence} (${intelligenceMod >= 0 ? '+' : ''}${intelligenceMod})`;

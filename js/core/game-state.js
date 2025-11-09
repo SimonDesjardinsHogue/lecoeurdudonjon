@@ -37,6 +37,7 @@ export const gameState = {
         maxEnergy: 100,
         lastSleepTime: null,
         bossesDefeated: 0,
+        weaponDamage: 0,  // Damage from last purchased weapon
         // Metal inventory (in ounces)
         metals: {
             or: 0,        // Gold

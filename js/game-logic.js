@@ -539,6 +539,11 @@ export function buyItem(index) {
             // Use item immediately (equipment, damage potions, exp potions, etc.)
             item.effect();
             
+            // Track weapon damage for display in UI
+            if (item.type === 'weapon' && item.bonus) {
+                p.weaponDamage = item.bonus;
+            }
+            
             // Generate and apply random stats for rare+ items at purchase time
             const randomStats = hasRandomStats(item) ? generateRandomStats(item.rarity) : null;
             if (randomStats && Object.keys(randomStats).length > 0) {

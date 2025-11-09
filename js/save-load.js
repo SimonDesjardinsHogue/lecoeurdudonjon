@@ -45,6 +45,10 @@ export function loadGame() {
             if (!gameState.player.hasOwnProperty('classIcon')) {
                 gameState.player.classIcon = '⚔️';
             }
+            // Add weapon damage property if it doesn't exist (for backwards compatibility)
+            if (!gameState.player.hasOwnProperty('weaponDamage')) {
+                gameState.player.weaponDamage = 0;
+            }
         } catch (e) {
             console.error('Error loading save:', e);
         }
