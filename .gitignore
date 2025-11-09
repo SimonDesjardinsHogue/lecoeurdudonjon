@@ -11,3 +11,4 @@ verify-balance.js
 server/node_modules/
 server/scores.json
 server/package-lock.json
+server/.env
