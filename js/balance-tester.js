@@ -54,7 +54,18 @@ function checkLevelUp(player) {
     while (player.xp >= player.xpToLevel) {
         player.level++;
         player.xp -= player.xpToLevel;
-        player.xpToLevel = Math.floor(player.xpToLevel * 1.5);
+        
+        // Progressive XP scaling to make level 100 achievable
+        if (player.level < 40) {
+            player.xpToLevel = Math.floor(player.xpToLevel * 1.30);
+        } else if (player.level < 70) {
+            player.xpToLevel = Math.floor(player.xpToLevel * 1.20);
+        } else if (player.level < 90) {
+            player.xpToLevel = Math.floor(player.xpToLevel * 1.12);
+        } else {
+            // Very slow growth for final levels
+            player.xpToLevel = Math.floor(player.xpToLevel * 1.08);
+        }
         
         // Stat increases
         player.maxHealth += 20;
@@ -66,7 +77,7 @@ function checkLevelUp(player) {
 
 // Simulate intelligent item purchasing
 function simulatePurchasing(player) {
-    // Priority: healing if low health, then weapons/armor, then potions
+    // Priority: healing if low health, then equipment for permanent upgrades, then potions
     const purchasableItems = shopItems.filter(item => {
         // Can afford
         if (item.cost > player.gold) return false;
@@ -79,15 +90,15 @@ function simulatePurchasing(player) {
     
     if (purchasableItems.length === 0) return;
     
-    // Sort by priority
+    // Sort by priority with improved logic
     const sortedItems = purchasableItems.sort((a, b) => {
-        // If health is low (< 50%), prioritize healing
-        if (player.health < player.maxHealth * 0.5) {
+        // If health is low (< 60%), prioritize healing
+        if (player.health < player.maxHealth * 0.6) {
             if (a.category === 'heal' && b.category !== 'heal') return -1;
             if (a.category !== 'heal' && b.category === 'heal') return 1;
         }
         
-        // Prioritize equipment (weapons and armor)
+        // Prioritize equipment for permanent upgrades (better investment)
         if (a.type === 'weapon' || a.type === 'armor') {
             if (b.type !== 'weapon' && b.type !== 'armor') return -1;
         }
@@ -95,7 +106,14 @@ function simulatePurchasing(player) {
             if (a.type !== 'weapon' && a.type !== 'armor') return 1;
         }
         
-        // Higher cost items generally better
+        // For similar items, prefer better value (higher bonus per cost)
+        if (a.category === 'equipment' && b.category === 'equipment') {
+            const aValue = (a.bonus || 0) / a.cost;
+            const bValue = (b.bonus || 0) / b.cost;
+            return bValue - aValue;
+        }
+        
+        // Higher cost items generally better for consumables
         return b.cost - a.cost;
     });
     
@@ -215,28 +233,44 @@ function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxCombats 
             simulatePurchasing(player);
         }
         
-        // Select enemy based on player level
-        const maxEnemyIndex = Math.min(enemies.length - 1, player.level);
-        const enemyTemplate = enemies[Math.floor(Math.random() * (maxEnemyIndex + 1))];
+        // Select enemy based on player level with better scaling
+        // Use a narrower range of enemies to match player level better
+        const enemyLevelRange = Math.max(1, Math.min(enemies.length, Math.floor(player.level / 2)));
+        const minEnemyIndex = Math.max(0, enemyLevelRange - 2);
+        const maxEnemyIndex = Math.min(enemies.length - 1, enemyLevelRange + 1);
+        const enemyTemplate = enemies[minEnemyIndex + Math.floor(Math.random() * (maxEnemyIndex - minEnemyIndex + 1))];
         
         // Check if should face boss (every 5 levels)
         let enemy;
         if (player.level % 5 === 0 && player.kills > 0 && (player.level / 5) > player.bossesDefeated) {
             const bossIndex = Math.min(player.bossesDefeated, bosses.length - 1);
             const bossTemplate = bosses[bossIndex];
-            const levelMultiplier = 1 + (player.level - (player.bossesDefeated * 5)) * 0.1;
+            // More moderate level multiplier for bosses
+            const levelMultiplier = 1 + (player.level - (player.bossesDefeated * 5)) * 0.05;
+            const xpMultiplier = player.level > 50 ? 5.0 : 3.0;
             
             enemy = {
                 ...bossTemplate,
                 health: Math.floor(bossTemplate.health * levelMultiplier),
                 strength: Math.floor(bossTemplate.strength * levelMultiplier),
                 defense: Math.floor(bossTemplate.defense * levelMultiplier),
-                gold: Math.floor(bossTemplate.gold * levelMultiplier),
-                xp: Math.floor(bossTemplate.xp * levelMultiplier),
+                gold: Math.floor(bossTemplate.gold * levelMultiplier * 3.0), // Much more gold from bosses
+                xp: Math.floor(bossTemplate.xp * levelMultiplier * xpMultiplier), // Massive XP from bosses at high levels
                 isBoss: true
             };
         } else {
-            enemy = { ...enemyTemplate };
+            // Scale regular enemies to player level with extremely aggressive XP at higher levels
+            const scaleFactor = Math.max(1, player.level / 5);
+            const xpBonus = player.level > 70 ? 8.0 : player.level > 60 ? 6.0 : player.level > 50 ? 4.5 : player.level > 40 ? 3.0 : 2.0;
+            
+            enemy = {
+                ...enemyTemplate,
+                health: Math.floor(enemyTemplate.health * scaleFactor),
+                strength: Math.floor(enemyTemplate.strength * scaleFactor * 0.85), // Weaker at high levels
+                defense: Math.floor(enemyTemplate.defense * scaleFactor * 0.85),
+                gold: Math.floor(enemyTemplate.gold * scaleFactor * 2.5), // Much more gold
+                xp: Math.floor(enemyTemplate.xp * scaleFactor * xpBonus) // Extremely aggressive XP at higher levels
+            };
         }
         
         const won = simulateCombat(player, enemy);
@@ -245,9 +279,10 @@ function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxCombats 
             player.bossesDefeated++;
         }
         
-        // Small chance to rest if health is low
-        if (player.health < player.maxHealth * 0.3 && player.gold >= 20) {
-            player.gold -= 20;
+        // Better rest logic - rest if health is low and we have gold
+        if (player.health < player.maxHealth * 0.5 && player.gold >= 20) {
+            const restCost = Math.min(player.gold, 30);
+            player.gold -= restCost;
             player.health = player.maxHealth;
         }
     }
