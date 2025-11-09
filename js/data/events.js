@@ -69,6 +69,45 @@ export const randomEvents = [
             p.energy = Math.min(p.maxEnergy, p.energy + 20);
             return 'Vous êtes complètement guéri et recevez 20 énergie !';
         }
+    },
+    {
+        type: 'mystery',
+        name: 'Inscription Mystérieuse',
+        icon: '📜',
+        description: 'Vous découvrez une inscription ancienne sur le mur. Elle ressemble aux symboles que les M&M ont mentionnés...',
+        effect: (p) => {
+            const xp = 40 + Math.floor(Math.random() * 60);
+            const gold = 20 + Math.floor(Math.random() * 40);
+            p.xp += xp;
+            p.gold += gold;
+            return `En déchiffrant l\'inscription, vous gagnez ${xp} XP et trouvez ${gold} pièces d\'or cachées !`;
+        }
+    },
+    {
+        type: 'mystery',
+        name: 'Passage Secret',
+        icon: '🚪',
+        description: 'Vous trouvez un passage secret marqué du symbole des M&M ! Il mène à une chambre oubliée...',
+        effect: (p) => {
+            const gold = 80 + Math.floor(Math.random() * 120);
+            const xp = 50 + Math.floor(Math.random() * 50);
+            p.gold += gold;
+            p.xp += xp;
+            return `Dans la chambre secrète, vous découvrez ${gold} pièces d\'or et des artefacts anciens qui vous donnent ${xp} XP !`;
+        }
+    },
+    {
+        type: 'mystery',
+        name: 'Fragment du Savoir',
+        icon: '🔮',
+        description: 'Vous trouvez un parchemin laissé par les M&M. Il contient des connaissances sur les anciens gardiens de Valéria...',
+        effect: (p) => {
+            const wisdomBonus = 1 + Math.floor(Math.random() * 2);
+            const intelligenceBonus = 1 + Math.floor(Math.random() * 2);
+            p.wisdom += wisdomBonus;
+            p.intelligence += intelligenceBonus;
+            return `Vous étudiez le parchemin avec attention. Votre sagesse augmente de ${wisdomBonus} et votre intelligence de ${intelligenceBonus} !`;
+        }
     }
 ];
 

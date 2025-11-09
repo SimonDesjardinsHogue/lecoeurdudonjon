@@ -1117,7 +1117,7 @@ async function displayLocalLeaderboard() {
     
     if (players.length === 0) {
         const emptyMsg = document.createElement('p');
-        emptyMsg.textContent = 'Aucun héros n\'a encore été enregistré dans les annales du royaume.';
+        emptyMsg.textContent = 'Aucun héros n\'a encore été enregistré dans les annales du royaume de Valéria.';
         emptyMsg.style.fontStyle = 'italic';
         emptyMsg.style.color = '#999';
         leaderboardList.appendChild(emptyMsg);
