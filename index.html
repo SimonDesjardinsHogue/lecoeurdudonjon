@@ -93,28 +93,31 @@
                     <div class="xp-bar">
                         <div class="xp-fill" id="xpFill" style="width: 0%;"></div>
                     </div>
+                    <div id="statPointsAvailable" style="display: none; text-align: center; margin: 5px 0; font-size: 0.85em; color: #DAA520; font-weight: bold;">
+                        ✨ Points disponibles: <span id="statPointsCount">0</span>
+                    </div>
                     <div class="characteristics-grid-compact">
-                        <div class="char-compact">
+                        <div class="char-compact clickable-stat" onclick="spendStatPoint('strength')" title="Cliquer pour ajouter +1">
                             <span class="char-label-small">FOR</span>
                             <span class="char-value-small" id="playerStrength">10</span>
                         </div>
-                        <div class="char-compact">
+                        <div class="char-compact clickable-stat" onclick="spendStatPoint('dexterity')" title="Cliquer pour ajouter +1">
                             <span class="char-label-small">DEX</span>
                             <span class="char-value-small" id="playerDexterity">10</span>
                         </div>
-                        <div class="char-compact">
+                        <div class="char-compact clickable-stat" onclick="spendStatPoint('constitution')" title="Cliquer pour ajouter +1">
                             <span class="char-label-small">CON</span>
                             <span class="char-value-small" id="playerConstitution">10</span>
                         </div>
-                        <div class="char-compact">
+                        <div class="char-compact clickable-stat" onclick="spendStatPoint('intelligence')" title="Cliquer pour ajouter +1">
                             <span class="char-label-small">INT</span>
                             <span class="char-value-small" id="playerIntelligence">10</span>
                         </div>
-                        <div class="char-compact">
+                        <div class="char-compact clickable-stat" onclick="spendStatPoint('wisdom')" title="Cliquer pour ajouter +1">
                             <span class="char-label-small">SAG</span>
                             <span class="char-value-small" id="playerWisdom">10</span>
                         </div>
-                        <div class="char-compact">
+                        <div class="char-compact clickable-stat" onclick="spendStatPoint('charisma')" title="Cliquer pour ajouter +1">
                             <span class="char-label-small">CHA</span>
                             <span class="char-value-small" id="playerCharisma">10</span>
                         </div>

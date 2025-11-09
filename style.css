@@ -1289,6 +1289,21 @@ input[type="text"]:focus {
     border: 1px solid #8B4513;
 }
 
+.char-compact.clickable-stat {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.char-compact.clickable-stat:hover {
+    background: rgba(218, 165, 32, 0.2);
+    border-color: #DAA520;
+    transform: scale(1.05);
+}
+
+.char-compact.clickable-stat:active {
+    transform: scale(0.98);
+}
+
 .char-label-small {
     display: block;
     color: #DAA520;

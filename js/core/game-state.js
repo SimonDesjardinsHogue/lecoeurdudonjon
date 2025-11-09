@@ -28,6 +28,7 @@ export const gameState = {
         intelligence: 10,
         wisdom: 10,
         charisma: 10,
+        statPoints: 0,   // Points to spend on stats
         gold: 50,
         xp: 0,
         xpToLevel: 100,

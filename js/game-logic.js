@@ -437,13 +437,24 @@ export function checkLevelUp() {
         p.xp -= p.xpToLevel;
         p.xpToLevel = Math.floor(p.xpToLevel * 1.5);
         
+        // Class-based HP increase
+        let hpIncrease = 10; // Default for Guerrier
+        if (p.class === 'archer') {
+            hpIncrease = 6;
+        } else if (p.class === 'magicien') {
+            hpIncrease = 4;
+        }
+        
         // Stat increases
-        p.maxHealth += 20;
+        p.maxHealth += hpIncrease;
         p.health = p.maxHealth;
         p.strength += 5;
         p.defense += 3;
         
-        addCombatLog(`🎉 Niveau supérieur ! Vous êtes maintenant niveau ${p.level}/20 !`, 'victory');
+        // Grant 1 stat point per level
+        p.statPoints = (p.statPoints || 0) + 1;
+        
+        addCombatLog(`🎉 Niveau supérieur ! Vous êtes maintenant niveau ${p.level}/20 ! (+${hpIncrease} PV, +1 point de stats)`, 'victory');
         
         // Play level up sound and show particles
         audioManager.playSound('levelup');
@@ -455,6 +466,54 @@ export function checkLevelUp() {
         saveGame();
         updateUI();
     }
+}
+
+// Spend stat point on a specific stat
+export function spendStatPoint(statName) {
+    const p = gameState.player;
+    
+    if (!p.statPoints || p.statPoints <= 0) {
+        alert('Vous n\'avez pas de points de stats disponibles !');
+        return;
+    }
+    
+    // Valid stat names
+    const validStats = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+    
+    if (!validStats.includes(statName)) {
+        console.error(`Invalid stat name: ${statName}`);
+        return;
+    }
+    
+    // Confirm spending the point
+    const statDisplayNames = {
+        'strength': 'Force',
+        'dexterity': 'Dextérité',
+        'constitution': 'Constitution',
+        'intelligence': 'Intelligence',
+        'wisdom': 'Sagesse',
+        'charisma': 'Charisme'
+    };
+    
+    if (!confirm(`Voulez-vous ajouter 1 point à ${statDisplayNames[statName]} ?`)) {
+        return;
+    }
+    
+    // Spend the point
+    p[statName]++;
+    p.statPoints--;
+    
+    // If constitution increases, also increase max health by 2
+    if (statName === 'constitution') {
+        p.maxHealth += 2;
+        p.health += 2; // Also heal by 2
+        addCombatLog(`✨ +1 ${statDisplayNames[statName]} ! (+2 PV max)`, 'info');
+    } else {
+        addCombatLog(`✨ +1 ${statDisplayNames[statName]} !`, 'info');
+    }
+    
+    saveGame();
+    updateUI();
 }
 
 // Show shop
@@ -849,6 +908,7 @@ export function resetGame() {
         gameState.player.intelligence = 10;
         gameState.player.wisdom = 10;
         gameState.player.charisma = 10;
+        gameState.player.statPoints = 0;
         gameState.player.gold = 75;
         gameState.player.xp = 0;
         gameState.player.xpToLevel = 100;

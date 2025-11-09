@@ -122,6 +122,19 @@ export function updateUI() {
     const energyPercent = (p.energy / p.maxEnergy) * 100;
     document.getElementById('energyFill').style.width = energyPercent + '%';
     
+    // Update stat points display
+    const statPointsAvailable = document.getElementById('statPointsAvailable');
+    const statPointsCount = document.getElementById('statPointsCount');
+    if (statPointsAvailable && statPointsCount) {
+        const points = p.statPoints || 0;
+        if (points > 0) {
+            statPointsAvailable.style.display = 'block';
+            statPointsCount.textContent = points;
+        } else {
+            statPointsAvailable.style.display = 'none';
+        }
+    }
+    
     // Update inventory count in characteristics section
     const inventoryCountEl = document.getElementById('inventoryCount');
     if (inventoryCountEl) {
