@@ -341,6 +341,47 @@
                 </div>
                 <div class="game-actions">
                     <button onclick="showStats()">🚪 Retour (ESC)</button>
+                    <button onclick="showMultiplayerSettings()">🌐 Paramètres Multijoueur</button>
+                </div>
+            </div>
+
+            <!-- Multiplayer Settings Screen -->
+            <div id="multiplayerSettingsScreen" class="game-screen">
+                <div class="story-text">
+                    <h3>🌐 Paramètres Multijoueur LAN</h3>
+                    <p>Configurez le serveur multijoueur pour jouer avec votre famille sur le réseau local.</p>
+                    
+                    <div class="shop-item" style="display: block; margin-top: 20px;">
+                        <h4 style="color: #DAA520;">🔧 Configuration du Serveur</h4>
+                        <p>Entrez l'adresse IP et le port du serveur (ex: 192.168.1.100:3000)</p>
+                        <input type="text" id="serverUrlInput" placeholder="192.168.1.100:3000" style="width: 100%; max-width: 100%; margin-top: 10px;">
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <button onclick="saveServerConfig()" style="flex: 1;">💾 Sauvegarder</button>
+                            <button onclick="testServerConnection()" style="flex: 1;">🔍 Tester</button>
+                            <button onclick="disableMultiplayer()" style="flex: 1; background: linear-gradient(135deg, #8B0000 0%, #660000 100%);">❌ Désactiver</button>
+                        </div>
+                        <div id="serverConfigResult" style="margin-top: 10px;"></div>
+                    </div>
+                    
+                    <div class="shop-item" style="display: block; margin-top: 20px;">
+                        <h4 style="color: #DAA520;">ℹ️ Informations</h4>
+                        <p><strong>ID Joueur:</strong> <span id="playerIdDisplay" style="color: #DAA520; font-family: monospace; font-size: 0.9em;">---</span></p>
+                        <p id="multiplayerStatus" style="margin-top: 10px;">⚪ Mode solo (aucun serveur configuré)</p>
+                    </div>
+                    
+                    <div class="shop-item" style="display: block; margin-top: 20px;">
+                        <h4 style="color: #DAA520;">📖 Instructions</h4>
+                        <ol style="font-size: 0.9em; color: #ddd; text-align: left;">
+                            <li>Démarrez le serveur sur un PC du réseau local (voir server/README.md)</li>
+                            <li>Trouvez l'adresse IP du serveur avec <code>ipconfig</code> (Windows) ou <code>ifconfig</code> (Mac/Linux)</li>
+                            <li>Entrez l'adresse IP et le port ci-dessus</li>
+                            <li>Testez la connexion</li>
+                            <li>Vos scores seront automatiquement envoyés au serveur !</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="game-actions">
+                    <button onclick="showSaveOptions()">🚪 Retour (ESC)</button>
                 </div>
             </div>
 

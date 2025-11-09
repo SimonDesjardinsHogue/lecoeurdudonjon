@@ -110,6 +110,42 @@ Pour accéder aux options de sauvegarde :
 2. Cliquez sur "Sauvegardes"
 3. Exportez votre code de sauvegarde ou importez-en un existant
 
+### 🌐 Mode Multijoueur LAN
+
+Jouez avec votre famille sur le réseau local et partagez un classement commun !
+
+#### Fonctionnalités
+
+- **Classement en temps réel** : Les scores se synchronisent automatiquement entre tous les joueurs
+- **Identification unique** : Chaque joueur a un ID unique stocké dans son navigateur
+- **WebSocket** : Mises à jour instantanées du classement via Socket.IO
+- **Persistance** : Les scores sont sauvegardés sur le serveur (fichier JSON)
+
+#### Configuration Rapide
+
+1. **Démarrer le serveur** (sur un PC du réseau local) :
+   ```bash
+   cd server
+   npm install
+   npm start
+   ```
+
+2. **Trouver l'adresse IP du serveur** :
+   - Windows : `ipconfig` (cherchez "Adresse IPv4")
+   - Mac/Linux : `ifconfig` ou `ip addr` (cherchez 192.168.x.x ou 10.x.x.x)
+
+3. **Configurer dans le jeu** :
+   - Allez dans Statistiques → Sauvegardes → Paramètres Multijoueur
+   - Entrez l'adresse IP et le port (ex: 192.168.1.100:3000)
+   - Testez la connexion
+   - Les scores seront automatiquement envoyés après chaque combat !
+
+4. **Jouer sur d'autres appareils** :
+   - Ouvrez `http://[IP-DU-SERVEUR]:3000` dans le navigateur
+   - Les scores sont partagés en temps réel !
+
+📖 **Documentation complète** : [server/README.md](server/README.md)
+
 ## 🛠️ Technologie
 
 Le jeu utilise une **architecture modulaire améliorée** basée sur des modules ES6 JavaScript pour une meilleure maintenabilité et évolutivité.

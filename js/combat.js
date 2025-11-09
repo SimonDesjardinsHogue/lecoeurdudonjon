@@ -8,6 +8,7 @@ import { particleSystem } from './particles.js';
 import { updateQuestProgress } from './daily-quests.js';
 import { updateSkillBuffs, applyShieldBuff, checkDodge, clearSkillBuffs, resetCombatState } from './skills.js';
 import { trackAchievementProgress, checkAchievements } from './achievements.js';
+import { submitScore, getNetworkState } from './network.js';
 
 // Check if player should face a boss (every 5 levels with probability)
 function shouldFaceBoss() {
@@ -362,6 +363,9 @@ export function attack() {
         clearSkillBuffs();
         resetCombatState();
         
+        // Submit score to multiplayer server if enabled
+        submitScoreIfEnabled();
+        
         // Return to main screen after victory
         setTimeout(() => {
             gameState.inCombat = false;
@@ -657,5 +661,25 @@ export function useCombatPotion(inventoryIndex) {
                 enemyAttack();
             }
         }, 1000);
+    }
+}
+
+// Submit score to multiplayer server if enabled
+async function submitScoreIfEnabled() {
+    const networkState = getNetworkState();
+    
+    if (!networkState.enabled) {
+        return; // Multiplayer not enabled
+    }
+    
+    try {
+        const result = await submitScore();
+        if (result.success) {
+            console.log('✓ Score soumis au serveur multijoueur');
+        } else if (!result.offline) {
+            console.warn('⚠️ Échec de soumission du score:', result.error);
+        }
+    } catch (error) {
+        console.error('Erreur lors de la soumission du score:', error);
     }
 }

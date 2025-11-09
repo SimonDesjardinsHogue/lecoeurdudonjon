@@ -6,6 +6,8 @@ import { audioManager } from './audio.js';
 import { initKeyboardHandler } from './keyboard-handler.js';
 import { useSkill as useSkillFn } from './skills.js';
 import { updateUI, updateEnemyUI, updateSkillsUI, updateCombatInventoryUI, updateShopInventoryUI, toggleInventoryPanel, updateInventoryPanel } from './ui.js';
+import { initNetwork, configureServer, getNetworkState, submitScore, fetchLeaderboard, checkServerHealth, requestLeaderboardUpdate } from './network.js';
+import { showMultiplayerSettings, saveServerConfig, testServerConnection, disableMultiplayer } from './multiplayer-ui.js';
 
 // Initialize audio context after user interaction
 function initAudio() {
@@ -49,6 +51,9 @@ if ('serviceWorker' in navigator) {
 // Initialize game on load
 window.addEventListener('load', () => {
     init();
+    
+    // Initialize network module for LAN multiplayer
+    initNetwork();
     
     // Initialize keyboard handler
     initKeyboardHandler();
@@ -150,3 +155,17 @@ window.useInventoryItemFromPanel = function(inventoryIndex) {
     useInventoryItem(inventoryIndex);
     updateInventoryPanel();
 };
+
+// Expose network functions
+window.configureMultiplayerServer = configureServer;
+window.getNetworkState = getNetworkState;
+window.submitScoreToServer = submitScore;
+window.fetchNetworkLeaderboard = fetchLeaderboard;
+window.checkServerHealth = checkServerHealth;
+window.requestLeaderboardUpdate = requestLeaderboardUpdate;
+
+// Expose multiplayer UI functions
+window.showMultiplayerSettings = showMultiplayerSettings;
+window.saveServerConfig = saveServerConfig;
+window.testServerConnection = testServerConnection;
+window.disableMultiplayer = disableMultiplayer;

@@ -6,3 +6,9 @@ test-balance.js
 run-quick-test.js
 quick-balance-test-report.html
 verify-balance.js
+
+# Server files
+server/node_modules/
+server/scores.json
+server/package-lock.json
+server/.env
