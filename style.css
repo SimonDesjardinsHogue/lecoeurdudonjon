@@ -1555,4 +1555,39 @@ input[type="text"]:focus {
     }
 }
 
+/* Two-column stats layout */
+.stats-two-column {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.stats-column {
+    background: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 5px;
+    border: 1px solid #8B4513;
+}
+
+.stats-column h4 {
+    color: #DAA520;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1em;
+    border-bottom: 1px solid #8B4513;
+    padding-bottom: 10px;
+}
+
+.stats-column p {
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+/* Responsive stats layout */
+@media (max-width: 768px) {
+    .stats-two-column {
+        grid-template-columns: 1fr;
+    }
+}
+
 

@@ -899,11 +899,6 @@ export function showStats() {
     const p = gameState.player;
     const statsDiv = document.getElementById('detailedStats');
     
-    // Create elements safely to avoid XSS
-    const container = document.createElement('div');
-    container.className = 'shop-item';
-    container.style.display = 'block';
-    
     // Helper function to create a stat paragraph
     const createStatParagraph = (label, value) => {
         const para = document.createElement('p');
@@ -914,27 +909,51 @@ export function showStats() {
         return para;
     };
     
-    container.appendChild(createStatParagraph('Nom', p.name));
-    container.appendChild(createStatParagraph('Genre', p.gender === 'male' ? '♂️ Masculin' : '♀️ Féminin'));
-    container.appendChild(createStatParagraph('Race', `${p.raceIcon || '👤'} ${p.raceName || 'Humain'}`));
-    container.appendChild(createStatParagraph('Classe', `${p.classIcon} ${p.className}`));
-    container.appendChild(createStatParagraph('Niveau', p.level));
-    container.appendChild(createStatParagraph('Points de vie', `${p.health}/${p.maxHealth}`));
-    container.appendChild(createStatParagraph('Énergie', `${p.energy}/${p.maxEnergy}`));
-    container.appendChild(createStatParagraph('Force', p.strength));
-    container.appendChild(createStatParagraph('Dextérité', p.dexterity));
-    container.appendChild(createStatParagraph('Constitution', p.constitution));
-    container.appendChild(createStatParagraph('Intelligence', p.intelligence));
-    container.appendChild(createStatParagraph('Sagesse', p.wisdom));
-    container.appendChild(createStatParagraph('Charisme', p.charisma));
-    container.appendChild(createStatParagraph('Classe d\'armure', p.defense));
-    container.appendChild(createStatParagraph('Or', p.gold));
-    container.appendChild(createStatParagraph('Expérience', `${p.xp}/${p.xpToLevel}`));
-    container.appendChild(createStatParagraph('Ennemis vaincus', p.kills));
-    container.appendChild(createStatParagraph('Parties jouées', p.gamesPlayed));
+    // Create two-column container
+    const twoColumnContainer = document.createElement('div');
+    twoColumnContainer.className = 'stats-two-column';
     
+    // Left column: Character info and stats
+    const leftColumn = document.createElement('div');
+    leftColumn.className = 'stats-column';
+    const leftTitle = document.createElement('h4');
+    leftTitle.textContent = '👤 Informations du Personnage';
+    leftColumn.appendChild(leftTitle);
+    
+    leftColumn.appendChild(createStatParagraph('Nom', p.name));
+    leftColumn.appendChild(createStatParagraph('Genre', p.gender === 'male' ? '♂️ Masculin' : '♀️ Féminin'));
+    leftColumn.appendChild(createStatParagraph('Race', `${p.raceIcon || '👤'} ${p.raceName || 'Humain'}`));
+    leftColumn.appendChild(createStatParagraph('Classe', `${p.classIcon} ${p.className}`));
+    leftColumn.appendChild(createStatParagraph('Points de vie', `${p.health}/${p.maxHealth}`));
+    leftColumn.appendChild(createStatParagraph('Énergie', `${p.energy}/${p.maxEnergy}`));
+    leftColumn.appendChild(createStatParagraph('Classe d\'armure', p.defense));
+    leftColumn.appendChild(createStatParagraph('Force', p.strength));
+    leftColumn.appendChild(createStatParagraph('Dextérité', p.dexterity));
+    leftColumn.appendChild(createStatParagraph('Constitution', p.constitution));
+    leftColumn.appendChild(createStatParagraph('Intelligence', p.intelligence));
+    leftColumn.appendChild(createStatParagraph('Sagesse', p.wisdom));
+    leftColumn.appendChild(createStatParagraph('Charisme', p.charisma));
+    
+    // Right column: Gameplay progression info
+    const rightColumn = document.createElement('div');
+    rightColumn.className = 'stats-column';
+    const rightTitle = document.createElement('h4');
+    rightTitle.textContent = '📊 Progression et Statistiques';
+    rightColumn.appendChild(rightTitle);
+    
+    rightColumn.appendChild(createStatParagraph('Niveau', p.level));
+    rightColumn.appendChild(createStatParagraph('Expérience', `${p.xp}/${p.xpToLevel}`));
+    rightColumn.appendChild(createStatParagraph('Or', p.gold));
+    rightColumn.appendChild(createStatParagraph('Ennemis vaincus', p.kills));
+    rightColumn.appendChild(createStatParagraph('Parties jouées', p.gamesPlayed));
+    
+    // Add columns to container
+    twoColumnContainer.appendChild(leftColumn);
+    twoColumnContainer.appendChild(rightColumn);
+    
+    // Update the stats div
     statsDiv.innerHTML = '';
-    statsDiv.appendChild(container);
+    statsDiv.appendChild(twoColumnContainer);
 }
 
 // Show save options
