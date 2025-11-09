@@ -22,6 +22,20 @@
             </button>
         </div>
 
+        <!-- Connection Notification Banner -->
+        <div id="connectionBanner" class="connection-banner" style="display: none;">
+            <div class="connection-banner-content">
+                <span class="connection-banner-icon" id="connectionBannerIcon">🌐</span>
+                <span class="connection-banner-text" id="connectionBannerText">Connexion au serveur...</span>
+                <button id="retryConnectionBtn" class="retry-connection-btn" onclick="retryServerConnection()" style="display: none;">
+                    🔄 Essayer de se connecter
+                </button>
+                <button id="dismissConnectionBtn" class="dismiss-connection-btn" onclick="dismissConnectionBanner()" style="display: none;">
+                    ✖️
+                </button>
+            </div>
+        </div>
+
         <!-- Event Schedule Banner -->
         <div id="eventBanner" class="event-banner" style="display: none;">
             <div class="event-banner-content">
