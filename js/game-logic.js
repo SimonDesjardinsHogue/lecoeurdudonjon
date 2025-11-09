@@ -1018,26 +1018,6 @@ function getRaceIcon(race) {
     };
     return icons[race] || '👤';
 }
-            
-            const nameSection = document.createElement('div');
-            nameSection.innerHTML = `
-                <strong>${medal}${player.name}</strong><br>
-                <small>Niveau ${player.level} | ${player.kills} victoires</small>
-            `;
-            
-            const statsSection = document.createElement('div');
-            statsSection.style.textAlign = 'right';
-            statsSection.innerHTML = `
-                <div style="color: #DAA520; font-weight: bold;">${player.score} pts</div>
-                <small>⚔️ ${player.strength} | 🛡️ ${player.defense}</small>
-            `;
-            
-            playerDiv.appendChild(nameSection);
-            playerDiv.appendChild(statsSection);
-            leaderboardList.appendChild(playerDiv);
-        });
-    }
-}
 
 // Calculate player score for leaderboard
 function calculatePlayerScore(player) {

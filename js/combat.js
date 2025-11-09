@@ -366,9 +366,11 @@ export function attack() {
         // Submit score to multiplayer server if enabled
         submitScoreIfEnabled();
         
+        // Immediately end combat to prevent double rewards
+        gameState.inCombat = false;
+        
         // Return to main screen after victory
         setTimeout(() => {
-            gameState.inCombat = false;
             showScreen('mainScreen');
         }, 2000);
         
