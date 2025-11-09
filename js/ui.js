@@ -40,7 +40,7 @@ export function showScreen(screenId) {
 export function updateUI() {
     const p = gameState.player;
     document.getElementById('playerName').textContent = p.name || '---';
-    document.getElementById('playerLevel').textContent = p.level;
+    document.getElementById('playerLevel').textContent = `${p.level}/20`;
     document.getElementById('playerGold').textContent = p.gold + ' 💰';
     document.getElementById('playerHealth').textContent = `${p.health}/${p.maxHealth}`;
     
@@ -73,7 +73,6 @@ export function updateUI() {
                 case 'guerrier': weaponIcon = '⚔️'; break;
                 case 'archer': weaponIcon = '🏹'; break;
                 case 'magicien': weaponIcon = '🪄'; break;
-                case 'rogue': weaponIcon = '🗡️'; break;
             }
         }
         weaponIconEl.textContent = weaponIcon;
@@ -457,9 +456,6 @@ export function updateEquipmentModal() {
                 break;
             case 'archer':
                 avatar = isFemale ? '🏹👩' : '🏹👨';
-                break;
-            case 'rogue':
-                avatar = isFemale ? '🗡️👩' : '🗡️👨';
                 break;
         }
         avatarEl.textContent = avatar;
