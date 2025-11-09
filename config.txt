@@ -1,0 +1,12 @@
+# Configuration du serveur multijoueur LAN
+# LAN Multiplayer Server Configuration
+
+# Adresse IP et port du serveur par défaut
+# Default server IP address and port
+SERVER_URL=192.168.68.61:3000
+
+# Informations réseau / Network information:
+# IPv4: 192.168.68.61
+# Subnet Mask: 255.255.252.0
+# Default Gateway: 192.168.68.1
+# Port: 3000 (débloqué dans le firewall OPNsense / unblocked in OPNsense firewall)

@@ -1,5 +1,5 @@
 // Multiplayer UI Functions
-import { configureServer, getNetworkState, checkServerHealth, getPlayerId } from './network.js';
+import { configureServer, getNetworkState, checkServerHealth, getPlayerId, getDefaultServerUrl } from './network.js';
 import { showScreen } from './ui.js';
 
 // Show multiplayer settings screen
@@ -15,10 +15,15 @@ export function showMultiplayerSettings() {
     // Load and display current server URL
     const networkState = getNetworkState();
     const serverUrlInput = document.getElementById('serverUrlInput');
-    if (serverUrlInput && networkState.serverUrl) {
-        // Remove http:// or https:// prefix for display
-        const displayUrl = networkState.serverUrl.replace(/^https?:\/\//, '');
-        serverUrlInput.value = displayUrl;
+    if (serverUrlInput) {
+        if (networkState.serverUrl) {
+            // Remove http:// or https:// prefix for display
+            const displayUrl = networkState.serverUrl.replace(/^https?:\/\//, '');
+            serverUrlInput.value = displayUrl;
+        } else {
+            // Pre-populate with default server URL
+            serverUrlInput.value = getDefaultServerUrl();
+        }
     }
     
     // Update status

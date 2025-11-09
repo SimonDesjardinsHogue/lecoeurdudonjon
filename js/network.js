@@ -3,6 +3,11 @@
 
 import { gameState } from './game-state.js';
 
+// Default configuration
+const DEFAULT_CONFIG = {
+  serverUrl: '192.168.68.61:3000'
+};
+
 // Network state
 const networkState = {
   serverUrl: null,
@@ -64,11 +69,20 @@ export function configureServer(serverUrl) {
   connectToServer();
 }
 
+// Get default server URL from config
+export function getDefaultServerUrl() {
+  return DEFAULT_CONFIG.serverUrl;
+}
+
 // Load saved server URL
 export function loadServerConfig() {
   const savedUrl = localStorage.getItem('lecoeurdudragon_serverUrl');
   if (savedUrl) {
     configureServer(savedUrl);
+  } else {
+    // If no saved URL, use default but don't auto-enable
+    // User still needs to save/test to enable multiplayer
+    console.log('ℹ️ Aucune configuration sauvegardée. Défaut disponible:', DEFAULT_CONFIG.serverUrl);
   }
 }
 

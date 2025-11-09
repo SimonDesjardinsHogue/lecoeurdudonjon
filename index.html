@@ -373,8 +373,8 @@
                     
                     <div class="shop-item" style="display: block; margin-top: 20px;">
                         <h4 style="color: #DAA520;">🔧 Configuration du Serveur</h4>
-                        <p>Entrez l'adresse IP et le port du serveur (ex: 192.168.1.100:3000)</p>
-                        <input type="text" id="serverUrlInput" placeholder="192.168.1.100:3000" style="width: 100%; max-width: 100%; margin-top: 10px;">
+                        <p>Adresse IP et port du serveur (défaut: 192.168.68.61:3000)</p>
+                        <input type="text" id="serverUrlInput" placeholder="192.168.68.61:3000" style="width: 100%; max-width: 100%; margin-top: 10px;">
                         <div style="display: flex; gap: 10px; margin-top: 10px;">
                             <button onclick="saveServerConfig()" style="flex: 1;">💾 Sauvegarder</button>
                             <button onclick="testServerConnection()" style="flex: 1;">🔍 Tester</button>
@@ -393,9 +393,10 @@
                         <h4 style="color: #DAA520;">📖 Instructions</h4>
                         <ol style="font-size: 0.9em; color: #ddd; text-align: left;">
                             <li>Démarrez le serveur sur un PC du réseau local (voir server/README.md)</li>
-                            <li>Trouvez l'adresse IP du serveur avec <code>ipconfig</code> (Windows) ou <code>ifconfig</code> (Mac/Linux)</li>
-                            <li>Entrez l'adresse IP et le port ci-dessus</li>
-                            <li>Testez la connexion</li>
+                            <li>L'adresse par défaut est <code>192.168.68.61:3000</code> (déjà configuré)</li>
+                            <li>Si le serveur est sur une autre IP, trouvez-la avec <code>ipconfig</code> (Windows) ou <code>ifconfig</code> (Mac/Linux)</li>
+                            <li>Testez la connexion avec le bouton 🔍 Tester</li>
+                            <li>Sauvegardez avec 💾 Sauvegarder</li>
                             <li>Vos scores seront automatiquement envoyés au serveur !</li>
                         </ol>
                     </div>
