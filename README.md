@@ -21,6 +21,7 @@ De mystérieux explorateurs, des frères et sœurs connus sous le nom des M&M, p
 - ⚔️ **Combat Tactique** : Système de combat avec compétences spéciales et stratégie
 - 🏆 **5 Boss Épiques** : Chacun avec des capacités uniques et des récompenses légendaires
 - 👥 **3 Classes Jouables** : Guerrier, Magicien, Archer - chacune avec son propre style de jeu
+- 🧝 **3 Races** : Humain, Elfe, Nain - chacune avec des modificateurs de stats uniques
 - 📈 **Progression Profonde** : 20 niveaux, 7 statistiques, système de points de stats
 - 🛍️ **Économie Complète** : Commerce, armes, armures, potions, objets légendaires
 - 🎲 **Événements Aléatoires** : Énigmes, choix moraux, trésors, pièges
@@ -66,7 +67,8 @@ Puis ouvrez votre navigateur à: `http://localhost:8000/`
 
 1. Entrez le nom de votre héros
 2. Choisissez une classe (Guerrier, Magicien, ou Archer)
-3. Cliquez sur "Commencer l'Aventure"
+3. Choisissez une race (Humain, Elfe, ou Nain)
+4. Cliquez sur "Commencer l'Aventure"
 
 ## 🎯 Objectifs et Portée du Jeu
 
@@ -78,6 +80,7 @@ Puis ouvrez votre navigateur à: `http://localhost:8000/`
 - **Nombre d'Ennemis** : 20 types différents (+ 5 Boss uniques)
 - **Temps de Jeu Estimé** : ~10-15 heures pour atteindre le niveau maximum
 - **Classes de Personnages** : 3 classes uniques (Guerrier, Magicien, Archer)
+- **Races de Personnages** : 3 races (Humain, Elfe, Nain)
 - **Boss à Vaincre** : 5 Boss légendaires avec capacités spéciales
 - **Objets Légendaires** : 8+ objets légendaires à débloquer
 - **Succès à Débloquer** : Système de succès pour récompenser vos exploits
@@ -98,9 +101,9 @@ Puis ouvrez votre navigateur à: `http://localhost:8000/`
 - **Attaquer** : Infligez des dégâts à l'ennemi en fonction de votre force
 - **Défendre** : Doublez votre défense pour le prochain tour
 - **Compétences Spéciales** : Utilisez des capacités uniques selon votre classe
-  - Guerrier : Coup Puissant, Rage du Berserker
-  - Magicien : Boule de Feu, Bouclier Arcanique, Chaîne de Foudre
-  - Archer : Tir Précis, Flèche Empoisonnée, Pluie de Flèches
+  - Guerrier : Charge Puissante, Coup de Bouclier
+  - Magicien : Boule de Feu, Bouclier de Mana, Éclair Foudroyant, Lance de Glace
+  - Archer : Tir Multiple, Tir Visé
 - **Fuir** : Tentez d'échapper au combat (50% de chance)
 - **Boss Combats** : Affrontez 5 Boss épiques avec des capacités spéciales
   - Troll des Cavernes (Niv. 5) - Régénération
@@ -153,7 +156,7 @@ Les objets rares+ peuvent avoir des bonus sur 7 stats différentes :
 #### 🛌 Se Reposer à l'Auberge
 - **Coût** : 20 or
 - **Effet** : Restaure complètement votre santé
-- **Repos Limité** : Une fois toutes les 4 heures (temps réel)
+- **Repos Limité** : Une fois par jour (énergie se restaure à 6 AM heure de Toronto)
 
 #### 📊 Système de Statistiques Détaillé
 - **7 Statistiques Principales** :
@@ -214,17 +217,32 @@ Chaque boss a des capacités spéciales uniques et récompense un objet légenda
 - **Guerrier** 🛡️ : Le plus résistant, excellent pour les débutants
   - 148 HP de base, haute défense
   - Bon équilibre entre attaque et survie
-  - Compétences : Coup Puissant, Rage du Berserker
+  - Compétences : Charge Puissante, Coup de Bouclier
   
 - **Magicien** 🧙 : Dégâts élevés, mais fragile
   - 122 HP de base, attaques magiques puissantes
-  - Bouclier Arcanique pour survivre aux combats difficiles
-  - Compétences : Boule de Feu, Bouclier Arcanique, Chaîne de Foudre
+  - Bouclier de Mana pour survivre aux combats difficiles
+  - Compétences : Boule de Feu, Bouclier de Mana, Éclair Foudroyant, Lance de Glace
   
 - **Archer** 🏹 : Équilibré avec esquive
   - 128 HP de base, bonne dextérité
   - Capacité d'esquive basée sur la DEX (jusqu'à 18%)
-  - Compétences : Tir Précis, Flèche Empoisonnée, Pluie de Flèches
+  - Compétences : Tir Multiple, Tir Visé
+
+#### Choix de Race
+- **Humain** 👤 : Polyvalent et équilibré
+  - Aucun modificateur de stats
+  - Bon choix pour toutes les classes
+  
+- **Elfe** 🧝 : Agile et gracieux
+  - +2 Dextérité, -2 Constitution
+  - Excellent pour Archer (esquive améliorée)
+  - Attention : Moins de HP de base (-10 HP)
+  
+- **Nain** 🧔 : Robuste et résistant
+  - +2 Constitution, -2 Dextérité
+  - Excellent pour Guerrier et Magicien (+10 HP)
+  - Parfait pour survivre aux combats difficiles
 
 #### Stratégies de Progression
 1. **Début du Jeu (Niveaux 1-5)**
