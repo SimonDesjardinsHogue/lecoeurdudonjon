@@ -15,14 +15,30 @@ console.log('══════════════════════�
 console.log('                  VERIFICATION RESULTS                         ');
 console.log('═══════════════════════════════════════════════════════════════');
 console.log(`Total Simulations:  ${report.summary.totalSimulations.toLocaleString()}`);
-console.log(`Average Win Rate:   ${report.summary.avgWinRate} (target: 60-85%)`);
+console.log(`Average Win Rate:   ${report.summary.avgWinRate} (target: 70-80%)`);
 console.log(`Average Level:      ${report.summary.avgLevel}`);
 console.log(`Average Kills:      ${report.summary.avgKills}`);
+console.log(`Average Bosses:     ${report.summary.avgBossesDefeated} (target: ~4 by lvl 20)`);
 console.log(`% Reached Lvl 20:   ${report.summary.percentReachedLevel20}`);
+
+// Calculate estimated play time to level 20
+const avgKillsToLevel20 = Object.values(report.classStats)
+    .map(c => c.milestones[20]?.avgKills || 0)
+    .filter(k => k > 0)
+    .reduce((sum, k) => sum + k, 0) / 
+    Object.values(report.classStats).filter(c => c.milestones[20]?.avgKills > 0).length;
+
+// Estimate: 30 seconds per combat (including shop visits, resting, etc.)
+const estimatedTimeMinutes = (avgKillsToLevel20 * 30) / 60;
+const estimatedTimeHours = estimatedTimeMinutes / 60;
+
+console.log(`\n⏱️  Estimated Play Time to Level 20:`);
+console.log(`    ${estimatedTimeHours.toFixed(1)} hours (${estimatedTimeMinutes.toFixed(0)} minutes)`);
+console.log(`    Based on ~${avgKillsToLevel20.toFixed(0)} combats at ~30 sec/combat`);
 
 console.log('\n📊 Class Balance:');
 Object.entries(report.classStats).forEach(([key, stats]) => {
-    console.log(`  ${stats.className.padEnd(12)} - WinRate: ${(stats.avgWinRate * 100).toFixed(1)}%, Level: ${stats.avgLevel.toFixed(1)}, Lvl20: ${stats.percentReachedLevel20.toFixed(1)}%`);
+    console.log(`  ${stats.className.padEnd(12)} - WinRate: ${(stats.avgWinRate * 100).toFixed(1)}%, Level: ${stats.avgLevel.toFixed(1)}, Bosses: ${stats.avgBossesDefeated.toFixed(1)}, Lvl20: ${stats.percentReachedLevel20.toFixed(1)}%`);
 });
 
 console.log('\n📊 Milestone Statistics by Class:');
@@ -53,7 +69,7 @@ Object.entries(report.sexStats).forEach(([key, stats]) => {
 
 const avgWinRate = parseFloat(report.summary.avgWinRate);
 const improvement = avgWinRate > 41.7 ? 'IMPROVED ✓' : 'needs more work';
-const targetMet = avgWinRate >= 60 && avgWinRate <= 85 ? 'TARGET MET ✓' : 'not yet in target range';
+const targetMet = avgWinRate >= 70 && avgWinRate <= 80 ? 'TARGET MET ✓' : 'not yet in target range';
 
 console.log(`\n🎯 Balance Status: ${improvement} - ${targetMet}`);
-console.log(`   Win rate: ${report.summary.avgWinRate} (was 41.67%, target: 60-85%)\n`);
+console.log(`   Win rate: ${report.summary.avgWinRate} (was 41.67%, target: 70-80%)\n`);

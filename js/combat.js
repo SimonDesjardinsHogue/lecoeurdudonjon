@@ -15,9 +15,9 @@ import { getEventMultiplier } from './scheduled-events.js';
 function shouldFaceBoss() {
     const p = gameState.player;
     // Boss possible at levels 5, 10, 15, 20, etc.
-    // 17.5% chance to encounter boss when at a boss level and haven't defeated this boss yet
+    // 25% chance to encounter boss when at a boss level and haven't defeated this boss yet
     const isAtBossLevel = p.level % 5 === 0 && p.kills > 0 && (p.level / 5) > p.bossesDefeated;
-    const bossSpawnChance = 0.175; // 17.5% chance (reduced from 35%)
+    const bossSpawnChance = 0.25; // 25% chance (increased to get ~4 bosses by level 20)
     return isAtBossLevel && Math.random() < bossSpawnChance;
 }
 
@@ -573,6 +573,25 @@ export function enemyAttack() {
     
     // Apply mana shield buff if active
     enemyDamage = applyShieldBuff(enemyDamage);
+    
+    // Class-specific defensive abilities
+    // Magicien: Arcane Shield - 20% chance to cast shield that reduces damage by 30%
+    if (p.class === 'magicien' && Math.random() < 0.20) {
+        const reduction = Math.floor(enemyDamage * 0.30);
+        enemyDamage = enemyDamage - reduction;
+        addCombatLog(`✨ Bouclier arcanique ! Les dégâts sont réduits de ${reduction}.`, 'special');
+    }
+    
+    // Archer: DEX-based dodge - chance to reduce damage based on dexterity
+    if (p.class === 'archer') {
+        const dexMod = getStatModifier(p.dexterity);
+        const dodgeChance = Math.min(0.18, dexMod * 0.018); // Up to 18% dodge chance
+        if (Math.random() < dodgeChance) {
+            const reduction = Math.floor(enemyDamage * 0.35);
+            enemyDamage = enemyDamage - reduction;
+            addCombatLog(`💨 Esquive partielle ! Les dégâts sont réduits de ${reduction}.`, 'special');
+        }
+    }
     
     p.health -= enemyDamage;
     addCombatLog(`Le ${e.name} vous inflige ${enemyDamage} dégâts !`, 'damage');

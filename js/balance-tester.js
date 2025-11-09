@@ -743,10 +743,14 @@ function generateBalanceReport(analysis) {
     // Calculate total simulations
     const totalSimulations = Object.values(analysis.byCombination).reduce((sum, c) => sum + c.gamesPlayed, 0);
     
+    // Calculate average bosses defeated
+    const avgBossesDefeated = average(allClasses.map(c => c.avgBossesDefeated));
+    
     report.summary = {
         avgLevel: avgLevelOverall.toFixed(2),
         avgWinRate: (avgWinRateOverall * 100).toFixed(2) + '%',
         avgKills: avgKillsOverall.toFixed(2),
+        avgBossesDefeated: avgBossesDefeated.toFixed(2),
         percentReachedLevel20: avgLevel20Percent.toFixed(2) + '%',
         totalSimulations: totalSimulations
     };
