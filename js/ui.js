@@ -116,14 +116,14 @@ function getDifficultyIndicator(enemy) {
     let title = '';
     
     if (powerRatio < 0.5) {
-        // Very easy - green
-        indicator = '●';
-        color = '#51cf66';
-        title = 'Très Facile';
-    } else if (powerRatio < 0.8) {
-        // Easy - light green
+        // Very easy - light green
         indicator = '●';
         color = '#8ce99a';
+        title = 'Très Facile';
+    } else if (powerRatio < 0.8) {
+        // Easy - green
+        indicator = '●';
+        color = '#51cf66';
         title = 'Facile';
     } else if (powerRatio < 1.2) {
         // Normal - yellow
