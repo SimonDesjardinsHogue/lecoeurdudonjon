@@ -674,6 +674,7 @@ export function resetGame() {
             cuivre: 0
         };
         gameState.player.inventory = [];
+        gameState.player.merchantPurchasedItems = [];
         
         // Reset combat state
         gameState.currentEnemy = null;
@@ -880,6 +881,9 @@ export function meetWanderingMerchant() {
     const shopDiv = document.getElementById('shopItems');
     shopDiv.innerHTML = '';
     
+    // Reset purchased items on new encounter
+    gameState.player.merchantPurchasedItems = [];
+    
     // Add merchant description
     const merchantDesc = document.createElement('div');
     merchantDesc.className = 'story-text';
@@ -889,8 +893,13 @@ export function meetWanderingMerchant() {
     `;
     shopDiv.appendChild(merchantDesc);
     
-    // Display rare items
+    // Display rare items (only show items that haven't been purchased this encounter)
     rareItems.forEach((item, index) => {
+        // Skip items that have been purchased in this encounter
+        if (gameState.player.merchantPurchasedItems.includes(index)) {
+            return;
+        }
+        
         const itemDiv = document.createElement('div');
         itemDiv.className = 'shop-item';
         const icon = item.icon || '📦';
@@ -905,12 +914,6 @@ export function meetWanderingMerchant() {
         `;
         shopDiv.appendChild(itemDiv);
     });
-    
-    // Add return button
-    const returnDiv = document.createElement('div');
-    returnDiv.className = 'game-actions';
-    returnDiv.innerHTML = '<button onclick="window.showMain()">🚪 Retour</button>';
-    shopDiv.appendChild(returnDiv);
 }
 
 // Buy rare item
@@ -921,6 +924,12 @@ export function buyRareItem(index) {
     if (p.gold >= item.cost) {
         p.gold -= item.cost;
         item.effect();
+        
+        // Mark item as purchased for this encounter
+        if (!p.merchantPurchasedItems) {
+            p.merchantPurchasedItems = [];
+        }
+        p.merchantPurchasedItems.push(index);
         
         // Play purchase sound
         audioManager.playSound('purchase');
@@ -1091,12 +1100,6 @@ export function meetJeweler() {
         sellSection.appendChild(sellDiv);
     });
     shopDiv.appendChild(sellSection);
-    
-    // Add return button
-    const returnDiv = document.createElement('div');
-    returnDiv.className = 'game-actions';
-    returnDiv.innerHTML = '<button onclick="window.showMain()">🚪 Retour</button>';
-    shopDiv.appendChild(returnDiv);
 }
 
 // Buy metal from jeweler

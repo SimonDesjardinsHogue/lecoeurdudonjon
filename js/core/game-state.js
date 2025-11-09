@@ -45,7 +45,9 @@ export const gameState = {
             cuivre: 0     // Copper
         },
         // Item inventory - max 4 items (potions and other items)
-        inventory: []
+        inventory: [],
+        // Track purchased items from wandering merchant (reset on next encounter)
+        merchantPurchasedItems: []
     },
     currentEnemy: null,
     inCombat: false,
