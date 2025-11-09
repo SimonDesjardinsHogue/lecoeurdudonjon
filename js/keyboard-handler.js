@@ -5,7 +5,7 @@ import { gameState } from './game-state.js';
 const COMBAT_KEYS = ['a', 'd', 'f'];
 
 // Configuration: Main menu navigation keys
-const MENU_KEYS = ['1', '2', '3', '4', '5', '6'];
+const MENU_KEYS = ['1', '2', '3', '4', '5', '6', '7', '8'];
 
 // Configuration: Universal navigation keys
 const UNIVERSAL_KEYS = ['escape'];
@@ -71,7 +71,7 @@ export function handleKeyPress(event) {
         return;
     }
     
-    // Main menu shortcuts (1-6)
+    // Main menu shortcuts (1-8)
     if (currentScreen === 'mainScreen') {
         switch (key) {
             case '1':
@@ -91,6 +91,12 @@ export function handleKeyPress(event) {
                 break;
             case '6':
                 window.showLeaderboard();
+                break;
+            case '7':
+                window.showDailyQuests();
+                break;
+            case '8':
+                window.showAchievements();
                 break;
         }
         return;
