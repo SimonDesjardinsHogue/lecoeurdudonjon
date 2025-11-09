@@ -90,17 +90,29 @@ export function initializeShopItems() {
     shopItems[54].effect = () => { gameState.player.strength += 18; }; // Bâton Céleste
     shopItems[55].effect = () => { gameState.player.strength += 22; }; // Bâton de l'Univers
     
+    // Shields for Guerrier (10 tiers)
+    shopItems[56].effect = () => { gameState.player.defense += 1; };  // Bouclier en Bois
+    shopItems[57].effect = () => { gameState.player.defense += 3; };  // Bouclier en Fer
+    shopItems[58].effect = () => { gameState.player.defense += 5; };  // Bouclier Renforcé
+    shopItems[59].effect = () => { gameState.player.defense += 7; };  // Bouclier d'Acier
+    shopItems[60].effect = () => { gameState.player.defense += 9; };  // Bouclier de Chevalier
+    shopItems[61].effect = () => { gameState.player.defense += 10; }; // Bouclier Enchanté
+    shopItems[62].effect = () => { gameState.player.defense += 12; }; // Bouclier Runique
+    shopItems[63].effect = () => { gameState.player.defense += 15; }; // Bouclier Divin
+    shopItems[64].effect = () => { gameState.player.defense += 18; }; // Bouclier Céleste
+    shopItems[65].effect = () => { gameState.player.defense += 22; }; // Bouclier du Protecteur Immortel
+    
     // Armors (10 tiers)
-    shopItems[56].effect = () => { gameState.player.defense += 1; };  // Armure en Tissu
-    shopItems[57].effect = () => { gameState.player.defense += 3; };  // Armure de Cuir
-    shopItems[58].effect = () => { gameState.player.defense += 5; };  // Armure Clouée
-    shopItems[59].effect = () => { gameState.player.defense += 7; };  // Cotte de Mailles
-    shopItems[60].effect = () => { gameState.player.defense += 9; };  // Armure d'Acier
-    shopItems[61].effect = () => { gameState.player.defense += 10; }; // Armure Enchantée
-    shopItems[62].effect = () => { gameState.player.defense += 12; }; // Armure Runique
-    shopItems[63].effect = () => { gameState.player.defense += 15; }; // Armure Divine
-    shopItems[64].effect = () => { gameState.player.defense += 18; }; // Armure Céleste
-    shopItems[65].effect = () => { gameState.player.defense += 22; }; // Armure Immortelle
+    shopItems[66].effect = () => { gameState.player.defense += 1; };  // Armure en Tissu
+    shopItems[67].effect = () => { gameState.player.defense += 3; };  // Armure de Cuir
+    shopItems[68].effect = () => { gameState.player.defense += 5; };  // Armure Clouée
+    shopItems[69].effect = () => { gameState.player.defense += 7; };  // Cotte de Mailles
+    shopItems[70].effect = () => { gameState.player.defense += 9; };  // Armure d'Acier
+    shopItems[71].effect = () => { gameState.player.defense += 10; }; // Armure Enchantée
+    shopItems[72].effect = () => { gameState.player.defense += 12; }; // Armure Runique
+    shopItems[73].effect = () => { gameState.player.defense += 15; }; // Armure Divine
+    shopItems[74].effect = () => { gameState.player.defense += 18; }; // Armure Céleste
+    shopItems[75].effect = () => { gameState.player.defense += 22; }; // Armure Immortelle
     
     // Rare items
     rareItems[0].effect = () => { // Élixir de Résurrection
@@ -587,6 +599,14 @@ export function buyItem(index) {
             }
             if (item.type === 'armor' && item.bonus) {
                 p.currentArmor = {
+                    name: item.name,
+                    icon: item.icon,
+                    bonus: item.bonus,
+                    description: item.description
+                };
+            }
+            if (item.type === 'shield' && item.bonus) {
+                p.currentShield = {
                     name: item.name,
                     icon: item.icon,
                     bonus: item.bonus,

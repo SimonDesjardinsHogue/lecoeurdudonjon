@@ -61,7 +61,28 @@ export const shopItems = [
     { name: 'Arc de l\'Étoile Filante', icon: '🏹', description: '22 de dégât\n✨ +1 Force', cost: 2500, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 22, rarity: 'legendaire', effect: null },
     
     // Weapons for Magicien (Mage) - 10 tiers for level 1-20
-
+    { name: 'Bâton de Bois', icon: '🪄', description: '1 de dégât\n✨ +1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 1, rarity: 'commun', effect: null },
+    { name: 'Bâton d\'Apprenti', icon: '🪄', description: '3 de dégât\n✨ +1 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 3, rarity: 'commun', effect: null },
+    { name: 'Bâton Mystique', icon: '🪄', description: '5 de dégât\n✨ +1 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 5, rarity: 'rare', effect: null },
+    { name: 'Bâton Enchanté', icon: '🪄', description: '7 de dégât\n✨ +1 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 7, rarity: 'rare', effect: null },
+    { name: 'Bâton de Pouvoir', icon: '🪄', description: '9 de dégât\n✨ +1 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 9, rarity: 'epique', effect: null },
+    { name: 'Bâton Runique', icon: '🪄', description: '10 de dégât\n✨ +1 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 10, rarity: 'epique', effect: null },
+    { name: 'Bâton Légendaire', icon: '🪄', description: '12 de dégât\n✨ +1 Force', cost: 850, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 12, rarity: 'legendaire', effect: null },
+    { name: 'Bâton de l\'Archimage', icon: '🪄', description: '15 de dégât\n✨ +1 Force', cost: 1250, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 15, rarity: 'legendaire', effect: null },
+    { name: 'Bâton Céleste', icon: '🪄', description: '18 de dégât\n✨ +1 Force', cost: 1800, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 18, rarity: 'legendaire', effect: null },
+    { name: 'Bâton de l\'Univers', icon: '🪄', description: '22 de dégât\n✨ +1 Force', cost: 2500, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 22, rarity: 'legendaire', effect: null },
+    
+    // Shields for Guerrier (Warrior) - 10 tiers for level 1-20
+    { name: 'Bouclier en Bois', icon: '🛡️', description: '+1 Défense', cost: 35, category: 'equipment', type: 'shield', classRestriction: 'guerrier', bonus: 1, rarity: 'commun', effect: null },
+    { name: 'Bouclier en Fer', icon: '🛡️', description: '+3 Défense', cost: 70, category: 'equipment', type: 'shield', classRestriction: 'guerrier', bonus: 3, rarity: 'commun', effect: null },
+    { name: 'Bouclier Renforcé', icon: '🛡️', description: '+5 Défense', cost: 115, category: 'equipment', type: 'shield', classRestriction: 'guerrier', bonus: 5, rarity: 'rare', effect: null },
+    { name: 'Bouclier d\'Acier', icon: '🛡️', description: '+7 Défense', cost: 180, category: 'equipment', type: 'shield', classRestriction: 'guerrier', bonus: 7, rarity: 'rare', effect: null },
+    { name: 'Bouclier de Chevalier', icon: '🛡️', description: '+9 Défense', cost: 265, category: 'equipment', type: 'shield', classRestriction: 'guerrier', bonus: 9, rarity: 'epique', effect: null },
+    { name: 'Bouclier Enchanté', icon: '🛡️', description: '+10 Défense', cost: 510, category: 'equipment', type: 'shield', classRestriction: 'guerrier', bonus: 10, rarity: 'epique', effect: null },
+    { name: 'Bouclier Runique', icon: '🛡️', description: '+12 Défense', cost: 800, category: 'equipment', type: 'shield', classRestriction: 'guerrier', bonus: 12, rarity: 'legendaire', effect: null },
+    { name: 'Bouclier Divin', icon: '🛡️', description: '+15 Défense', cost: 1200, category: 'equipment', type: 'shield', classRestriction: 'guerrier', bonus: 15, rarity: 'legendaire', effect: null },
+    { name: 'Bouclier Céleste', icon: '🛡️', description: '+18 Défense', cost: 1700, category: 'equipment', type: 'shield', classRestriction: 'guerrier', bonus: 18, rarity: 'legendaire', effect: null },
+    { name: 'Bouclier du Protecteur Immortel', icon: '🛡️', description: '+22 Défense', cost: 2400, category: 'equipment', type: 'shield', classRestriction: 'guerrier', bonus: 22, rarity: 'legendaire', effect: null },
     
     // Armors (10 tiers for level 1-20)
     { name: 'Armure en Tissu', icon: '🛡️', description: '+1 Défense', cost: 35, category: 'equipment', type: 'armor', bonus: 1, rarity: 'commun', effect: null },
