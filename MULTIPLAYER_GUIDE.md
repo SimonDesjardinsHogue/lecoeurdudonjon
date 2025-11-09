@@ -4,6 +4,15 @@
 
 Le jeu "Le Coeur du Dragon" supporte maintenant le mode multijoueur en réseau local (LAN), permettant à plusieurs joueurs sur le même réseau de partager un classement commun en temps réel.
 
+### Configuration par Défaut
+
+Le jeu est préconfiguré avec l'adresse IP `192.168.68.61:3000` pour faciliter la connexion au réseau LAN. Cette configuration est stockée dans le fichier `config.txt` et pré-chargée automatiquement dans l'interface.
+
+**Adresse IP par défaut**: `192.168.68.61`
+**Port**: `3000` (débloqué dans le firewall OPNsense)
+**Masque de sous-réseau**: `255.255.252.0`
+**Passerelle par défaut**: `192.168.68.1`
+
 ## Fonctionnalités Principales
 
 ### 1. Identification des Joueurs
@@ -99,14 +108,15 @@ Cherchez une adresse 192.168.x.x ou 10.x.x.x
 2. Aller dans **Statistiques** (bouton 5)
 3. Cliquer sur **Sauvegardes**
 4. Cliquer sur **Paramètres Multijoueur**
-5. Entrer l'adresse IP et le port (ex: `192.168.1.100:3000`)
-6. Cliquer sur **Tester** pour vérifier la connexion
-7. Cliquer sur **Sauvegarder**
+5. L'adresse par défaut `192.168.68.61:3000` est déjà configurée
+6. Si votre serveur utilise une autre IP, modifiez l'adresse IP et le port
+7. Cliquer sur **🔍 Tester** pour vérifier la connexion
+8. Cliquer sur **💾 Sauvegarder**
 
 ### Étape 6: Jouer sur d'Autres Appareils
 
 1. Sur un autre appareil (téléphone, tablette, PC), ouvrir le navigateur
-2. Aller à `http://[IP-DU-SERVEUR]:3000` (ex: `http://192.168.1.100:3000`)
+2. Aller à `http://192.168.68.61:3000` (ou l'IP de votre serveur)
 3. Configurer le serveur comme à l'étape 5
 4. Jouer ! Les scores sont automatiquement partagés
 
@@ -188,6 +198,7 @@ Le serveur utilise Socket.IO pour les mises à jour en temps réel:
 
 ```
 lecoeurdudragon/
+├── config.txt               # Configuration par défaut (192.168.68.61:3000)
 ├── js/
 │   ├── network.js           # Module client réseau
 │   ├── multiplayer-ui.js    # Interface utilisateur multijoueur
