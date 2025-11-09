@@ -1834,3 +1834,41 @@ export function showAdminPanel() {
 export function showServerHosting() {
     showScreen('serverHostingScreen');
 }
+
+// Delete all saved games from localStorage and network
+export function deleteAllSaves() {
+    if (confirm('⚠️ ATTENTION ⚠️\n\nÊtes-vous sûr de vouloir supprimer TOUTES les sauvegardes ?\n\nCela supprimera :\n- Toutes les parties sauvegardées localement\n- Les données du classement local\n- La configuration du serveur multijoueur\n- Les paramètres audio\n\nCette action est IRRÉVERSIBLE !')) {
+        
+        // Second confirmation to prevent accidental deletion
+        if (confirm('Dernière confirmation : Voulez-vous vraiment supprimer toutes les données ?')) {
+            try {
+                // List of all localStorage keys used by the game
+                const keysToDelete = [
+                    'lecoeurdudonjon_save',           // Main game save
+                    'lecoeurdudragon_playerId',       // Multiplayer player ID
+                    'lecoeurdudragon_serverUrl',      // Server configuration
+                    'lecoeurdudonjon_leaderboard',    // Local leaderboard
+                    'lecoeurdudonjon_audio'           // Audio settings
+                ];
+                
+                // Delete each key
+                let deletedCount = 0;
+                keysToDelete.forEach(key => {
+                    if (localStorage.getItem(key) !== null) {
+                        localStorage.removeItem(key);
+                        deletedCount++;
+                    }
+                });
+                
+                // Show success message
+                alert(`✅ Sauvegardes supprimées avec succès !\n\n${deletedCount} élément(s) supprimé(s) du stockage local.`);
+                
+                // Reset the game state to default
+                resetGame();
+                
+            } catch (e) {
+                alert(`❌ Erreur lors de la suppression des sauvegardes :\n${e.message}`);
+            }
+        }
+    }
+}
