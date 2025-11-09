@@ -768,11 +768,19 @@ input[type="text"]:focus {
     }
 
     .stat-group-character {
-        grid-column: span 2;
+        grid-column: span 1;
+    }
+
+    .stat-group-combat {
+        grid-column: span 1;
+    }
+
+    .stat-group-progression {
+        grid-column: span 1;
     }
 
     .characteristics-group {
-        grid-column: span 2;
+        grid-column: span 1;
     }
 
     .game-content {
@@ -796,7 +804,7 @@ input[type="text"]:focus {
     }
 
     .game-stats {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .stat-group-character {
@@ -804,10 +812,14 @@ input[type="text"]:focus {
     }
 
     .stat-group-combat {
-        grid-column: span 2;
+        grid-column: span 1;
     }
 
     .stat-group-progression {
+        grid-column: span 1;
+    }
+
+    .characteristics-group {
         grid-column: span 1;
     }
 }
