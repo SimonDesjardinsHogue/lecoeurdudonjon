@@ -564,7 +564,7 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
             <input type="checkbox" id="classFilter" ${filterByClass ? 'checked' : ''} onchange="window.showShop(document.getElementById('categoryFilter').value, this.checked)" style="cursor: pointer; width: 18px; height: 18px;">
-            <label for="classFilter" style="color: #DAA520; cursor: pointer;">Objets pour ma classe uniquement</label>
+            <label for="classFilter" style="color: #DAA520; cursor: pointer;">Ma classe, disponibles et prérequis atteints</label>
         </div>
     `;
     shopDiv.appendChild(filterContainer);
@@ -597,12 +597,23 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
             return item.category === filterCategory;
         });
     
-    // Additional filter by class compatibility if checkbox is checked
+    // Additional filter by class compatibility, availability, and prerequisites if checkbox is checked
     if (filterByClass) {
         filteredItems = filteredItems.filter(item => {
-            // Show item if it has no class restriction (usable by all)
-            // OR if the class restriction matches the player's class
-            return !item.classRestriction || item.classRestriction === gameState.player.class;
+            // Find the original index in shopItems array
+            const originalIndex = shopItems.indexOf(item);
+            
+            // Check class compatibility
+            const isClassCompatible = !item.classRestriction || item.classRestriction === gameState.player.class;
+            
+            // Check availability
+            const isAvailable = !isItemUnavailable(originalIndex);
+            
+            // Check level requirement
+            const meetsLevelRequirement = !item.levelRequirement || gameState.player.level >= item.levelRequirement;
+            
+            // Show item only if it passes all checks
+            return isClassCompatible && isAvailable && meetsLevelRequirement;
         });
     }
     
