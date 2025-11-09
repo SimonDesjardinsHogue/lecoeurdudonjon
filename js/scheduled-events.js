@@ -155,18 +155,18 @@ export function generateDailyEvents() {
     // Shuffle event types to get random events
     const shuffledTypes = [...eventTypes].sort(() => Math.random() - 0.5);
     
-    // Morning event: 8am - 12pm (noon)
+    // Morning event: 8am - 2pm (14h)
     const morningEvent = {
         ...shuffledTypes[0],
-        startTime: generateRandomTime(8, 12),
+        startTime: generateRandomTime(8, 14),
         endTime: null // Will be set based on start time
     };
     morningEvent.endTime = new Date(morningEvent.startTime.getTime() + 30 * 60 * 1000); // +30 minutes
     
-    // Afternoon event: 12pm - 8pm
+    // Afternoon event: 2pm (14h) - 8pm (20h)
     const afternoonEvent = {
         ...shuffledTypes[1],
-        startTime: generateRandomTime(12, 20), // 20 is 8pm
+        startTime: generateRandomTime(14, 20), // 14 is 2pm, 20 is 8pm
         endTime: null
     };
     afternoonEvent.endTime = new Date(afternoonEvent.startTime.getTime() + 30 * 60 * 1000); // +30 minutes
