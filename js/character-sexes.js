@@ -15,12 +15,12 @@ export const characterSexes = {
     female: {
         name: 'Féminin',
         icon: '♀️',
-        strength: 13,      // FOR
+        strength: 14,      // FOR
         dexterity: 16,     // DEX
         constitution: 13,  // CON
         intelligence: 18,  // INT
         wisdom: 10,        // SAG
-        charisma: 13       // CHA
+        charisma: 12       // CHA
     }
 };
 
