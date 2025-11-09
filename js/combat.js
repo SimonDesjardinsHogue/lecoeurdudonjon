@@ -1,6 +1,6 @@
 // Combat System Module
 import { gameState, enemies, bosses, legendaryItems, randomEvents, riddles, moralChoices, getStatModifier, shopItems } from './game-state.js';
-import { updateUI, updateEnemyUI, addCombatLog, showScreen, updateCombatInventoryUI } from './ui.js';
+import { updateUI, updateEnemyUI, addCombatLog, showScreen, updateCombatInventoryUI, updateSkillsUI } from './ui.js';
 import { saveGame } from './save-load.js';
 import { checkLevelUp, meetNPC } from './game-logic.js';
 import { audioManager } from './audio.js';
@@ -689,6 +689,7 @@ export function enemyAttack() {
     }
     
     updateUI();
+    updateSkillsUI();
     updateCombatInventoryUI();
 }
 
@@ -746,6 +747,7 @@ export function defend() {
     
     // Update UI to show combat inventory
     updateCombatInventoryUI();
+    updateSkillsUI();
     
     // Don't automatically trigger enemy attack - let player choose to use potion or skip
     // Enemy will attack after potion use or when defending state is cleared

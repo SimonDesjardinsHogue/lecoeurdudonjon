@@ -184,6 +184,12 @@ export function getSkillCooldown(skillId) {
 export function useSkill(skillId) {
     if (!gameState.inCombat) return false;
     
+    // Can only use skills while defending
+    if (!gameState.defending) {
+        addCombatLog('Vous devez vous défendre pour accéder à vos compétences !', 'damage');
+        return false;
+    }
+    
     const skill = getPlayerSkills().find(s => s.id === skillId);
     if (!skill) return false;
     

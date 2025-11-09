@@ -377,7 +377,14 @@ export function updateSkillsUI() {
     
     const player = gameState.player;
     
-    skillsContainer.innerHTML = '<div style="margin-bottom: 5px; color: #DAA520; font-weight: bold;">⚡ Compétences Spéciales:</div>';
+    // Only show skills when defending (similar to inventory/potions)
+    if (!gameState.defending) {
+        skillsContainer.innerHTML = '<div style="margin-bottom: 5px; color: #DAA520; font-weight: bold;">⚡ Compétences Spéciales:</div><div style="color: #888; font-style: italic; font-size: 0.9em;">🛡️ Défendez-vous pour accéder à vos compétences</div>';
+        return;
+    }
+    
+    // When defending, show skills
+    skillsContainer.innerHTML = '<div style="margin-bottom: 5px; color: #51cf66; font-weight: bold;">✅ ⚡ Compétences Spéciales - Accessibles:</div>';
     
     skills.forEach(skill => {
         const cooldown = getSkillCooldown(skill.id);

@@ -137,6 +137,7 @@ window.useSkill = function(skillId) {
         setTimeout(() => {
             enemyAttack();
             updateSkillsUI();
+            updateCombatInventoryUI();
         }, 1000);
     }
 };
