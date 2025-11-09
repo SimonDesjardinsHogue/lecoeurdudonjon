@@ -1,6 +1,6 @@
 // Main Entry Point Module
 import { init, startGame, rest, showShop, showStats, showSaveOptions, showMain, resetGame, buyItem, restoreSaveFromStart, meetNPC, showLeaderboard, buyRareItem, showDailyQuestsScreen, showAchievements, buyMetal, sellMetal, meetJeweler, showBalanceTest, runBalanceTest, useInventoryItem, sellInventoryItem, showAdminLogin, showAdminPanel, showServerHosting, spendStatPoint, deleteAllSaves } from './game-logic.js';
-import { explore, attack, defend, flee, enemyAttack, useCombatPotion } from './combat.js';
+import { explore, attack, defend, flee, enemyAttack, useCombatPotion, skipDefendTurn } from './combat.js';
 import { exportSave, importSave } from './save-load.js';
 import { audioManager } from './audio.js';
 import { initKeyboardHandler } from './keyboard-handler.js';
@@ -142,6 +142,12 @@ window.sellInventoryItem = function(inventoryIndex) {
 window.useCombatPotion = function(inventoryIndex) {
     initAudio();
     useCombatPotion(inventoryIndex);
+    updateCombatInventoryUI();
+};
+
+window.skipDefendTurn = function() {
+    initAudio();
+    skipDefendTurn();
     updateCombatInventoryUI();
 };
 

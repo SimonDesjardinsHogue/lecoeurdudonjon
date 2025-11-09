@@ -338,12 +338,34 @@ export function updateCombatInventoryUI() {
     const currentSlots = p.inventory ? p.inventory.length : 0;
     const maxSlots = 4;
     
-    if (currentSlots === 0) {
-        container.innerHTML = `<div style="margin-bottom: 10px; color: #DAA520; font-weight: bold;">🎒 Sac (0/4):</div><div style="color: #888; font-style: italic; font-size: 0.9em;">Aucun objet</div>`;
+    // Only show inventory contents when defending
+    if (!gameState.defending) {
+        if (currentSlots === 0) {
+            container.innerHTML = `<div style="margin-bottom: 10px; color: #DAA520; font-weight: bold;">🎒 Sac (0/4):</div><div style="color: #888; font-style: italic; font-size: 0.9em;">Défendez-vous pour accéder à vos potions</div>`;
+        } else {
+            container.innerHTML = `<div style="margin-bottom: 10px; color: #DAA520; font-weight: bold;">🎒 Sac (${currentSlots}/4):</div><div style="color: #888; font-style: italic; font-size: 0.9em;">🛡️ Défendez-vous pour accéder à vos potions</div>`;
+        }
         return;
     }
     
-    container.innerHTML = `<div style="margin-bottom: 10px; color: #DAA520; font-weight: bold;">🎒 Sac (${currentSlots}/4):</div>`;
+    // When defending, show inventory
+    if (currentSlots === 0) {
+        container.innerHTML = `<div style="margin-bottom: 10px; color: #DAA520; font-weight: bold;">🎒 Sac (0/4):</div><div style="color: #888; font-style: italic; font-size: 0.9em;">Aucun objet</div>`;
+        
+        // Add skip button when no items
+        const skipButton = document.createElement('button');
+        skipButton.textContent = '⏭️ Passer le tour';
+        skipButton.style.cssText = 'margin-top: 10px;';
+        skipButton.onclick = () => {
+            if (window.skipDefendTurn) {
+                window.skipDefendTurn();
+            }
+        };
+        container.appendChild(skipButton);
+        return;
+    }
+    
+    container.innerHTML = `<div style="margin-bottom: 10px; color: #51cf66; font-weight: bold;">✅ 🎒 Sac (${currentSlots}/4) - Accessible:</div>`;
     const inventoryDiv = document.createElement('div');
     inventoryDiv.style.cssText = 'display: flex; flex-wrap: wrap; gap: 5px;';
     
@@ -361,6 +383,17 @@ export function updateCombatInventoryUI() {
     });
     
     container.appendChild(inventoryDiv);
+    
+    // Add skip button option
+    const skipButton = document.createElement('button');
+    skipButton.textContent = '⏭️ Passer le tour';
+    skipButton.style.cssText = 'margin-top: 10px;';
+    skipButton.onclick = () => {
+        if (window.skipDefendTurn) {
+            window.skipDefendTurn();
+        }
+    };
+    container.appendChild(skipButton);
 }
 
 // Update inventory UI in shop screen (for selling)

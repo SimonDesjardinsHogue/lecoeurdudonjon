@@ -565,6 +565,7 @@ export function enemyAttack() {
     }
     
     updateUI();
+    updateCombatInventoryUI();
 }
 
 // Handle player defeat
@@ -606,6 +607,7 @@ export function defend() {
     
     gameState.defending = true;
     addCombatLog('Vous prenez une position défensive !', 'info');
+    addCombatLog('Vous pouvez maintenant utiliser vos potions !', 'special');
     
     // Play defend sound and show particles
     audioManager.playSound('defend');
@@ -614,9 +616,11 @@ export function defend() {
         particleSystem.createDefenseEffect(playerStatsElement);
     }
     
-    setTimeout(() => {
-        enemyAttack();
-    }, 1000);
+    // Update UI to show combat inventory
+    updateCombatInventoryUI();
+    
+    // Don't automatically trigger enemy attack - let player choose to use potion or skip
+    // Enemy will attack after potion use or when defending state is cleared
 }
 
 // Try to flee from combat
@@ -656,6 +660,12 @@ export function flee() {
 export function useCombatPotion(inventoryIndex) {
     if (!gameState.inCombat) return;
     
+    // Can only use potions while defending
+    if (!gameState.defending) {
+        addCombatLog('Vous devez vous défendre pour accéder à vos potions !', 'damage');
+        return;
+    }
+    
     const p = gameState.player;
     if (!p.inventory || inventoryIndex < 0 || inventoryIndex >= p.inventory.length) {
         return;
@@ -685,6 +695,22 @@ export function useCombatPotion(inventoryIndex) {
             }
         }, 1000);
     }
+}
+
+// Skip turn while defending (don't use potion)
+export function skipDefendTurn() {
+    if (!gameState.inCombat) return;
+    
+    if (!gameState.defending) {
+        return;
+    }
+    
+    addCombatLog('Vous maintenez votre position défensive sans utiliser de potion.', 'info');
+    
+    // Trigger enemy attack
+    setTimeout(() => {
+        enemyAttack();
+    }, 1000);
 }
 
 // Submit score to multiplayer server if enabled
