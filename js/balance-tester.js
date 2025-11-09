@@ -219,7 +219,7 @@ function simulateCombat(player, enemy) {
 }
 
 // Simulate a single game
-function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxCombats = 50000) {
+function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxCombats = 10000) {
     const player = createSimulatedPlayer(classKey, raceKey, sexKey);
     
     for (let i = 0; i < maxCombats; i++) {
@@ -259,17 +259,17 @@ function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxCombats 
                 isBoss: true
             };
         } else {
-            // Scale regular enemies to player level with extremely aggressive XP at higher levels
+            // Scale regular enemies to player level with balanced difficulty
             const scaleFactor = Math.max(1, player.level / 5);
             const xpBonus = player.level > 70 ? 8.0 : player.level > 60 ? 6.0 : player.level > 50 ? 4.5 : player.level > 40 ? 3.0 : 2.0;
             
             enemy = {
                 ...enemyTemplate,
-                health: Math.floor(enemyTemplate.health * scaleFactor),
-                strength: Math.floor(enemyTemplate.strength * scaleFactor * 0.85), // Weaker at high levels
-                defense: Math.floor(enemyTemplate.defense * scaleFactor * 0.85),
-                gold: Math.floor(enemyTemplate.gold * scaleFactor * 2.5), // Much more gold
-                xp: Math.floor(enemyTemplate.xp * scaleFactor * xpBonus) // Extremely aggressive XP at higher levels
+                health: Math.floor(enemyTemplate.health * scaleFactor * 1.05), // Slightly more HP
+                strength: Math.floor(enemyTemplate.strength * scaleFactor), // Normal strength
+                defense: Math.floor(enemyTemplate.defense * scaleFactor),
+                gold: Math.floor(enemyTemplate.gold * scaleFactor * 2.0), // Good gold
+                xp: Math.floor(enemyTemplate.xp * scaleFactor * xpBonus) // Aggressive XP scaling
             };
         }
         
