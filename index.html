@@ -482,33 +482,48 @@
                     <h3>🖥️ Hébergement du Serveur Multijoueur</h3>
                     <p>Informations et outils pour héberger le serveur de jeu multijoueur.</p>
                     
+                    <div class="shop-item" style="display: block; margin-top: 20px; background: linear-gradient(135deg, #2d5016 0%, #1a3009 100%); border: 2px solid #4a7c1b; padding: 20px;">
+                        <h4 style="color: #90EE90; margin-bottom: 15px;">🪟 Démarrage sur Windows - C'est Simple !</h4>
+                        <p style="font-size: 1.1em; color: #fff; font-weight: bold; margin-bottom: 20px;">
+                            ✅ OUI, vous pouvez créer votre serveur facilement !
+                        </p>
+                        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                            <p style="color: #DAA520; font-size: 1em; margin-bottom: 10px;">
+                                <strong>📍 Étapes simples :</strong>
+                            </p>
+                            <ol style="font-size: 0.95em; color: #ddd; text-align: left; line-height: 1.8;">
+                                <li>Ouvrez l'explorateur de fichiers Windows</li>
+                                <li>Naviguez vers le dossier <code style="background: #000; padding: 2px 6px; border-radius: 3px;">server/</code> du projet</li>
+                                <li>Trouvez le fichier <code style="background: #000; padding: 2px 6px; border-radius: 3px;">start-server.bat</code></li>
+                                <li><strong style="color: #90EE90;">Double-cliquez sur start-server.bat</strong> 🖱️</li>
+                                <li>C'est tout ! Le serveur va démarrer automatiquement 🚀</li>
+                            </ol>
+                        </div>
+                        <div style="background: rgba(255,215,0,0.1); padding: 12px; border-radius: 5px; border-left: 4px solid #DAA520;">
+                            <p style="font-size: 0.9em; color: #ffd93d; margin: 0;">
+                                💡 <strong>Astuce :</strong> Le script installera automatiquement les dépendances et affichera les adresses IP pour partager avec votre famille !
+                            </p>
+                        </div>
+                    </div>
+                    
                     <div class="shop-item" style="display: block; margin-top: 20px;">
-                        <h4 style="color: #DAA520;">🪟 Démarrage Rapide pour Windows</h4>
-                        <p>Créez votre serveur en quelques clics !</p>
-                        <ol style="font-size: 0.9em; color: #ddd; text-align: left; line-height: 1.6;">
-                            <li>Cliquez sur le bouton ci-dessous pour télécharger le script de démarrage</li>
-                            <li>Placez le fichier <code>start-server.bat</code> dans le dossier <code>server/</code> du projet</li>
-                            <li>Double-cliquez sur <code>start-server.bat</code> pour démarrer le serveur</li>
-                            <li>Le serveur installera automatiquement les dépendances et affichera vos adresses IP</li>
-                        </ol>
-                        <button onclick="downloadWindowsServerScript()" style="margin-top: 10px;">
-                            📥 Télécharger start-server.bat pour Windows
-                        </button>
-                        <div id="downloadServerScriptResult" style="margin-top: 10px;"></div>
-                        <p style="font-size: 0.85em; color: #999; margin-top: 10px;">
-                            ⚠️ <strong>Note importante:</strong> Pour des raisons de sécurité, les navigateurs web ne peuvent pas démarrer automatiquement des serveurs sur votre ordinateur. Vous devez télécharger et exécuter le script manuellement.
+                        <h4 style="color: #DAA520;">❓ Pourquoi pas un bouton dans le navigateur ?</h4>
+                        <p style="font-size: 0.9em; color: #ddd; line-height: 1.6;">
+                            Pour des raisons de sécurité, les navigateurs web <strong>ne peuvent pas</strong> démarrer automatiquement des programmes sur votre ordinateur. C'est une protection importante contre les sites malveillants.
+                        </p>
+                        <p style="font-size: 0.9em; color: #ddd; line-height: 1.6;">
+                            C'est pourquoi vous devez double-cliquer sur le fichier <code>start-server.bat</code> manuellement. C'est rapide et sécuritaire ! 🔒
                         </p>
                     </div>
                     
                     <div class="shop-item" style="display: block; margin-top: 20px;">
-                        <h4 style="color: #DAA520;">📋 Instructions d'Installation Manuelle</h4>
-                        <p style="font-size: 0.9em; color: #ddd;">Si vous préférez installer manuellement :</p>
+                        <h4 style="color: #DAA520;">📋 Méthode Alternative (Ligne de Commande)</h4>
+                        <p style="font-size: 0.9em; color: #ddd;">Si vous préférez utiliser la ligne de commande :</p>
                         <ol style="font-size: 0.9em; color: #ddd; text-align: left; line-height: 1.6;">
+                            <li>Ouvrez l'invite de commande (CMD) ou PowerShell</li>
                             <li>Naviguez vers le dossier <code>server/</code> du projet</li>
-                            <li>Installez les dépendances avec <code>npm install</code></li>
-                            <li>Démarrez le serveur avec <code>npm start</code></li>
-                            <li>Le serveur sera disponible sur le port 3000</li>
-                            <li>Partagez votre adresse IP locale avec les autres joueurs</li>
+                            <li>Exécutez <code>npm install</code> (première fois seulement)</li>
+                            <li>Exécutez <code>npm start</code> pour démarrer le serveur</li>
                         </ol>
                     </div>
                     
