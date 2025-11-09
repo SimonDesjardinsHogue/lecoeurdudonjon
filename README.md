@@ -2,6 +2,8 @@
 
 Une quête légendaire de courage et d'honneur inspirée par Legend of the Red Dragon.
 
+**🎯 Un RPG complet avec 10-15 heures de gameplay | 20 niveaux | 5 Boss épiques | 3 Classes uniques**
+
 ![Game Screenshot](https://github.com/user-attachments/assets/589cfd57-3726-44ea-b8e6-5f2b63bcc5c9)
 
 ## 📖 Description
@@ -11,6 +13,21 @@ Dans le royaume oublié de Valéria, les ténèbres s'étendent. Au cœur du don
 Selon les anciennes légendes, Valéria était autrefois un royaume prospère, protégé par la magie du Cœur du Dragon. Mais lorsque l'artefact fut corrompu par les forces des ténèbres, le royaume sombra dans l'oubli. 
 
 De mystérieux explorateurs, des frères et sœurs connus sous le nom des M&M, parcourent maintenant les ruines du royaume. Ils déchiffrent les inscriptions anciennes et découvrent les secrets perdus de Valéria, aidant les héros courageux dans leur quête pour restaurer la lumière.
+
+**Votre mission** : Atteindre le niveau 20, vaincre les 5 Boss légendaires et restaurer le Cœur du Dragon pour sauver Valéria !
+
+### ✨ Caractéristiques Principales
+- 🎮 **Gameplay Riche** : 10-15 heures pour compléter la quête principale
+- ⚔️ **Combat Tactique** : Système de combat avec compétences spéciales et stratégie
+- 🏆 **5 Boss Épiques** : Chacun avec des capacités uniques et des récompenses légendaires
+- 👥 **3 Classes Jouables** : Guerrier, Magicien, Archer - chacune avec son propre style de jeu
+- 🧝 **3 Races** : Humain, Elfe, Nain - chacune avec des modificateurs de stats uniques
+- 📈 **Progression Profonde** : 20 niveaux, 7 statistiques, système de points de stats
+- 🛍️ **Économie Complète** : Commerce, armes, armures, potions, objets légendaires
+- 🎲 **Événements Aléatoires** : Énigmes, choix moraux, trésors, pièges
+- 🏅 **Système de Succès** : Débloquez des accomplissements
+- 💾 **Sauvegarde Multi-Appareils** : Exportez et importez votre progression
+- 🌐 **Mode Multijoueur LAN** : Classements partagés en temps réel
 
 Êtes-vous prêt à devenir cette légende ?
 
@@ -49,55 +66,223 @@ Puis ouvrez votre navigateur à: `http://localhost:8000/`
 ### Commencer à Jouer
 
 1. Entrez le nom de votre héros
-2. Choisissez une classe (Guerrier, Magicien, Archer, ou Rogue)
-3. Cliquez sur "Commencer l'Aventure"
+2. Choisissez une classe (Guerrier, Magicien, ou Archer)
+3. Choisissez une race (Humain, Elfe, ou Nain)
+4. Cliquez sur "Commencer l'Aventure"
 
-### Fonctionnalités
+## 🎯 Objectifs et Portée du Jeu
+
+### Objectif Principal
+**Atteindre le niveau 20 et vaincre les 5 Boss légendaires pour restaurer le Cœur du Dragon et sauver le royaume de Valéria !**
+
+### Statistiques de Jeu
+- **Niveau Maximum** : 20
+- **Nombre d'Ennemis** : 20 types différents (+ 5 Boss uniques)
+- **Temps de Jeu Estimé** : ~10-15 heures pour atteindre le niveau maximum
+- **Classes de Personnages** : 3 classes uniques (Guerrier, Magicien, Archer)
+- **Races de Personnages** : 3 races (Humain, Elfe, Nain)
+- **Boss à Vaincre** : 5 Boss légendaires avec capacités spéciales
+- **Objets Légendaires** : 8+ objets légendaires à débloquer
+- **Succès à Débloquer** : Système de succès pour récompenser vos exploits
+
+### Ce Que Vous Pouvez Faire
 
 #### 🗺️ Explorer le Donjon
 - Rencontrez des ennemis aléatoires ou des PNJ amicaux
 - Combattez pour gagner de l'or et de l'expérience
 - Progressez à travers différents niveaux de difficulté
 - 70% de chance de rencontrer un monstre, 30% de chance de rencontrer un PNJ
+- Découvrez des événements aléatoires : trésors, pièges, fontaines de guérison, sanctuaires
+- Trouvez des passages secrets et des inscriptions mystérieuses laissées par les M&M
 
 ![Combat Screenshot](https://github.com/user-attachments/assets/e4fb88ef-63e4-46f8-b7e4-5f9c2339a699)
 
-#### ⚔️ Système de Combat
-- **Attaquer** : Infligez des dégâts à l'ennemi
+#### ⚔️ Système de Combat Avancé
+- **Attaquer** : Infligez des dégâts à l'ennemi en fonction de votre force
 - **Défendre** : Doublez votre défense pour le prochain tour
+- **Compétences Spéciales** : Utilisez des capacités uniques selon votre classe
+  - Guerrier : Charge Puissante, Coup de Bouclier
+  - Magicien : Boule de Feu, Bouclier de Mana, Éclair Foudroyant, Lance de Glace
+  - Archer : Tir Multiple, Tir Visé
 - **Fuir** : Tentez d'échapper au combat (50% de chance)
+- **Boss Combats** : Affrontez 5 Boss épiques avec des capacités spéciales
+  - Troll des Cavernes (Niv. 5) - Régénération
+  - Seigneur Liche (Niv. 10) - Vol de vie
+  - Hydre à Trois Têtes (Niv. 15) - Triple attaque
+  - Démon des Flammes (Niv. 17+) - Explosion de feu
+  - Dragon Ancien (Niv. 20) - Souffle de dragon dévastateur
 
-#### 🏪 Le Marchand
-Achetez des améliorations et des potions :
-- Potions de soin (30-60 or)
-- Épées pour augmenter la force (100-250 or)
-- Armures pour augmenter la défense (80-200 or)
+#### 🏪 Le Marchand et l'Économie
+Achetez des améliorations et des potions avec votre or :
+- **10 niveaux de potions de soin** : De 20 HP (15 or) à 550 HP (900 or)
+- **10 niveaux d'armes par classe** : Épées, Arcs, Bâtons (+1 à +22 dégâts)
+- **10 niveaux d'armures** : De +1 à +22 défense
+- **Potions de force** : +1 à +22 Force permanente
+- **Potions d'énergie** : Restaurez votre énergie pour les compétences
+- **Marchand Itinérant** : Rencontrez un marchand rare avec des objets épiques
+- **Bijoutier** : Achetez et vendez des métaux précieux (or, argent, platine, etc.)
 
 ![Shop Screenshot](https://github.com/user-attachments/assets/a0cace49-fa20-44d3-a84d-42f8043118fa)
 
-#### 🛌 Se Reposer
-- Coût : 20 or
-- Restaure complètement votre santé
+#### 💎 Système de Rareté des Objets
+- **Commun** : Objets de base (gris)
+- **Rare** : Objets avec 1 bonus aléatoire (bleu) 
+- **Épique** : Objets avec 2 bonus aléatoires (violet)
+- **Légendaire** : Objets avec 3 bonus aléatoires (or)
 
-#### 📊 Statistiques
-- Suivez votre progression
-- Voyez vos statistiques détaillées
-- Compteur d'ennemis vaincus
+Les objets rares+ peuvent avoir des bonus sur 7 stats différentes :
+- Force, Défense, Dextérité, Constitution, Intelligence, Sagesse, Charisme
 
-### Ennemis
+#### 🎭 Personnages Non-Joueurs (PNJ)
+- **Sage Mystérieux** : Conseils sur votre progression
+- **Forgeron** : Accès à la boutique
+- **Prêtre** : Bénédiction de guérison (+30 HP)
+- **Chasseur de Trésors** : Vous donne de l'or
+- **Vieux Guerrier** : Conseils tactiques
+- **Les M&M (frère et sœur)** : Explorateurs qui révèlent les secrets de Valéria
+- **Marchand Itinérant** : Objets rares et puissants
+- **Bijoutier** : Commerce de métaux précieux
 
-1. **Rat Géant** - Niveau débutant
-2. **Gobelin** - Facile
-3. **Squelette** - Moyen
-4. **Orc** - Difficile
-5. **Loup-Garou** - Très difficile
-6. **Dragon Mineur** - Boss
+#### 🎲 Événements Aléatoires et Choix
+- **Énigmes** : Résolvez des énigmes pour gagner de l'or et de l'XP
+- **Choix Moraux** : Vos décisions affectent vos statistiques
+  - Aider un mendiant (+Charisme)
+  - Respecter les morts (+Sagesse, +XP)
+- **Trésors** : Coffres au trésor, gemmes magiques
+- **Pièges** : Pièges à pointes, gaz toxique
+- **Lieux Spéciaux** : Fontaines de guérison, sanctuaires anciens
+- **Découvertes** : Inscriptions mystérieuses, passages secrets
 
-### Progression
+#### 🛌 Se Reposer à l'Auberge
+- **Coût** : 20 or
+- **Effet** : Restaure complètement votre santé
+- **Repos Limité** : Une fois par jour (énergie se restaure à 6 AM heure de Toronto)
 
-- **Montée de niveau** : Gagnez de l'expérience en combattant
-- **Améliorations automatiques** : +20 HP max, +5 Force, +3 Défense par niveau
-- **Objectif** : Vaincre 10 ennemis pour atteindre le Coeur du Dragon
+#### 📊 Système de Statistiques Détaillé
+- **7 Statistiques Principales** :
+  - Force : Augmente les dégâts d'attaque
+  - Défense : Réduit les dégâts reçus (Classe d'armure)
+  - Dextérité : Chance d'esquive pour Archer
+  - Constitution : Augmente les points de vie maximums
+  - Intelligence : Puissance des sorts pour Magicien
+  - Sagesse : Résistance aux effets mentaux
+  - Charisme : Influence les interactions avec les PNJ
+- **Points de Stats** : +1 point par niveau à allouer librement
+- **Progression** : Suivez vos kills, boss vaincus, or total, parties jouées
+
+#### 🏆 Système de Succès
+Débloquez des succès en accomplissant des exploits :
+- Tuer un certain nombre d'ennemis
+- Vaincre tous les boss
+- Accumuler de l'or
+- Atteindre des niveaux élevés
+- Et bien plus !
+
+### Ennemis et Boss
+
+#### 20 Types d'Ennemis (Niveaux 1-20)
+1. **Rat Géant** 🐀 - Niveau débutant (30 HP, 7 Force)
+2. **Gobelin** 👺 - Facile (50 HP, 9 Force)
+3. **Araignée Géante** 🕷️ - Facile (55 HP, 10 Force)
+4. **Squelette** 💀 - Moyen (60 HP, 12 Force)
+5. **Orc** 👹 - Moyen-Difficile (80 HP, 15 Force)
+6. **Bandit** 🗡️ - Moyen (75 HP, 14 Force)
+7. **Loup-Garou** 🐺 - Difficile (100 HP, 18 Force)
+8. **Zombie** 🧟 - Difficile (90 HP, 16 Force)
+9. **Sorcier Noir** 🧙 - Très Difficile (110 HP, 20 Force)
+10. **Dragon Mineur** 🐉 - Très Difficile (150 HP, 23 Force)
+11-20. **Et 10 ennemis avancés** pour les niveaux 11-20 !
+
+#### 5 Boss Légendaires
+Chaque boss a des capacités spéciales uniques et récompense un objet légendaire !
+
+1. **Troll des Cavernes** 👹 (Niv. 5) - Régénération 4-7 HP/tour
+2. **Seigneur Liche** 💀 (Niv. 10) - Vol de vie (15 HP)
+3. **Hydre à Trois Têtes** 🐉 (Niv. 15) - Triple attaque dévastatrice
+4. **Démon des Flammes** 😈 (Niv. 17+) - Explosion de feu (ignore 50% défense)
+5. **Dragon Ancien** 🐲 (Niv. 20) - Souffle légendaire du dragon
+
+### Progression et Montée de Niveau
+
+- **Montée de niveau** : Gagnez de l'expérience en combattant les ennemis
+- **Améliorations automatiques par niveau** : 
+  - +20 HP maximum
+  - +1 point de stat à allouer librement
+- **Expérience requise** : Augmente progressivement avec chaque niveau
+- **Boss** : 25% de chance de rencontrer un boss aux niveaux 5, 10, 15, 20
+
+### 💡 Conseils et Stratégies pour les Nouveaux Joueurs
+
+#### Choix de Classe
+- **Guerrier** 🛡️ : Le plus résistant, excellent pour les débutants
+  - 148 HP de base, haute défense
+  - Bon équilibre entre attaque et survie
+  - Compétences : Charge Puissante, Coup de Bouclier
+  
+- **Magicien** 🧙 : Dégâts élevés, mais fragile
+  - 122 HP de base, attaques magiques puissantes
+  - Bouclier de Mana pour survivre aux combats difficiles
+  - Compétences : Boule de Feu, Bouclier de Mana, Éclair Foudroyant, Lance de Glace
+  
+- **Archer** 🏹 : Équilibré avec esquive
+  - 128 HP de base, bonne dextérité
+  - Capacité d'esquive basée sur la DEX (jusqu'à 18%)
+  - Compétences : Tir Multiple, Tir Visé
+
+#### Choix de Race
+- **Humain** 👤 : Polyvalent et équilibré
+  - Aucun modificateur de stats
+  - Bon choix pour toutes les classes
+  
+- **Elfe** 🧝 : Agile et gracieux
+  - +2 Dextérité, -2 Constitution
+  - Excellent pour Archer (esquive améliorée)
+  - Attention : Moins de HP de base (-10 HP)
+  
+- **Nain** 🧔 : Robuste et résistant
+  - +2 Constitution, -2 Dextérité
+  - Excellent pour Guerrier et Magicien (+10 HP)
+  - Parfait pour survivre aux combats difficiles
+
+#### Stratégies de Progression
+1. **Début du Jeu (Niveaux 1-5)**
+   - Combattez les Rats Géants et Gobelins pour gagner de l'expérience
+   - Économisez votre or pour acheter une première arme (~80-130 or)
+   - Reposez-vous à l'auberge quand votre santé est basse (20 or)
+   - Objectif : Atteindre niveau 5 et affronter le Troll des Cavernes
+
+2. **Milieu du Jeu (Niveaux 6-15)**
+   - Améliorez progressivement votre équipement
+   - Utilisez vos points de stats stratégiquement :
+     - Guerrier : Constitution et Force
+     - Magicien : Intelligence et Constitution
+     - Archer : Dextérité et Force
+   - Gardez toujours des potions de soin dans votre inventaire
+   - Objectifs : Vaincre le Seigneur Liche (Niv. 10) et l'Hydre (Niv. 15)
+
+3. **Fin du Jeu (Niveaux 16-20)**
+   - Équipez-vous avec des armes et armures légendaires
+   - Préparez-vous pour les boss finaux : Démon des Flammes et Dragon Ancien
+   - Maximisez vos statistiques principales
+   - Utilisez vos compétences spéciales efficacement en combat
+   - Objectif final : Vaincre le Dragon Ancien et restaurer le Cœur du Dragon !
+
+#### Conseils Généraux
+- 💰 **Gestion de l'Or** : N'achetez pas tout tout de suite, priorisez la survie
+- 🧪 **Potions** : Gardez toujours 2-3 potions de soin pour les urgences
+- 🎯 **Compétences** : Économisez votre énergie pour les combats de boss
+- 🛡️ **Défense** : La défense est aussi importante que l'attaque pour survivre
+- 📊 **Stats** : Distribuez vos points de stats selon votre style de jeu
+- 🎲 **Événements** : Les choix moraux et énigmes peuvent donner de bonnes récompenses
+- 🔍 **Exploration** : Parlez aux M&M pour découvrir des secrets et gagner des bonus
+
+### Temps de Jeu Estimé par Objectif
+- **Atteindre Niveau 5** : ~1-2 heures
+- **Atteindre Niveau 10** : ~3-5 heures
+- **Atteindre Niveau 15** : ~7-10 heures
+- **Atteindre Niveau 20 (Max)** : ~10-15 heures
+- **Vaincre tous les Boss** : Inclus dans le temps ci-dessus
+- **Débloquer tous les Succès** : ~15-20 heures (rejouabilité)
 
 ### Sauvegarde
 
