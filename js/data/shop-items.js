@@ -61,16 +61,16 @@ export const shopItems = [
     { name: 'Arc de l\'Étoile Filante', icon: '🏹', description: '22 de dégât\n✨ +1 Force', cost: 1350, category: 'equipment', type: 'weapon', classRestriction: 'archer', bonus: 22, rarity: 'legendaire', effect: null },
     
     // Weapons for Magicien (Mage) - 10 tiers for level 1-20
-    { name: 'Bâton de Bois', icon: '🪄', description: '1 de dégât\n✨ +1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 1, rarity: 'commun', effect: null },
-    { name: 'Bâton d\'Apprenti', icon: '🪄', description: '3 de dégât\n✨ +1 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 3, rarity: 'commun', effect: null },
-    { name: 'Bâton Mystique', icon: '🪄', description: '5 de dégât\n✨ +1 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 5, rarity: 'rare', effect: null },
-    { name: 'Bâton Enchanté', icon: '🪄', description: '7 de dégât\n✨ +1 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 7, rarity: 'rare', effect: null },
-    { name: 'Bâton de Pouvoir', icon: '🪄', description: '9 de dégât\n✨ +1 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 9, rarity: 'epique', effect: null },
-    { name: 'Bâton Runique', icon: '🪄', description: '10 de dégât\n✨ +1 Force', cost: 400, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 10, rarity: 'epique', effect: null },
-    { name: 'Bâton Légendaire', icon: '🪄', description: '12 de dégât\n✨ +1 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 12, rarity: 'legendaire', effect: null },
-    { name: 'Bâton de l\'Archimage', icon: '🪄', description: '15 de dégât\n✨ +1 Force', cost: 750, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 15, rarity: 'legendaire', effect: null },
-    { name: 'Bâton Céleste', icon: '🪄', description: '18 de dégât\n✨ +1 Force', cost: 1000, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 18, rarity: 'legendaire', effect: null },
-    { name: 'Bâton de l\'Univers', icon: '🪄', description: '22 de dégât\n✨ +1 Force', cost: 1350, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 22, rarity: 'legendaire', effect: null },
+    { name: 'Bâton de Bois', icon: '🔮', description: '1 de dégât\n✨ +1 Force', cost: 40, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 1, rarity: 'commun', effect: null },
+    { name: 'Bâton d\'Apprenti', icon: '🔮', description: '3 de dégât\n✨ +1 Force', cost: 80, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 3, rarity: 'commun', effect: null },
+    { name: 'Bâton Mystique', icon: '🔮', description: '5 de dégât\n✨ +1 Force', cost: 130, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 5, rarity: 'rare', effect: null },
+    { name: 'Bâton Enchanté', icon: '🔮', description: '7 de dégât\n✨ +1 Force', cost: 200, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 7, rarity: 'rare', effect: null },
+    { name: 'Bâton de Pouvoir', icon: '🔮', description: '9 de dégât\n✨ +1 Force', cost: 290, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 9, rarity: 'epique', effect: null },
+    { name: 'Bâton Runique', icon: '🔮', description: '10 de dégât\n✨ +1 Force', cost: 400, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 10, rarity: 'epique', effect: null },
+    { name: 'Bâton Légendaire', icon: '🔮', description: '12 de dégât\n✨ +1 Force', cost: 550, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 12, rarity: 'legendaire', effect: null },
+    { name: 'Bâton de l\'Archimage', icon: '🔮', description: '15 de dégât\n✨ +1 Force', cost: 750, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 15, rarity: 'legendaire', effect: null },
+    { name: 'Bâton Céleste', icon: '🔮', description: '18 de dégât\n✨ +1 Force', cost: 1000, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 18, rarity: 'legendaire', effect: null },
+    { name: 'Bâton de l\'Univers', icon: '🔮', description: '22 de dégât\n✨ +1 Force', cost: 1350, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 22, rarity: 'legendaire', effect: null },
     
     // Armors (10 tiers for level 1-20)
     { name: 'Armure en Tissu', icon: '🛡️', description: '+1 Défense', cost: 35, category: 'equipment', type: 'armor', bonus: 1, rarity: 'commun', effect: null },
@@ -103,5 +103,5 @@ export const legendaryItems = [
     { name: 'Cape de l\'Ombre', icon: '🦇', description: '+7 Dextérité, +5 Défense', effect: (p) => { p.dexterity += 7; p.defense += 5; } },
     { name: 'Couronne de Sagesse', icon: '👑', description: '+10 Intelligence, +10 Sagesse', effect: (p) => { p.intelligence += 10; p.wisdom += 10; } },
     { name: 'Marteau du Forgeron Divin', icon: '🔨', description: '+20 Force, +5 Constitution', effect: (p) => { p.strength += 20; p.constitution += 5; } },
-    { name: 'Bâton du Mage Suprême', icon: '🪄', description: '+15 Intelligence, +50 Énergie Max', effect: (p) => { p.intelligence += 15; p.maxEnergy += 50; p.energy += 50; } }
+    { name: 'Bâton du Mage Suprême', icon: '🔮', description: '+15 Intelligence, +50 Énergie Max', effect: (p) => { p.intelligence += 15; p.maxEnergy += 50; p.energy += 50; } }
 ];
