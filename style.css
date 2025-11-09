@@ -411,6 +411,13 @@ input[type="text"]:focus {
     opacity: 1;
 }
 
+/* Class Selection Grid */
+.class-selection-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
 .class-option {
     background: rgba(0, 0, 0, 0.5);
     padding: 15px;
@@ -742,6 +749,10 @@ input[type="text"]:focus {
     }
 
     /* Class selection on mobile */
+    .class-selection-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
     .class-option {
         padding: 12px;
     }
@@ -838,6 +849,11 @@ input[type="text"]:focus {
         font-size: 16px; /* Prevents zoom on iOS */
         max-width: 400px;
     }
+
+    /* Class selection grid for tablets */
+    .class-selection-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 /* Large Tablets and Small Desktops (769px - 1199px) */
@@ -847,7 +863,7 @@ input[type="text"]:focus {
     }
 
     .game-stats {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .stat-group-character {
@@ -858,12 +874,17 @@ input[type="text"]:focus {
         grid-column: span 1;
     }
 
-    .stat-group-progression {
+    .stat-group-progression-combined {
         grid-column: span 1;
     }
 
     .characteristics-group {
         grid-column: span 1;
+    }
+
+    /* Class selection grid for larger tablets */
+    .class-selection-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -878,15 +899,20 @@ input[type="text"]:focus {
     }
 
     .stat-group-combat {
-        grid-column: span 2;
+        grid-column: span 1;
     }
 
-    .stat-group-progression {
+    .stat-group-progression-combined {
         grid-column: span 1;
     }
 
     .characteristics-group {
         grid-column: span 1;
+    }
+
+    /* Class selection grid for desktops */
+    .class-selection-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -993,6 +1019,11 @@ input[type="text"]:focus {
     .game-footer {
         padding: 20px;
         font-size: 0.9em;
+    }
+
+    /* Class selection grid for large desktops */
+    .class-selection-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
