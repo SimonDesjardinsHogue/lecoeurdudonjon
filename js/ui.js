@@ -275,8 +275,19 @@ export function updateSkillsUI() {
     skills.forEach(skill => {
         const cooldown = getSkillCooldown(skill.id);
         const isOnCooldown = isSkillOnCooldown(skill.id);
-        const hasEnergy = player.energy >= skill.energyCost;
-        const canUse = !isOnCooldown && hasEnergy;
+        
+        // Check if player has enough energy or mana
+        let hasResource = false;
+        let costText = '';
+        if (skill.energyCost) {
+            hasResource = player.energy >= skill.energyCost;
+            costText = `${skill.energyCost} ⚡`;
+        } else if (skill.manaCost) {
+            hasResource = player.mana >= skill.manaCost;
+            costText = `${skill.manaCost} 🔮`;
+        }
+        
+        const canUse = !isOnCooldown && hasResource;
         
         const button = document.createElement('button');
         button.style.cssText = 'margin: 5px; padding: 8px 12px; font-size: 0.9em;';
@@ -287,10 +298,10 @@ export function updateSkillsUI() {
             buttonText += ` (${cooldown} tours)`;
             button.style.opacity = '0.5';
         } else {
-            buttonText += ` (${skill.energyCost} ⚡)`;
+            buttonText += ` (${costText})`;
         }
         
-        if (!hasEnergy) {
+        if (!hasResource) {
             button.style.opacity = '0.5';
         }
         

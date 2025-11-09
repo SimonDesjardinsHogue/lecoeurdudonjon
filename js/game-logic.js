@@ -150,8 +150,9 @@ export function checkEnergyRegeneration() {
     
     // Check if current time is past the regeneration time
     if (torontoTime >= nextRegeneration) {
-        // Regenerate energy to full
+        // Regenerate energy and mana to full
         p.energy = p.maxEnergy;
+        p.mana = p.maxMana;
         p.lastSleepTime = torontoTime.toISOString();
         saveGame();
         updateUI();
@@ -259,6 +260,20 @@ export function restoreEnergy(amount) {
     const finalAmount = Math.floor(amount * energyBonus);
     
     p.energy = Math.min(p.maxEnergy, p.energy + finalAmount);
+    saveGame();
+    updateUI();
+}
+
+// Restore mana
+export function restoreMana(amount) {
+    const p = gameState.player;
+    
+    // Intelligence increases mana restoration: +5% per intelligence modifier point
+    const intelligenceMod = getStatModifier(p.intelligence);
+    const manaBonus = 1 + (intelligenceMod * 0.05);
+    const finalAmount = Math.floor(amount * manaBonus);
+    
+    p.mana = Math.min(p.maxMana, p.mana + finalAmount);
     saveGame();
     updateUI();
 }

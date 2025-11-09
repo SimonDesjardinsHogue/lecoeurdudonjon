@@ -83,6 +83,39 @@ export const skills = {
                 audioManager.playSound('defend');
                 return { type: 'shield' };
             }
+        },
+        {
+            id: 'lightning_bolt',
+            name: 'Éclair Foudroyant',
+            icon: '⚡',
+            description: 'Frappe l\'ennemi avec un éclair destructeur (utilise du mana)',
+            manaCost: 20,
+            cooldown: 2,
+            effect: (player, enemy) => {
+                const intelligenceMod = getStatModifier(player.intelligence);
+                const damage = Math.floor(player.intelligence * 1.8) + Math.floor(intelligenceMod * 2) + Math.floor(Math.random() * 12);
+                enemy.health -= damage;
+                addCombatLog(`⚡ Éclair Foudroyant ! Dégâts électriques de ${damage} !`, 'special');
+                audioManager.playSound('attack');
+                return { damage, type: 'magic' };
+            }
+        },
+        {
+            id: 'ice_lance',
+            name: 'Lance de Glace',
+            icon: '❄️',
+            description: 'Projette une lance de glace perçante (utilise du mana)',
+            manaCost: 25,
+            cooldown: 3,
+            effect: (player, enemy) => {
+                const intelligenceMod = getStatModifier(player.intelligence);
+                const wisdomMod = getStatModifier(player.wisdom);
+                const damage = Math.floor(player.intelligence * 1.6) + Math.floor(intelligenceMod * 1.5) + Math.floor(wisdomMod * 1.5) + Math.floor(Math.random() * 18);
+                enemy.health -= damage;
+                addCombatLog(`❄️ Lance de Glace ! Dégâts glacials de ${damage} !`, 'special');
+                audioManager.playSound('attack');
+                return { damage, type: 'magic' };
+            }
         }
     ],
     archer: [
@@ -157,10 +190,17 @@ export function useSkill(skillId) {
     const player = gameState.player;
     const enemy = gameState.currentEnemy;
     
-    // Check energy cost
-    if (player.energy < skill.energyCost) {
-        addCombatLog(`❌ Pas assez d'énergie ! (${skill.energyCost} requis)`, 'error');
-        return false;
+    // Check energy or mana cost
+    if (skill.energyCost) {
+        if (player.energy < skill.energyCost) {
+            addCombatLog(`❌ Pas assez d'énergie ! (${skill.energyCost} requis)`, 'error');
+            return false;
+        }
+    } else if (skill.manaCost) {
+        if (player.mana < skill.manaCost) {
+            addCombatLog(`❌ Pas assez de mana ! (${skill.manaCost} requis)`, 'error');
+            return false;
+        }
     }
     
     // Check cooldown
@@ -170,8 +210,12 @@ export function useSkill(skillId) {
         return false;
     }
     
-    // Consume energy
-    player.energy -= skill.energyCost;
+    // Consume energy or mana
+    if (skill.energyCost) {
+        player.energy -= skill.energyCost;
+    } else if (skill.manaCost) {
+        player.mana -= skill.manaCost;
+    }
     
     // Use skill
     const result = skill.effect(player, enemy);
