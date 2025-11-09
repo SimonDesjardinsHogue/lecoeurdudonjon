@@ -55,16 +55,16 @@ function checkLevelUp(player) {
         player.level++;
         player.xp -= player.xpToLevel;
         
-        // Progressive XP scaling to make level 100 achievable
-        if (player.level < 40) {
-            player.xpToLevel = Math.floor(player.xpToLevel * 1.30);
-        } else if (player.level < 70) {
-            player.xpToLevel = Math.floor(player.xpToLevel * 1.20);
-        } else if (player.level < 90) {
-            player.xpToLevel = Math.floor(player.xpToLevel * 1.12);
+        // Progressive XP scaling - much harder progression (level 20 max)
+        if (player.level < 5) {
+            player.xpToLevel = Math.floor(player.xpToLevel * 1.40);
+        } else if (player.level < 10) {
+            player.xpToLevel = Math.floor(player.xpToLevel * 1.50);
+        } else if (player.level < 15) {
+            player.xpToLevel = Math.floor(player.xpToLevel * 1.60);
         } else {
-            // Very slow growth for final levels
-            player.xpToLevel = Math.floor(player.xpToLevel * 1.08);
+            // Very hard to reach level 20
+            player.xpToLevel = Math.floor(player.xpToLevel * 1.70);
         }
         
         // Stat increases
@@ -219,11 +219,11 @@ function simulateCombat(player, enemy) {
 }
 
 // Simulate a single game
-function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxCombats = 50000) {
+function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxCombats = 5000) {
     const player = createSimulatedPlayer(classKey, raceKey, sexKey);
     
     // Track stats at milestone levels
-    const milestones = [25, 50, 75, 100];
+    const milestones = [5, 10, 15, 20];
     const milestoneStats = {};
     
     for (let i = 0; i < maxCombats; i++) {
@@ -245,8 +245,8 @@ function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxCombats 
             }
         }
         
-        // Stop if we reach level 100
-        if (player.level >= 100) {
+        // Stop if we reach level 20 (maximum level)
+        if (player.level >= 20) {
             break;
         }
         
@@ -267,31 +267,31 @@ function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxCombats 
         if (player.level % 5 === 0 && player.kills > 0 && (player.level / 5) > player.bossesDefeated) {
             const bossIndex = Math.min(player.bossesDefeated, bosses.length - 1);
             const bossTemplate = bosses[bossIndex];
-            // More moderate level multiplier for bosses
-            const levelMultiplier = 1 + (player.level - (player.bossesDefeated * 5)) * 0.05;
-            const xpMultiplier = player.level > 50 ? 5.0 : 3.0;
+            // Harder boss multipliers for level 20 max
+            const levelMultiplier = 1 + (player.level - (player.bossesDefeated * 5)) * 0.15;
+            const xpMultiplier = player.level > 10 ? 1.8 : 1.5;
             
             enemy = {
                 ...bossTemplate,
-                health: Math.floor(bossTemplate.health * levelMultiplier),
-                strength: Math.floor(bossTemplate.strength * levelMultiplier),
-                defense: Math.floor(bossTemplate.defense * levelMultiplier),
-                gold: Math.floor(bossTemplate.gold * levelMultiplier * 3.0), // Much more gold from bosses
-                xp: Math.floor(bossTemplate.xp * levelMultiplier * xpMultiplier), // Massive XP from bosses at high levels
+                health: Math.floor(bossTemplate.health * levelMultiplier * 1.5),
+                strength: Math.floor(bossTemplate.strength * levelMultiplier * 1.3),
+                defense: Math.floor(bossTemplate.defense * levelMultiplier * 1.2),
+                gold: Math.floor(bossTemplate.gold * levelMultiplier * 2.0),
+                xp: Math.floor(bossTemplate.xp * levelMultiplier * xpMultiplier),
                 isBoss: true
             };
         } else {
-            // Scale regular enemies to player level with balanced difficulty
-            const scaleFactor = Math.max(1, player.level / 5);
-            const xpBonus = player.level > 70 ? 8.0 : player.level > 60 ? 6.0 : player.level > 50 ? 4.5 : player.level > 40 ? 3.0 : 2.0;
+            // Scale regular enemies - harder difficulty for level 20 cap
+            const scaleFactor = Math.max(1, player.level / 3);
+            const xpBonus = player.level > 15 ? 1.2 : player.level > 10 ? 1.0 : player.level > 5 ? 0.8 : 0.6;
             
             enemy = {
                 ...enemyTemplate,
-                health: Math.floor(enemyTemplate.health * scaleFactor * 1.05), // Slightly more HP
-                strength: Math.floor(enemyTemplate.strength * scaleFactor), // Normal strength
-                defense: Math.floor(enemyTemplate.defense * scaleFactor),
-                gold: Math.floor(enemyTemplate.gold * scaleFactor * 2.0), // Good gold
-                xp: Math.floor(enemyTemplate.xp * scaleFactor * xpBonus) // Aggressive XP scaling
+                health: Math.floor(enemyTemplate.health * scaleFactor * 1.3), // Much more HP
+                strength: Math.floor(enemyTemplate.strength * scaleFactor * 1.2), // Stronger
+                defense: Math.floor(enemyTemplate.defense * scaleFactor * 1.1),
+                gold: Math.floor(enemyTemplate.gold * scaleFactor * 1.5),
+                xp: Math.floor(enemyTemplate.xp * scaleFactor * xpBonus) // Reduced XP gains
             };
         }
         
@@ -348,7 +348,7 @@ function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxCombats 
         finalDexterity: player.dexterity,
         finalConstitution: player.constitution,
         winRate: player.combatsWon / (player.combatsWon + player.combatsLost),
-        reachedLevel100: player.level >= 100,
+        reachedLevel20: player.level >= 20,
         milestoneStats: milestoneStats // Add milestone tracking
     };
 }
@@ -529,12 +529,12 @@ function analyzeResults(results) {
             minLevel: Math.min(...games.map(g => g.finalLevel)),
             maxKills: Math.max(...games.map(g => g.kills)),
             minKills: Math.min(...games.map(g => g.kills)),
-            percentReachedLevel100: (games.filter(g => g.reachedLevel100).length / games.length * 100),
+            percentReachedLevel20: (games.filter(g => g.reachedLevel20).length / games.length * 100),
             milestones: {
-                25: calculateMilestoneStats(games, 25),
-                50: calculateMilestoneStats(games, 50),
-                75: calculateMilestoneStats(games, 75),
-                100: calculateMilestoneStats(games, 100)
+                5: calculateMilestoneStats(games, 5),
+                10: calculateMilestoneStats(games, 10),
+                15: calculateMilestoneStats(games, 15),
+                20: calculateMilestoneStats(games, 20)
             }
         };
         
@@ -572,12 +572,12 @@ function analyzeResults(results) {
             minLevel: Math.min(...games.map(g => g.finalLevel)),
             maxKills: Math.max(...games.map(g => g.kills)),
             minKills: Math.min(...games.map(g => g.kills)),
-            percentReachedLevel100: (games.filter(g => g.reachedLevel100).length / games.length * 100),
+            percentReachedLevel20: (games.filter(g => g.reachedLevel20).length / games.length * 100),
             milestones: {
-                25: calculateMilestoneStats(games, 25),
-                50: calculateMilestoneStats(games, 50),
-                75: calculateMilestoneStats(games, 75),
-                100: calculateMilestoneStats(games, 100)
+                5: calculateMilestoneStats(games, 5),
+                10: calculateMilestoneStats(games, 10),
+                15: calculateMilestoneStats(games, 15),
+                20: calculateMilestoneStats(games, 20)
             }
         };
         
@@ -615,12 +615,12 @@ function analyzeResults(results) {
             minLevel: Math.min(...games.map(g => g.finalLevel)),
             maxKills: Math.max(...games.map(g => g.kills)),
             minKills: Math.min(...games.map(g => g.kills)),
-            percentReachedLevel100: (games.filter(g => g.reachedLevel100).length / games.length * 100),
+            percentReachedLevel20: (games.filter(g => g.reachedLevel20).length / games.length * 100),
             milestones: {
-                25: calculateMilestoneStats(games, 25),
-                50: calculateMilestoneStats(games, 50),
-                75: calculateMilestoneStats(games, 75),
-                100: calculateMilestoneStats(games, 100)
+                5: calculateMilestoneStats(games, 5),
+                10: calculateMilestoneStats(games, 10),
+                15: calculateMilestoneStats(games, 15),
+                20: calculateMilestoneStats(games, 20)
             }
         };
         
@@ -667,7 +667,7 @@ function analyzeResults(results) {
             minLevel: Math.min(...games.map(g => g.finalLevel)),
             maxKills: Math.max(...games.map(g => g.kills)),
             minKills: Math.min(...games.map(g => g.kills)),
-            percentReachedLevel100: (games.filter(g => g.reachedLevel100).length / games.length * 100)
+            percentReachedLevel20: (games.filter(g => g.reachedLevel100).length / games.length * 100)
         };
         
         analysis.byCombination[comboKey] = stats;
@@ -728,7 +728,7 @@ function generateBalanceReport(analysis) {
     const avgLevelOverall = average(allClasses.map(c => c.avgLevel));
     const avgWinRateOverall = average(allClasses.map(c => c.avgWinRate));
     const avgKillsOverall = average(allClasses.map(c => c.avgKills));
-    const avgLevel100Percent = average(allClasses.map(c => c.percentReachedLevel100));
+    const avgLevel20Percent = average(allClasses.map(c => c.percentReachedLevel20));
     
     // Calculate overall metrics for races
     const allRaces = Object.values(analysis.byRace);
@@ -749,7 +749,7 @@ function generateBalanceReport(analysis) {
         avgLevel: avgLevelOverall.toFixed(2),
         avgWinRate: (avgWinRateOverall * 100).toFixed(2) + '%',
         avgKills: avgKillsOverall.toFixed(2),
-        percentReachedLevel100: avgLevel100Percent.toFixed(2) + '%',
+        percentReachedLevel20: avgLevel20Percent.toFixed(2) + '%',
         totalSimulations: totalSimulations
     };
     
@@ -907,14 +907,14 @@ function generateBalanceReport(analysis) {
         });
     }
     
-    // Level 100 progression suggestion
-    if (avgLevel100Percent < 10) {
+    // Level 20 progression suggestion
+    if (avgLevel20Percent < 10) {
         report.suggestions.push({
             category: 'game',
             class: 'all',
             type: 'progression',
-            metric: 'level100',
-            suggestion: `Seulement ${avgLevel100Percent.toFixed(1)}% des joueurs atteignent le niveau 100. Suggestion: Augmenter les gains d'XP de +20% ou réduire les requis d'XP par niveau.`
+            metric: 'level20',
+            suggestion: `Seulement ${avgLevel20Percent.toFixed(1)}% des joueurs atteignent le niveau 20. Suggestion: Augmenter les gains d'XP de +20% ou réduire les requis d'XP par niveau.`
         });
     }
     
@@ -955,7 +955,7 @@ export function formatReportAsHTML(report) {
     html += `<p><strong>Niveau moyen atteint:</strong> ${report.summary.avgLevel}</p>`;
     html += `<p><strong>Taux de victoire moyen:</strong> ${report.summary.avgWinRate}</p>`;
     html += `<p><strong>Ennemis vaincus (moyenne):</strong> ${report.summary.avgKills}</p>`;
-    html += `<p><strong>% atteignant niveau 100:</strong> ${report.summary.percentReachedLevel100}</p>`;
+    html += `<p><strong>% atteignant niveau 20:</strong> ${report.summary.percentReachedLevel20}</p>`;
     html += '</div></div>';
     
     // Class comparison table
@@ -1077,7 +1077,7 @@ export function formatReportAsHTML(report) {
         html += `<div>Or gagné: ${stats.avgGoldEarned.toFixed(0)} 💰</div>`;
         html += `<div>Or dépensé: ${stats.avgGoldSpent.toFixed(0)} 💰</div>`;
         html += `<div>Objets achetés: ${stats.avgItemsPurchased.toFixed(1)}</div>`;
-        html += `<div>% Niveau 100: ${stats.percentReachedLevel100.toFixed(1)}%</div>`;
+        html += `<div>% Niveau 20: ${stats.percentReachedLevel20.toFixed(1)}%</div>`;
         html += `<div>Potions soin: ${stats.avgItemsByCategory.heal.toFixed(1)}</div>`;
         html += `<div>Potions force: ${stats.avgItemsByCategory.damage.toFixed(1)}</div>`;
         html += `<div>Équipement: ${stats.avgItemsByCategory.equipment.toFixed(1)}</div>`;
@@ -1107,7 +1107,7 @@ export function formatReportAsHTML(report) {
         html += `<div>Or gagné: ${stats.avgGoldEarned.toFixed(0)} 💰</div>`;
         html += `<div>Or dépensé: ${stats.avgGoldSpent.toFixed(0)} 💰</div>`;
         html += `<div>Objets achetés: ${stats.avgItemsPurchased.toFixed(1)}</div>`;
-        html += `<div>% Niveau 100: ${stats.percentReachedLevel100.toFixed(1)}%</div>`;
+        html += `<div>% Niveau 20: ${stats.percentReachedLevel20.toFixed(1)}%</div>`;
         html += `<div>Potions soin: ${stats.avgItemsByCategory.heal.toFixed(1)}</div>`;
         html += `<div>Potions force: ${stats.avgItemsByCategory.damage.toFixed(1)}</div>`;
         html += `<div>Équipement: ${stats.avgItemsByCategory.equipment.toFixed(1)}</div>`;
