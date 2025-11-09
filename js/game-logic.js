@@ -729,6 +729,18 @@ export function restoreSaveFromStart() {
 
 // Meet a random NPC
 export function meetNPC() {
+    // Check if player has enough energy to meet an NPC
+    if (gameState.player.energy < 2) {
+        alert('Vous êtes trop fatigué pour rencontrer un PNJ ! Allez dormir à l\'auberge pour récupérer votre énergie.');
+        return;
+    }
+    
+    // Consume energy for meeting an NPC
+    gameState.player.energy = Math.max(0, gameState.player.energy - 2);
+    
+    // Update UI immediately to show energy consumption
+    updateUI();
+    
     const npc = npcs[Math.floor(Math.random() * npcs.length)];
     
     // Check if it's the wandering merchant
@@ -799,6 +811,10 @@ export function meetNPC() {
     
     npcDialogueEl.innerHTML = '';
     npcDialogueEl.appendChild(dialogueContainer);
+    
+    // Save and update UI to reflect energy consumption
+    saveGame();
+    updateUI();
 }
 
 // Show leaderboard
