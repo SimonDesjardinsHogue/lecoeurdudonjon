@@ -129,6 +129,8 @@ function triggerRiddle() {
 function checkRiddleAnswer(riddle) {
     const answer = document.getElementById('riddleAnswer').value.toLowerCase().trim();
     const resultDiv = document.getElementById('riddleResult');
+    const inputEl = document.getElementById('riddleAnswer');
+    const submitBtn = inputEl.nextElementSibling; // Get the submit button
     const p = gameState.player;
     
     if (riddle.answers.includes(answer)) {
@@ -140,6 +142,12 @@ function checkRiddleAnswer(riddle) {
     } else {
         resultDiv.innerHTML = `<p style="color: #ff6b6b; font-weight: bold;">✗ Incorrect... La bonne réponse était : ${riddle.answers[0]}</p>`;
     }
+    
+    // Disable input and button to prevent re-submission
+    inputEl.disabled = true;
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = '0.5';
+    submitBtn.style.cursor = 'not-allowed';
     
     saveGame();
     updateUI();
