@@ -295,7 +295,7 @@ export function updateInventoryPanel() {
                 <strong>${item.icon} ${item.name}</strong><br>
                 <small style="color: #999;">${item.description}</small>
             </div>
-            <button onclick="window.useInventoryItemFromPanel(${index})" style="padding: 6px 12px; font-size: 0.85em;">Utiliser</button>
+            <button onclick="window.useInventoryItemFromPanel(${index})" style="padding: 4px 8px; font-size: 0.75em;">Utiliser</button>
         `;
         
         container.appendChild(itemDiv);
