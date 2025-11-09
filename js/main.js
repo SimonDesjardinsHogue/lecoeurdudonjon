@@ -5,7 +5,7 @@ import { exportSave, importSave } from './save-load.js';
 import { audioManager } from './audio.js';
 import { initKeyboardHandler } from './keyboard-handler.js';
 import { useSkill as useSkillFn } from './skills.js';
-import { updateUI, updateEnemyUI, updateSkillsUI, updateCombatInventoryUI, updateShopInventoryUI } from './ui.js';
+import { updateUI, updateEnemyUI, updateSkillsUI, updateCombatInventoryUI, updateShopInventoryUI, toggleInventoryPanel, updateInventoryPanel } from './ui.js';
 
 // Initialize audio context after user interaction
 function initAudio() {
@@ -137,4 +137,16 @@ window.useCombatPotion = function(inventoryIndex) {
     initAudio();
     useCombatPotion(inventoryIndex);
     updateCombatInventoryUI();
+};
+
+// Expose inventory panel functions
+window.toggleInventoryPanel = function() {
+    initAudio();
+    toggleInventoryPanel();
+};
+
+window.useInventoryItemFromPanel = function(inventoryIndex) {
+    initAudio();
+    useInventoryItem(inventoryIndex);
+    updateInventoryPanel();
 };

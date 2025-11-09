@@ -76,6 +76,19 @@ export function updateUI() {
     // Update energy bar
     const energyPercent = (p.energy / p.maxEnergy) * 100;
     document.getElementById('energyFill').style.width = energyPercent + '%';
+    
+    // Update inventory count in characteristics section
+    const inventoryCountEl = document.getElementById('inventoryCount');
+    if (inventoryCountEl) {
+        const currentSlots = p.inventory ? p.inventory.length : 0;
+        inventoryCountEl.textContent = `${currentSlots}/4`;
+    }
+    
+    // Update inventory panel if it's visible
+    const inventoryPanel = document.getElementById('inventoryPanel');
+    if (inventoryPanel && inventoryPanel.style.display !== 'none') {
+        updateInventoryPanel();
+    }
 }
 
 // Update enemy UI
@@ -241,6 +254,48 @@ export function updateShopInventoryUI() {
             </div>
             <div class="shop-item-price">${sellPrice} 💰 (50%)</div>
             <button onclick="window.sellInventoryItem(${index})">Vendre</button>
+        `;
+        
+        container.appendChild(itemDiv);
+    });
+}
+
+// Toggle inventory panel in characteristics section
+export function toggleInventoryPanel() {
+    const panel = document.getElementById('inventoryPanel');
+    if (!panel) return;
+    
+    if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        updateInventoryPanel();
+    } else {
+        panel.style.display = 'none';
+    }
+}
+
+// Update inventory panel content
+export function updateInventoryPanel() {
+    const container = document.getElementById('inventoryPanelContent');
+    if (!container) return;
+    
+    const p = gameState.player;
+    if (!p.inventory || p.inventory.length === 0) {
+        container.innerHTML = '<div style="color: #888; font-style: italic; font-size: 0.9em; text-align: center;">Aucun objet</div>';
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    p.inventory.forEach((item, index) => {
+        const itemDiv = document.createElement('div');
+        itemDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 3px; margin-bottom: 5px;';
+        
+        itemDiv.innerHTML = `
+            <div style="flex: 1;">
+                <strong>${item.icon} ${item.name}</strong><br>
+                <small style="color: #999;">${item.description}</small>
+            </div>
+            <button onclick="window.useInventoryItemFromPanel(${index})" style="padding: 6px 12px; font-size: 0.85em;">Utiliser</button>
         `;
         
         container.appendChild(itemDiv);
