@@ -49,6 +49,20 @@ export function loadGame() {
             if (!gameState.player.hasOwnProperty('weaponDamage')) {
                 gameState.player.weaponDamage = 0;
             }
+            // Add equipment tracking properties if they don't exist (for backwards compatibility)
+            if (!gameState.player.hasOwnProperty('currentWeapon')) {
+                gameState.player.currentWeapon = null;
+            }
+            if (!gameState.player.hasOwnProperty('currentArmor')) {
+                gameState.player.currentArmor = null;
+            }
+            // Add mana properties if they don't exist (for backwards compatibility)
+            if (!gameState.player.hasOwnProperty('mana')) {
+                gameState.player.mana = 100;
+            }
+            if (!gameState.player.hasOwnProperty('maxMana')) {
+                gameState.player.maxMana = 100;
+            }
         } catch (e) {
             console.error('Error loading save:', e);
         }

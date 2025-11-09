@@ -23,128 +23,129 @@
         </div>
 
         <div class="game-stats" id="gameStats" style="display: none;">
-            <!-- Groupe 1: Informations personnelles (Nom, Classe, Race, Sexe) -->
-            <div class="stat-box stat-group-character">
-                <div class="stat-label">Personnage</div>
-                <div class="character-info">
-                    <div class="char-info-line">
-                        <span class="char-info-label">Nom:</span>
-                        <span class="stat-value" id="playerName">---</span>
-                    </div>
-                    <div class="char-info-line">
-                        <span class="char-info-label">Classe:</span>
-                        <span class="stat-value" id="playerClass">⚔️ Guerrier</span>
-                    </div>
-                    <div class="char-info-line">
-                        <span class="char-info-label">Race:</span>
-                        <span class="stat-value" id="playerRace">👤 Humain</span>
-                    </div>
-                    <div class="char-info-line">
-                        <span class="char-info-label">Sexe:</span>
-                        <span class="stat-value" id="playerGender">♂️ Masculin</span>
-                    </div>
+            <!-- Groupe 1: Informations personnelles (Nom, Classe, Race, Sexe) - Clickable -->
+            <div class="stat-box stat-group-character" onclick="toggleEquipmentModal()" style="cursor: pointer;" title="Cliquer pour voir l'équipement">
+                <div class="stat-label">Personnage 🔍</div>
+                <div class="character-info-compact">
+                    <div><strong id="playerName">---</strong></div>
+                    <div style="font-size: 0.85em;"><span id="playerClass">⚔️ Guerrier</span> | <span id="playerRace">👤 Humain</span></div>
+                    <div style="font-size: 0.85em;" id="playerGender">♂️ Masculin</div>
                 </div>
             </div>
 
-            <!-- Groupe 2: Statistiques de combat (PV, CA, Énergie) -->
+            <!-- Groupe 2: Statistiques de combat (PV, Mana for mages, CA, Énergie) -->
             <div class="stat-box stat-group-combat">
                 <div class="stat-label">Combat</div>
-                <div class="combat-stats">
-                    <div class="combat-stat-item">
-                        <div class="combat-icon">❤️</div>
-                        <div class="combat-stat-content">
-                            <div class="combat-stat-label">Points de vie</div>
-                            <div class="stat-value" id="playerHealth">100/100</div>
-                            <div class="health-bar">
-                                <div class="health-fill" id="healthFill" style="width: 100%;"></div>
-                            </div>
+                <div class="combat-stats-compact">
+                    <div class="combat-stat-row">
+                        <span class="combat-icon-small">❤️</span>
+                        <span class="stat-value-small" id="playerHealth">100/100</span>
+                        <div class="health-bar-small">
+                            <div class="health-fill" id="healthFill" style="width: 100%;"></div>
                         </div>
                     </div>
-                    <div class="combat-stat-item">
-                        <div class="combat-icon">⚔️</div>
-                        <div class="combat-stat-content">
-                            <div class="combat-stat-label">Dégât de l'arme</div>
-                            <div class="stat-value" id="playerWeaponDamage">0</div>
+                    <div class="combat-stat-row" id="manaRow" style="display: none;">
+                        <span class="combat-icon-small">🔮</span>
+                        <span class="stat-value-small" id="playerMana">100/100</span>
+                        <div class="health-bar-small">
+                            <div class="health-fill" id="manaFill" style="width: 100%; background: linear-gradient(90deg, #4169E1 0%, #1E90FF 100%);"></div>
                         </div>
                     </div>
-                    <div class="combat-stat-item">
-                        <div class="combat-icon">🛡️</div>
-                        <div class="combat-stat-content">
-                            <div class="combat-stat-label">Classe d'armure</div>
-                            <div class="stat-value" id="playerDefense">5</div>
+                    <div class="combat-stat-row">
+                        <span class="combat-icon-small">⚡</span>
+                        <span class="stat-value-small" id="playerEnergy">100/100</span>
+                        <div class="health-bar-small">
+                            <div class="health-fill" id="energyFill" style="width: 100%; background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);"></div>
                         </div>
                     </div>
-                    <div class="combat-stat-item">
-                        <div class="combat-icon">⚡</div>
-                        <div class="combat-stat-content">
-                            <div class="combat-stat-label">Énergie</div>
-                            <div class="stat-value" id="playerEnergy">100/100</div>
-                            <div class="health-bar">
-                                <div class="health-fill" id="energyFill" style="width: 100%; background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);"></div>
-                            </div>
-                        </div>
+                    <div class="combat-stat-inline">
+                        <span class="combat-icon-small" id="weaponIcon">⚔️</span>
+                        <span class="stat-label-inline">Arme:</span>
+                        <span class="stat-value-small" id="playerWeaponDamage">0</span>
+                    </div>
+                    <div class="combat-stat-inline">
+                        <span class="combat-icon-small">🛡️</span>
+                        <span class="stat-label-inline">CA:</span>
+                        <span class="stat-value-small" id="playerDefense">5</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Groupe 3: Progression (Niveau, Expérience et Or) -->
-            <div class="stat-box stat-group-progression">
-                <div class="stat-label">Progression</div>
-                <div class="progression-stats">
-                    <div class="progression-item">
-                        <span class="progression-label">Niveau</span>
-                        <span class="stat-value" id="playerLevel">1</span>
-                    </div>
-                    <div class="progression-item">
-                        <span class="progression-label">Expérience</span>
-                        <span class="stat-value" id="playerXP">0/100</span>
+            <!-- Groupe 3: Progression et Caractéristiques combinées -->
+            <div class="stat-box stat-group-progression-combined">
+                <div class="stat-label">Progression & Stats</div>
+                <div class="progression-compact">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                        <span style="font-size: 0.85em;">Niv. <strong id="playerLevel">1</strong></span>
+                        <span style="font-size: 0.85em;" id="playerXP">0/100</span>
+                        <span style="font-size: 0.85em;" id="playerGold">0 💰</span>
                     </div>
                     <div class="xp-bar">
                         <div class="xp-fill" id="xpFill" style="width: 0%;"></div>
                     </div>
-                    <div class="progression-item" style="margin-top: 10px;">
-                        <span class="progression-label">Or</span>
-                        <span class="stat-value" id="playerGold">0 💰</span>
+                    <div class="characteristics-grid-compact">
+                        <div class="char-compact">
+                            <span class="char-label-small">FOR</span>
+                            <span class="char-value-small" id="playerStrength">10</span>
+                        </div>
+                        <div class="char-compact">
+                            <span class="char-label-small">DEX</span>
+                            <span class="char-value-small" id="playerDexterity">10</span>
+                        </div>
+                        <div class="char-compact">
+                            <span class="char-label-small">CON</span>
+                            <span class="char-value-small" id="playerConstitution">10</span>
+                        </div>
+                        <div class="char-compact">
+                            <span class="char-label-small">INT</span>
+                            <span class="char-value-small" id="playerIntelligence">10</span>
+                        </div>
+                        <div class="char-compact">
+                            <span class="char-label-small">SAG</span>
+                            <span class="char-value-small" id="playerWisdom">10</span>
+                        </div>
+                        <div class="char-compact">
+                            <span class="char-label-small">CHA</span>
+                            <span class="char-value-small" id="playerCharisma">10</span>
+                        </div>
+                        <div class="char-compact" onclick="toggleInventoryPanel()" style="cursor: pointer;" title="Ouvrir/Fermer le sac">
+                            <span class="char-label-small">🎒</span>
+                            <span class="char-value-small" id="inventoryCount">0/4</span>
+                        </div>
+                    </div>
+                    <div id="inventoryPanel" style="display: none; margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 5px;">
+                        <div style="color: #DAA520; font-weight: bold; margin-bottom: 6px; font-size: 0.9em;">🎒 Sac d'Objets</div>
+                        <div id="inventoryPanelContent"></div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- Caractéristiques -->
-            <div class="stat-box characteristics-group">
-                <div class="stat-label">Caractéristiques</div>
-                <div class="characteristics-grid">
-                    <div class="characteristic">
-                        <span class="char-label">FOR</span>
-                        <span class="char-value" id="playerStrength">10</span>
+        <!-- Equipment Modal -->
+        <div id="equipmentModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="modal-close" onclick="toggleEquipmentModal()">&times;</span>
+                <h2 style="color: #DAA520; margin-bottom: 15px;">⚔️ Équipement</h2>
+                <div style="display: flex; gap: 20px; align-items: center;">
+                    <div style="font-size: 4em; text-align: center;" id="characterAvatar">🧙</div>
+                    <div style="flex: 1;">
+                        <div class="equipment-item">
+                            <div class="equipment-icon" id="equippedWeaponIcon">⚔️</div>
+                            <div class="equipment-details">
+                                <div style="font-weight: bold; color: #DAA520;">Arme</div>
+                                <div id="equippedWeaponName">Aucune arme</div>
+                                <div id="equippedWeaponDesc" style="font-size: 0.85em; color: #999;"></div>
+                            </div>
+                        </div>
+                        <div class="equipment-item">
+                            <div class="equipment-icon">🛡️</div>
+                            <div class="equipment-details">
+                                <div style="font-weight: bold; color: #DAA520;">Armure</div>
+                                <div id="equippedArmorName">Aucune armure</div>
+                                <div id="equippedArmorDesc" style="font-size: 0.85em; color: #999;"></div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="characteristic">
-                        <span class="char-label">DEX</span>
-                        <span class="char-value" id="playerDexterity">10</span>
-                    </div>
-                    <div class="characteristic">
-                        <span class="char-label">CON</span>
-                        <span class="char-value" id="playerConstitution">10</span>
-                    </div>
-                    <div class="characteristic">
-                        <span class="char-label">INT</span>
-                        <span class="char-value" id="playerIntelligence">10</span>
-                    </div>
-                    <div class="characteristic">
-                        <span class="char-label">SAG</span>
-                        <span class="char-value" id="playerWisdom">10</span>
-                    </div>
-                    <div class="characteristic">
-                        <span class="char-label">CHA</span>
-                        <span class="char-value" id="playerCharisma">10</span>
-                    </div>
-                    <div class="characteristic characteristic-bag" onclick="toggleInventoryPanel()" style="cursor: pointer;" title="Ouvrir/Fermer le sac">
-                        <span class="char-label">🎒</span>
-                        <span class="char-value" id="inventoryCount">0/4</span>
-                    </div>
-                </div>
-                <div id="inventoryPanel" style="display: none; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 5px;">
-                    <div style="color: #DAA520; font-weight: bold; margin-bottom: 8px;">🎒 Sac d'Objets</div>
-                    <div id="inventoryPanelContent"></div>
                 </div>
             </div>
         </div>

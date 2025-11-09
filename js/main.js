@@ -5,7 +5,7 @@ import { exportSave, importSave } from './save-load.js';
 import { audioManager } from './audio.js';
 import { initKeyboardHandler } from './keyboard-handler.js';
 import { useSkill as useSkillFn } from './skills.js';
-import { updateUI, updateEnemyUI, updateSkillsUI, updateCombatInventoryUI, updateShopInventoryUI, toggleInventoryPanel, updateInventoryPanel } from './ui.js';
+import { updateUI, updateEnemyUI, updateSkillsUI, updateCombatInventoryUI, updateShopInventoryUI, toggleInventoryPanel, updateInventoryPanel, toggleEquipmentModal, updateEquipmentModal } from './ui.js';
 import { initNetwork, configureServer, getNetworkState, submitScore, fetchLeaderboard, checkServerHealth, requestLeaderboardUpdate } from './network.js';
 import { showMultiplayerSettings, saveServerConfig, testServerConnection, disableMultiplayer } from './multiplayer-ui.js';
 
@@ -154,6 +154,12 @@ window.useInventoryItemFromPanel = function(inventoryIndex) {
     initAudio();
     useInventoryItem(inventoryIndex);
     updateInventoryPanel();
+};
+
+// Expose equipment modal functions
+window.toggleEquipmentModal = function() {
+    initAudio();
+    toggleEquipmentModal();
 };
 
 // Expose network functions

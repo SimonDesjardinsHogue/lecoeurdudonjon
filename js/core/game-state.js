@@ -38,6 +38,10 @@ export const gameState = {
         lastSleepTime: null,
         bossesDefeated: 0,
         weaponDamage: 0,  // Damage from last purchased weapon
+        currentWeapon: null,  // Currently equipped weapon item
+        currentArmor: null,   // Currently equipped armor item
+        mana: 100,           // Mana for mages
+        maxMana: 100,        // Max mana for mages
         // Metal inventory (in ounces)
         metals: {
             or: 0,        // Gold

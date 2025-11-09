@@ -56,10 +56,41 @@ export function updateUI() {
     document.getElementById('playerStrength').textContent = `${p.strength} (${strengthMod >= 0 ? '+' : ''}${strengthMod})`;
     document.getElementById('playerDefense').textContent = `${p.defense} (${defenseMod >= 0 ? '+' : ''}${defenseMod})`;
     
-    // Update weapon damage display
+    // Update weapon damage display and icon
     const weaponDamage = p.weaponDamage || 0;
     const totalDamage = weaponDamage + strengthMod;
     document.getElementById('playerWeaponDamage').textContent = `${weaponDamage} (+${strengthMod >= 0 ? strengthMod : 0})`;
+    
+    // Update weapon icon based on class or equipped weapon
+    const weaponIconEl = document.getElementById('weaponIcon');
+    if (weaponIconEl) {
+        let weaponIcon = '⚔️'; // default
+        if (p.currentWeapon && p.currentWeapon.icon) {
+            weaponIcon = p.currentWeapon.icon;
+        } else {
+            // Use class-specific weapon icon
+            switch(p.class) {
+                case 'guerrier': weaponIcon = '⚔️'; break;
+                case 'archer': weaponIcon = '🏹'; break;
+                case 'magicien': weaponIcon = '🪄'; break;
+                case 'rogue': weaponIcon = '🗡️'; break;
+            }
+        }
+        weaponIconEl.textContent = weaponIcon;
+    }
+    
+    // Show/hide mana bar for mages
+    const manaRow = document.getElementById('manaRow');
+    if (manaRow) {
+        if (p.class === 'magicien') {
+            manaRow.style.display = 'flex';
+            document.getElementById('playerMana').textContent = `${p.mana}/${p.maxMana}`;
+            const manaPercent = (p.mana / p.maxMana) * 100;
+            document.getElementById('manaFill').style.width = manaPercent + '%';
+        } else {
+            manaRow.style.display = 'none';
+        }
+    }
     
     document.getElementById('playerDexterity').textContent = `${p.dexterity} (${dexterityMod >= 0 ? '+' : ''}${dexterityMod})`;
     document.getElementById('playerConstitution').textContent = `${p.constitution} (${constitutionMod >= 0 ? '+' : ''}${constitutionMod})`;
@@ -381,4 +412,72 @@ export function updateInventoryPanel() {
         
         container.appendChild(itemDiv);
     });
+}
+
+// Toggle equipment modal
+export function toggleEquipmentModal() {
+    const modal = document.getElementById('equipmentModal');
+    if (!modal) return;
+    
+    if (modal.style.display === 'none' || !modal.style.display) {
+        modal.style.display = 'block';
+        updateEquipmentModal();
+    } else {
+        modal.style.display = 'none';
+    }
+}
+
+// Update equipment modal content
+export function updateEquipmentModal() {
+    const p = gameState.player;
+    
+    // Update character avatar based on gender and class
+    const avatarEl = document.getElementById('characterAvatar');
+    if (avatarEl) {
+        let avatar = '🧙'; // default
+        const isFemale = p.gender === 'female';
+        
+        switch(p.class) {
+            case 'guerrier':
+                avatar = isFemale ? '👸' : '🤴';
+                break;
+            case 'magicien':
+                avatar = isFemale ? '🧙‍♀️' : '🧙‍♂️';
+                break;
+            case 'archer':
+                avatar = isFemale ? '🏹👩' : '🏹👨';
+                break;
+            case 'rogue':
+                avatar = isFemale ? '🗡️👩' : '🗡️👨';
+                break;
+        }
+        avatarEl.textContent = avatar;
+    }
+    
+    // Update weapon info
+    const weaponIconEl = document.getElementById('equippedWeaponIcon');
+    const weaponNameEl = document.getElementById('equippedWeaponName');
+    const weaponDescEl = document.getElementById('equippedWeaponDesc');
+    
+    if (p.currentWeapon) {
+        if (weaponIconEl) weaponIconEl.textContent = p.currentWeapon.icon;
+        if (weaponNameEl) weaponNameEl.textContent = p.currentWeapon.name;
+        if (weaponDescEl) weaponDescEl.textContent = p.currentWeapon.description;
+    } else {
+        if (weaponIconEl) weaponIconEl.textContent = '⚔️';
+        if (weaponNameEl) weaponNameEl.textContent = 'Aucune arme';
+        if (weaponDescEl) weaponDescEl.textContent = 'Visitez le marchand pour acheter une arme';
+    }
+    
+    // Update armor info
+    const armorNameEl = document.getElementById('equippedArmorName');
+    const armorDescEl = document.getElementById('equippedArmorDesc');
+    
+    if (p.currentArmor) {
+        if (armorNameEl) armorNameEl.textContent = p.currentArmor.name;
+        if (armorDescEl) armorDescEl.textContent = p.currentArmor.description;
+    } else {
+        if (armorNameEl) armorNameEl.textContent = 'Aucune armure';
+        if (armorDescEl) armorDescEl.textContent = 'Visitez le marchand pour acheter une armure';
+    }
 }
