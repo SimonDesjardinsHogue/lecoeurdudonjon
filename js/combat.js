@@ -14,9 +14,9 @@ import { submitScore, getNetworkState } from './network.js';
 function shouldFaceBoss() {
     const p = gameState.player;
     // Boss possible at levels 5, 10, 15, 20, etc.
-    // 35% chance to encounter boss when at a boss level and haven't defeated this boss yet
+    // 17.5% chance to encounter boss when at a boss level and haven't defeated this boss yet
     const isAtBossLevel = p.level % 5 === 0 && p.kills > 0 && (p.level / 5) > p.bossesDefeated;
-    const bossSpawnChance = 0.35; // 35% chance
+    const bossSpawnChance = 0.175; // 17.5% chance (reduced from 35%)
     return isAtBossLevel && Math.random() < bossSpawnChance;
 }
 
@@ -423,8 +423,8 @@ export function enemyAttack() {
     if (e.isBoss && e.ability) {
         switch (e.ability) {
             case 'regeneration':
-                // Troll regenerates 8-15 HP each turn
-                const regenAmount = 8 + Math.floor(Math.random() * 8);
+                // Troll regenerates 4-7 HP each turn (reduced from 8-15)
+                const regenAmount = 4 + Math.floor(Math.random() * 4);
                 e.health = Math.min(e.maxHealth, e.health + regenAmount);
                 addCombatLog(`${e.name} se régénère de ${regenAmount} HP !`, 'info');
                 updateEnemyUI();

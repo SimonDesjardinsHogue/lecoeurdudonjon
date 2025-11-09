@@ -25,7 +25,7 @@ export const bosses = [
         xp: 250,
         description: 'Un troll massif avec une peau de pierre',
         ability: 'regeneration',
-        abilityDescription: 'Se régénère de 10 HP chaque tour'
+        abilityDescription: 'Se régénère de 4-7 HP chaque tour'
     },
     { 
         name: 'Seigneur Liche', 
