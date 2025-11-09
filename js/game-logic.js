@@ -9,7 +9,7 @@ import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 import { initializeDailyQuests, checkDailyReset, updateQuestProgress, showDailyQuestsScreen } from './daily-quests.js';
 import { initAchievements, trackAchievementProgress, checkAchievements } from './achievements.js';
-import { runBalanceTests, formatReportAsHTML } from './balance-tester.js';
+import { runBalanceTests, runBalanceTestsAsync, formatReportAsHTML } from './balance-tester.js';
 import { submitScore, fetchLeaderboard, getNetworkState } from './network.js';
 
 // Helper function to get class display name
@@ -1492,15 +1492,16 @@ export async function runBalanceTest() {
         // Use setTimeout to allow UI to update
         await new Promise(resolve => setTimeout(resolve, 100));
         
-        // Run tests with progress updates
-        statusText.textContent = 'Simulation en cours... (Cela peut prendre 10-30 secondes)';
-        progressBar.style.width = '25%';
+        // Run tests with progress updates (100 games per combination instead of 2500)
+        statusText.textContent = 'Simulation en cours...';
         
-        await new Promise(resolve => setTimeout(resolve, 100));
+        const report = await runBalanceTestsAsync(100, (progress) => {
+            // Update progress bar
+            progressBar.style.width = `${progress.progress}%`;
+            statusText.textContent = `Simulation en cours... ${progress.currentGames}/${progress.totalGames} (${progress.progress.toFixed(1)}%)`;
+        });
         
-        const report = runBalanceTests(2500);
-        
-        progressBar.style.width = '75%';
+        progressBar.style.width = '95%';
         statusText.textContent = 'Génération du rapport...';
         
         await new Promise(resolve => setTimeout(resolve, 100));
