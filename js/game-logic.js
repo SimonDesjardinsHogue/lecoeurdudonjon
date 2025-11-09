@@ -649,6 +649,21 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
                 }
             }
             
+            // Check if item has level requirement
+            let levelInfo = '';
+            if (item.levelRequirement) {
+                const meetsRequirement = gameState.player.level >= item.levelRequirement;
+                const levelColor = meetsRequirement ? '#51cf66' : '#ff6b6b';
+                levelInfo = `<br><small style="color: ${levelColor};">Niveau requis: ${item.levelRequirement}</small>`;
+                
+                // Disable if player level is too low
+                if (!meetsRequirement) {
+                    isDisabled = true;
+                    disabledReason = 'level';
+                    itemDiv.classList.add('shop-item-disabled');
+                }
+            }
+            
             // Check if item is currently unavailable
             if (isItemUnavailable(originalIndex)) {
                 isDisabled = true;
@@ -680,7 +695,7 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
                 <div class="shop-item-info">
                     <strong style="color: ${rarityColor};">${icon} ${item.name}</strong><br>
                     ${rarityInfo}
-                    <small>${item.description}</small>${randomStatsInfo}${classInfo}
+                    <small>${item.description}</small>${randomStatsInfo}${classInfo}${levelInfo}
                 </div>
                 <div class="shop-item-price">${priceDisplay}</div>
                 <button onclick="window.buyItem(${originalIndex})" ${isDisabled ? 'disabled' : ''}>${buttonText}</button>
@@ -706,6 +721,12 @@ export function buyItem(index) {
     if (item.classRestriction && item.classRestriction !== p.class) {
         const className = getClassDisplayName(item.classRestriction);
         alert(`Cet objet est réservé à la classe ${className} !`);
+        return;
+    }
+    
+    // Check level requirement
+    if (item.levelRequirement && p.level < item.levelRequirement) {
+        alert(`Vous n'avez pas le niveau requis pour acheter cet objet !\n\nNiveau requis : ${item.levelRequirement}\nVotre niveau : ${p.level}\n\nRevenez quand vous serez plus fort !`);
         return;
     }
     
