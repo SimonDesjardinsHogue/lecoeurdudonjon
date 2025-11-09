@@ -140,6 +140,59 @@ export function initializeShopItems() {
     };
 }
 
+// Initialize or rotate unavailable shop items (approximately 20% of items)
+export function initializeShopAvailability() {
+    const now = Date.now();
+    
+    // Check if we need to restock (first time or after 2 hours)
+    if (!gameState.shop.nextRestockTime || now >= gameState.shop.nextRestockTime) {
+        // Calculate how many items to make unavailable (~20%)
+        const unavailableCount = Math.floor(shopItems.length * 0.2);
+        
+        // Randomly select items to make unavailable
+        const unavailableIndices = new Set();
+        while (unavailableIndices.size < unavailableCount) {
+            const randomIndex = Math.floor(Math.random() * shopItems.length);
+            unavailableIndices.add(randomIndex);
+        }
+        
+        // Update shop state
+        gameState.shop.unavailableItemIndices = Array.from(unavailableIndices);
+        gameState.shop.nextRestockTime = now + (2 * 60 * 60 * 1000); // 2 hours in milliseconds
+        
+        saveGame();
+    }
+}
+
+// Get time remaining until next restock in a human-readable format
+export function getRestockTimeRemaining() {
+    if (!gameState.shop.nextRestockTime) {
+        return null;
+    }
+    
+    const now = Date.now();
+    const timeRemaining = gameState.shop.nextRestockTime - now;
+    
+    if (timeRemaining <= 0) {
+        return null;
+    }
+    
+    const hours = Math.floor(timeRemaining / (60 * 60 * 1000));
+    const minutes = Math.floor((timeRemaining % (60 * 60 * 1000)) / (60 * 1000));
+    
+    if (hours > 0) {
+        return `${hours}h ${minutes}min`;
+    } else {
+        return `${minutes}min`;
+    }
+}
+
+// Check if an item is currently unavailable
+export function isItemUnavailable(itemIndex) {
+    return gameState.shop.unavailableItemIndices.includes(itemIndex);
+}
+
+
 // Check energy regeneration (6:00 AM Toronto time)
 export function checkEnergyRegeneration() {
     const p = gameState.player;
@@ -178,6 +231,7 @@ export function checkEnergyRegeneration() {
 export function init() {
     loadGame();
     initializeShopItems();
+    initializeShopAvailability();
     initializeDailyQuests();
     initAchievements();
     checkEnergyRegeneration();
@@ -405,6 +459,9 @@ export function checkLevelUp() {
 
 // Show shop
 export function showShop(filterCategory = 'all', filterByClass = true) {
+    // Check and update shop availability
+    initializeShopAvailability();
+    
     showScreen('shopScreen');
     const shopDiv = document.getElementById('shopItems');
     shopDiv.innerHTML = '';
@@ -436,6 +493,22 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
         </div>
     `;
     shopDiv.appendChild(filterContainer);
+    
+    // Add restock timer message if there are unavailable items
+    const restockTime = getRestockTimeRemaining();
+    if (restockTime && gameState.shop.unavailableItemIndices.length > 0) {
+        const restockMsg = document.createElement('div');
+        restockMsg.style.cssText = 'background: rgba(139, 69, 19, 0.3); border: 2px solid #8B4513; border-radius: 8px; padding: 12px; margin-bottom: 15px; text-align: center;';
+        restockMsg.innerHTML = `
+            <p style="margin: 0; color: #DAA520; font-weight: bold;">
+                🕐 Le marchand attend de nouveaux articles dans ${restockTime}
+            </p>
+            <p style="margin: 5px 0 0 0; color: #AAA; font-size: 0.9em; font-style: italic;">
+                Certains articles sont temporairement indisponibles
+            </p>
+        `;
+        shopDiv.appendChild(restockMsg);
+    }
     
     // Filter items based on category or type
     let filteredItems = filterCategory === 'all' 
@@ -503,6 +576,8 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
             // Check if item has class restriction
             let classInfo = '';
             let isDisabled = false;
+            let disabledReason = '';
+            
             if (item.classRestriction) {
                 const className = getClassDisplayName(item.classRestriction);
                 classInfo = `<br><small style="color: #DAA520;">Pour: ${className}</small>`;
@@ -510,8 +585,17 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
                 // Disable if player is not this class
                 if (item.classRestriction !== gameState.player.class) {
                     isDisabled = true;
+                    disabledReason = 'class';
                     itemDiv.classList.add('shop-item-disabled');
                 }
+            }
+            
+            // Check if item is currently unavailable
+            if (isItemUnavailable(originalIndex)) {
+                isDisabled = true;
+                disabledReason = 'unavailable';
+                itemDiv.classList.add('shop-item-disabled');
+                itemDiv.style.opacity = '0.6';
             }
             
             // Calculate discounted price based on charisma
@@ -521,8 +605,16 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
             
             // Build price display with discount info
             let priceDisplay = `${finalCost} 💰`;
-            if (discount > 0) {
+            if (disabledReason === 'unavailable') {
+                priceDisplay = `<span style="color: #888;">Indisponible</span>`;
+            } else if (discount > 0) {
                 priceDisplay = `<span style="text-decoration: line-through; color: #888;">${item.cost}</span> ${finalCost} 💰<br><small style="color: #51cf66;">-${Math.floor(discount * 100)}% (Charisme)</small>`;
+            }
+            
+            // Build button text based on disabled reason
+            let buttonText = 'Acheter';
+            if (disabledReason === 'unavailable') {
+                buttonText = 'Indisponible';
             }
             
             itemDiv.innerHTML = `
@@ -532,7 +624,7 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
                     <small>${item.description}</small>${randomStatsInfo}${classInfo}
                 </div>
                 <div class="shop-item-price">${priceDisplay}</div>
-                <button onclick="window.buyItem(${originalIndex})" ${isDisabled ? 'disabled' : ''}>Acheter</button>
+                <button onclick="window.buyItem(${originalIndex})" ${isDisabled ? 'disabled' : ''}>${buttonText}</button>
             `;
             shopDiv.appendChild(itemDiv);
         });
@@ -543,6 +635,13 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
 export function buyItem(index) {
     const item = shopItems[index];
     const p = gameState.player;
+    
+    // Check if item is currently unavailable
+    if (isItemUnavailable(index)) {
+        const restockTime = getRestockTimeRemaining();
+        alert(`Cet article est temporairement indisponible. Le marchand attend de nouveaux articles dans ${restockTime}.`);
+        return;
+    }
     
     // Check class restriction for weapons
     if (item.classRestriction && item.classRestriction !== p.class) {

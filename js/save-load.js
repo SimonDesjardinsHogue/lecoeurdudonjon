@@ -63,6 +63,17 @@ export function loadGame() {
             if (!gameState.player.hasOwnProperty('maxMana')) {
                 gameState.player.maxMana = 100;
             }
+            
+            // Add shop state if it doesn't exist (for backwards compatibility)
+            if (loadedState.shop) {
+                gameState.shop = loadedState.shop;
+            }
+            if (!gameState.shop) {
+                gameState.shop = {
+                    unavailableItemIndices: [],
+                    nextRestockTime: null
+                };
+            }
         } catch (e) {
             console.error('Error loading save:', e);
         }

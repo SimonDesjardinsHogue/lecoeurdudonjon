@@ -56,5 +56,10 @@ export const gameState = {
     },
     currentEnemy: null,
     inCombat: false,
-    defending: false
+    defending: false,
+    // Shop state for item availability
+    shop: {
+        unavailableItemIndices: [],  // Indices of items currently unavailable
+        nextRestockTime: null         // Timestamp when items will be restocked
+    }
 };
