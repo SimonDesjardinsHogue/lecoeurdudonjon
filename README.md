@@ -10,7 +10,7 @@ Dans le royaume oublié de Valéria, les ténèbres s'étendent. Au cœur du don
 
 Selon les anciennes légendes, Valéria était autrefois un royaume prospère, protégé par la magie du Cœur du Dragon. Mais lorsque l'artefact fut corrompu par les forces des ténèbres, le royaume sombra dans l'oubli. 
 
-De mystérieux explorateurs, deux frères et sœurs connus sous le nom des M&M (Marcel et Morgane), parcourent maintenant les ruines du royaume. Ils déchiffrent les inscriptions anciennes et découvrent les secrets perdus de Valéria, aidant les héros courageux dans leur quête pour restaurer la lumière.
+De mystérieux explorateurs, des frères et sœurs connus sous le nom des M&M, parcourent maintenant les ruines du royaume. Ils déchiffrent les inscriptions anciennes et découvrent les secrets perdus de Valéria, aidant les héros courageux dans leur quête pour restaurer la lumière.
 
 Êtes-vous prêt à devenir cette légende ?
 
