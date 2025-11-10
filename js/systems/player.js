@@ -95,7 +95,7 @@ export function checkLevelUp() {
     if (p.xp >= p.xpToLevel) {
         p.level++;
         p.xp -= p.xpToLevel;
-        p.xpToLevel = Math.floor(p.xpToLevel * 1.8);
+        p.xpToLevel = Math.floor(p.xpToLevel * 1.54);
         
         // Class-based HP increase
         let hpIncrease = 10; // Default for Guerrier
