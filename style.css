@@ -227,7 +227,7 @@ body {
 
 .game-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
     gap: 10px;
     padding: 15px;
     background: rgba(139, 69, 19, 0.2);
