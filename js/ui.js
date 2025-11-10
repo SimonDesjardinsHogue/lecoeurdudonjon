@@ -232,11 +232,19 @@ export function updateUI() {
     const armorIconInlineEl = document.getElementById('equippedArmorIconInline');
     const armorNameInlineEl = document.getElementById('equippedArmorNameInline');
     if (armorIconInlineEl && armorNameInlineEl) {
+        // Set armor icon based on character class
+        let armorIcon = '🛡️'; // default
+        switch(p.class) {
+            case 'guerrier': armorIcon = '🦺'; break; // plate armor
+            case 'archer': armorIcon = '🥋'; break; // leather/mail armor
+            case 'magicien': armorIcon = '👘'; break; // robe
+        }
+        
         if (p.currentArmor) {
-            armorIconInlineEl.textContent = '🛡️';
+            armorIconInlineEl.textContent = armorIcon;
             armorNameInlineEl.textContent = p.currentArmor.name;
         } else {
-            armorIconInlineEl.textContent = '🛡️';
+            armorIconInlineEl.textContent = armorIcon;
             armorNameInlineEl.textContent = 'Aucune';
         }
     }
