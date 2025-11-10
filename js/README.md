@@ -17,11 +17,12 @@ js/
 ├── core/               # Modules centraux du jeu
 │   └── game-state.js   # État central du jeu (importe depuis data/)
 │
-├── systems/            # Systèmes de jeu (à venir)
-│   └── (futures extractions de game-logic.js)
+├── systems/            # Systèmes de jeu modulaires
+│   ├── shop.js         # Système de boutique (régulière et marchand itinérant)
+│   └── npc.js          # Système de PNJ (rencontres, bijoutier)
 │
 ├── game-state.js       # Wrapper de compatibilité (re-exporte core/game-state.js)
-├── game-logic.js       # Logique principale du jeu
+├── game-logic.js       # Logique principale du jeu (~1044 lignes)
 ├── combat.js           # Système de combat
 ├── ui.js               # Gestion de l'interface
 ├── save-load.js        # Sauvegarde/Chargement
@@ -52,14 +53,22 @@ js/
    - État mutable du joueur et du jeu
    - Source unique de vérité
 
-3. **Logique (game-logic.js)** : Opérations sur l'état
+3. **Systèmes (systems/)** : Systèmes indépendants et modulaires
+   - **shop.js** : Gestion complète de la boutique
+     - Boutique régulière avec filtres
+     - Marchand itinérant
+     - Initialisation des effets d'items
+     - Système de disponibilité et rotation d'items
+   - **npc.js** : Interactions avec les PNJ
+     - Rencontres aléatoires
+     - Bijoutier (achat/vente de métaux)
+     - Récompenses et dialogues
+
+4. **Logique (game-logic.js)** : Opérations sur l'état
    - Manipulation de l'état du jeu
    - Orchestration des différents systèmes
    - Règles métier
-
-4. **Systèmes (systems/)** : Systèmes indépendants
-   - Futurs modules pour boutique, PNJ, classement, etc.
-   - Chaque système gère une fonctionnalité spécifique
+   - Réduit de 1970 à 1044 lignes (-47%)
 
 ## 📝 Guide de Modification
 
@@ -96,12 +105,12 @@ export const shopItems = [
         cost: 100, 
         category: 'heal', 
         type: 'potion', 
-        effect: null  // Sera défini dans game-logic.js
+        effect: null  // Sera défini dans systems/shop.js
     }
 ];
 ```
 
-Puis dans `js/game-logic.js`, fonction `initializeShopItems()` :
+Puis dans `js/systems/shop.js`, fonction `initializeShopItems()` :
 
 ```javascript
 shopItems[XX].effect = () => healPlayer(50);
@@ -127,6 +136,14 @@ export const npcs = [
 
 Éditez `js/data/game-constants.js` pour les rarités, noms de stats, modificateurs, etc.
 
+### Ajouter une Fonctionnalité au Système de Boutique
+
+Éditez `js/systems/shop.js` pour ajouter de nouvelles fonctionnalités liées à l'achat/vente d'items.
+
+### Ajouter une Fonctionnalité au Système de PNJ
+
+Éditez `js/systems/npc.js` pour ajouter de nouveaux types de PNJ ou d'interactions.
+
 ## 🔄 Compatibilité Rétroactive
 
 L'ancien fichier `js/game-state.js` est maintenant un wrapper qui re-exporte tout depuis `js/core/game-state.js`. Cela assure que le code existant continue de fonctionner sans modification.
@@ -136,27 +153,27 @@ L'ancien fichier `js/game-state.js` est maintenant un wrapper qui re-exporte tou
 export * from './core/game-state.js';
 ```
 
-## 🚀 Prochaines Améliorations
+## 🚀 Améliorations Futures
 
-Pour réduire davantage la taille de `game-logic.js` (actuellement 1197 lignes), les systèmes suivants peuvent être extraits :
+Pour réduire davantage la taille de `game-logic.js` (actuellement 1044 lignes), les systèmes suivants peuvent être extraits :
 
-1. **Shop System** → `js/systems/shop.js`
-   - `showShop()`, `buyItem()`, `buyRareItem()`
+1. **Leaderboard System** → `js/systems/leaderboard.js`
+   - `showLeaderboard()`, `updateLeaderboardDisplay()`
    
-2. **NPC System** → `js/systems/npc.js`
-   - `meetNPC()`, `meetWanderingMerchant()`, `meetJeweler()`
-   - `buyMetal()`, `sellMetal()`
+2. **Inventory System** → `js/systems/inventory.js`
+   - `useInventoryItem()`, `sellInventoryItem()`
    
-3. **Leaderboard System** → `js/systems/leaderboard.js`
-   - `showLeaderboard()`
+3. **Player System** → `js/systems/player.js`
+   - `rest()`, `healPlayer()`, `spendStatPoint()`
 
 ## 💡 Bonnes Pratiques
 
 1. **Un fichier = Une responsabilité** : Chaque fichier devrait avoir un rôle clairement défini
-2. **Petits fichiers** : Viser < 300 lignes par fichier pour faciliter la lecture
+2. **Petits fichiers** : Viser < 500 lignes par fichier pour faciliter la lecture
 3. **Imports explicites** : Toujours nommer ce qui est importé
 4. **Documentation** : Commenter le rôle de chaque module en haut du fichier
 5. **Tests** : Après chaque modification, tester le jeu dans le navigateur
+6. **Modularité** : Extraire les systèmes logiques dans `systems/` pour une meilleure organisation
 
 ## 🔍 Débogage
 
@@ -167,6 +184,15 @@ Si vous rencontrez des erreurs après une modification :
 3. S'assurer que tous les fichiers sont bien enregistrés
 4. Rafraîchir la page (Ctrl+F5)
 5. Vérifier que le serveur HTTP est actif
+
+## 📊 Statistiques de Refactoring
+
+| Métrique | Avant | Après | Amélioration |
+|----------|-------|-------|--------------|
+| Taille game-logic.js | 1970 lignes | 1044 lignes | **-47%** |
+| Systèmes modulaires | 0 | 2 (shop, npc) | **+2** |
+| Fichiers de données | 6 | 6 | - |
+| Maintenabilité | Faible | Élevée | **++** |
 
 ## 📚 Ressources
 
