@@ -7,7 +7,7 @@ import { exportSave, importSave } from './save-load.js';
 import { audioManager } from './audio.js';
 import { initKeyboardHandler } from './keyboard-handler.js';
 import { useSkill as useSkillFn } from './skills.js';
-import { updateUI, updateEnemyUI, updateSkillsUI, updateCombatInventoryUI, updateShopInventoryUI, toggleInventoryPanel, updateInventoryPanel, toggleEquipmentModal, updateEquipmentModal, updateEventBanner } from './ui.js';
+import { updateUI, updateEnemyUI, updateSkillsUI, updateCombatInventoryUI, updateShopInventoryUI, toggleInventoryPanel, updateInventoryPanel, toggleEquipmentModal, updateEquipmentModal, updateEventBanner, getCurrentDisplayedEvent } from './ui.js';
 import { initNetwork, configureServer, getNetworkState, submitScore, fetchLeaderboard, checkServerHealth, requestLeaderboardUpdate, retryDefaultServerConnection } from './network.js';
 import { showMultiplayerSettings, saveServerConfig, testServerConnection, disableMultiplayer, showConnectionNotification, dismissConnectionNotification } from './multiplayer-ui.js';
 import * as scheduledEventsModule from './scheduled-events.js';
@@ -222,3 +222,22 @@ window.showAdminLogin = showAdminLogin;
 window.showAdminPanel = showAdminPanel;
 window.showServerHosting = showServerHosting;
 window.deleteAllSaves = deleteAllSaves;
+
+// Expose event info popup function
+window.showEventInfoPopup = function() {
+    initAudio();
+    const currentEvent = getCurrentDisplayedEvent();
+    if (!currentEvent && window.scheduledEventsModule) {
+        // Try to get the current event directly
+        const { checkActiveEvent, getNextEvent } = window.scheduledEventsModule;
+        const activeEvent = checkActiveEvent();
+        const nextEvent = getNextEvent();
+        const eventToShow = activeEvent || nextEvent;
+        
+        if (eventToShow && window.scheduledEventsModule.showEventInfo) {
+            window.scheduledEventsModule.showEventInfo(eventToShow);
+        }
+    } else if (currentEvent && window.scheduledEventsModule && window.scheduledEventsModule.showEventInfo) {
+        window.scheduledEventsModule.showEventInfo(currentEvent);
+    }
+};

@@ -2,6 +2,9 @@
 import { gameState, getStatModifier } from './game-state.js';
 import { getPlayerSkills, isSkillOnCooldown, getSkillCooldown } from './skills.js';
 
+// Store current event for the info popup
+let currentDisplayedEvent = null;
+
 // Update event banner UI
 export function updateEventBanner() {
     // This will be implemented when scheduled-events module is imported
@@ -27,6 +30,9 @@ export function updateEventBanner() {
         document.getElementById('eventBannerIcon').textContent = activeEvent.icon;
         document.getElementById('eventBannerText').textContent = `🎉 ÉVÉNEMENT ACTIF ! ${timeStr} restant`;
         document.getElementById('eventBannerDetails').textContent = `${activeEvent.name} - ${activeEvent.benefit}`;
+        
+        // Store the current event for the info popup
+        currentDisplayedEvent = activeEvent;
     } else if (nextEvent) {
         // Show next upcoming event
         banner.style.display = 'block';
@@ -43,10 +49,19 @@ export function updateEventBanner() {
         document.getElementById('eventBannerIcon').textContent = nextEvent.icon;
         document.getElementById('eventBannerText').textContent = `Prochain événement dans ${timeStr}`;
         document.getElementById('eventBannerDetails').textContent = `${nextEvent.name} à ${hours}:${minutes}`;
+        
+        // Store the current event for the info popup
+        currentDisplayedEvent = nextEvent;
     } else {
         // No events remaining today
         banner.style.display = 'none';
+        currentDisplayedEvent = null;
     }
+}
+
+// Get the currently displayed event
+export function getCurrentDisplayedEvent() {
+    return currentDisplayedEvent;
 }
 
 // Show specific screen

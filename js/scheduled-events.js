@@ -12,7 +12,10 @@ const eventTypes = [
         name: 'Ruée vers le Trésor',
         icon: '💰',
         description: 'Les trésors sont plus nombreux pendant 30 minutes !',
+        story: 'Les anciens dragons avaient caché des trésors dans les recoins du donjon. Une fois par jour, ces trésors deviennent plus accessibles aux aventuriers chanceux.',
         benefit: 'Double l\'or trouvé lors de l\'exploration',
+        objective: 'Explorez le donjon pendant l\'événement pour maximiser vos gains d\'or',
+        duration: '30 minutes',
         effect: (p) => {
             // This will be checked in game logic to double gold rewards
             return { goldMultiplier: 2 };
@@ -23,7 +26,10 @@ const eventTypes = [
         name: 'Vague d\'Énergie Mystique',
         icon: '✨',
         description: 'Une énergie mystique amplifie votre apprentissage !',
+        story: 'Les étoiles s\'alignent de manière particulière, créant une vague d\'énergie mystique qui amplifie l\'apprentissage de tous les héros présents dans le donjon.',
         benefit: '+50% d\'expérience pendant 30 minutes',
+        objective: 'Combattez des ennemis pour gagner plus d\'expérience',
+        duration: '30 minutes',
         effect: (p) => {
             return { xpMultiplier: 1.5 };
         }
@@ -33,7 +39,10 @@ const eventTypes = [
         name: 'Vente du Marchand',
         icon: '🏪',
         description: 'Le marchand offre des rabais spéciaux !',
+        story: 'Le vieux marchand célèbre l\'anniversaire de son échoppe en offrant des rabais généreux à tous ses clients fidèles.',
         benefit: '30% de rabais sur tous les articles',
+        objective: 'Visitez la boutique pour profiter des prix réduits',
+        duration: '30 minutes',
         effect: (p) => {
             return { shopDiscount: 0.30 };
         }
@@ -43,7 +52,10 @@ const eventTypes = [
         name: 'Bénédiction de Force',
         icon: '⚔️',
         description: 'Les dieux de la guerre vous accordent leur bénédiction !',
+        story: 'Les dieux de la guerre observent votre courage et décident de vous accorder temporairement leur bénédiction divine pour vous aider dans vos combats.',
         benefit: '+20% de force en combat pendant 30 minutes',
+        objective: 'Affrontez des ennemis puissants avec votre force augmentée',
+        duration: '30 minutes',
         effect: (p) => {
             return { strengthMultiplier: 1.2 };
         }
@@ -53,7 +65,10 @@ const eventTypes = [
         name: 'Sanctuaire de Guérison',
         icon: '⛲',
         description: 'Un sanctuaire sacré ouvre ses portes !',
+        story: 'Un sanctuaire ancien, caché dans les profondeurs du donjon, s\'ouvre brièvement pour offrir repos et guérison aux aventuriers fatigués.',
         benefit: 'Repos gratuit et régénération améliorée',
+        objective: 'Reposez-vous à l\'auberge gratuitement et profitez d\'une guérison bonus',
+        duration: '30 minutes',
         effect: (p) => {
             return { freeRest: true, healingBonus: 1.5 };
         }
@@ -63,7 +78,10 @@ const eventTypes = [
         name: 'Invasion de Monstres',
         icon: '👹',
         description: 'Une horde de monstres envahit le donjon !',
+        story: 'Une faille dimensionnelle s\'est ouverte, permettant à une horde de monstres d\'envahir le donjon. Plus d\'ennemis signifie plus de récompenses pour les braves !',
         benefit: 'Plus d\'ennemis mais doubles récompenses',
+        objective: 'Repoussez l\'invasion et récoltez des récompenses doublées',
+        duration: '30 minutes',
         effect: (p) => {
             return { enemySpawnRate: 1.5, combatRewardMultiplier: 2 };
         }
@@ -73,7 +91,10 @@ const eventTypes = [
         name: 'Heure de Chance',
         icon: '🍀',
         description: 'La chance est de votre côté !',
+        story: 'Les fées de la fortune ont décidé de vous sourire aujourd\'hui. Vos chances de trouver des objets rares et de porter des coups critiques sont considérablement augmentées.',
         benefit: 'Meilleures chances de trouver des objets rares',
+        objective: 'Explorez et combattez pour maximiser vos chances de trouver des objets légendaires',
+        duration: '30 minutes',
         effect: (p) => {
             return { luckBonus: 2, criticalChance: 1.5 };
         }
@@ -83,7 +104,10 @@ const eventTypes = [
         name: 'Révélation Ancienne',
         icon: '📖',
         description: 'Les M&M partagent leurs connaissances anciennes !',
+        story: 'Les mystérieux frères et sœurs M&M ont déchiffré de nouvelles inscriptions anciennes et partagent leurs connaissances avec vous, augmentant temporairement toutes vos caractéristiques.',
         benefit: '+2 à toutes les caractéristiques temporairement',
+        objective: 'Profitez de cette augmentation temporaire pour accomplir des exploits',
+        duration: '30 minutes',
         effect: (p) => {
             return { allStatsBonus: 2 };
         }
@@ -315,3 +339,63 @@ export function getEventMultiplier(effectName, defaultValue = 1) {
     const effects = getEventEffects();
     return effects[effectName] || defaultValue;
 }
+
+// Show event information popup
+export function showEventInfo(event) {
+    if (!event) return;
+    
+    // Create modal HTML
+    const modalHtml = `
+        <div id="eventInfoModal" class="modal" style="display: block;">
+            <div class="modal-content" style="max-width: 600px;">
+                <span class="modal-close" onclick="closeEventInfoModal()">&times;</span>
+                <h2 style="color: #DAA520; margin-bottom: 20px; text-align: center;">
+                    ${event.icon} ${event.name}
+                </h2>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                    <h3 style="color: #DAA520; font-size: 1em; margin-bottom: 10px;">📖 Histoire</h3>
+                    <p style="line-height: 1.6; color: #ddd;">${event.story}</p>
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                    <h3 style="color: #DAA520; font-size: 1em; margin-bottom: 10px;">✨ Bonus</h3>
+                    <p style="line-height: 1.6; color: #51cf66; font-weight: bold;">${event.benefit}</p>
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                    <h3 style="color: #DAA520; font-size: 1em; margin-bottom: 10px;">🎯 Objectif</h3>
+                    <p style="line-height: 1.6; color: #ddd;">${event.objective}</p>
+                </div>
+                
+                <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 5px; margin-bottom: 15px;">
+                    <h3 style="color: #DAA520; font-size: 1em; margin-bottom: 10px;">⏱️ Durée</h3>
+                    <p style="line-height: 1.6; color: #ddd;">${event.duration}</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="closeEventInfoModal()" style="padding: 10px 30px;">
+                        Fermer
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove any existing modal
+    const existingModal = document.getElementById('eventInfoModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Add modal to page
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+}
+
+// Close event info modal
+window.closeEventInfoModal = function() {
+    const modal = document.getElementById('eventInfoModal');
+    if (modal) {
+        modal.remove();
+    }
+};

@@ -119,6 +119,27 @@ body {
     flex-wrap: wrap;
 }
 
+.event-banner-icon-btn {
+    background: rgba(218, 165, 32, 0.2);
+    border: 2px solid #DAA520;
+    border-radius: 8px;
+    padding: 5px 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: eventIconBounce 1s ease-in-out infinite;
+}
+
+.event-banner-icon-btn:hover {
+    background: rgba(218, 165, 32, 0.4);
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(218, 165, 32, 0.6);
+}
+
+.event-banner-icon-btn #eventBannerIcon {
+    font-size: 1.3em;
+    display: inline-block;
+}
+
 .event-banner-icon {
     font-size: 1.3em;
     animation: eventIconBounce 1s ease-in-out infinite;
