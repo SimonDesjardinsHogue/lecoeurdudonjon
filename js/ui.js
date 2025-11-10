@@ -194,6 +194,52 @@ export function updateUI() {
     if (inventoryPanel && inventoryPanel.style.display !== 'none') {
         updateInventoryPanel();
     }
+    
+    // Update inline character avatar
+    const avatarInlineEl = document.getElementById('characterAvatarInline');
+    if (avatarInlineEl) {
+        let avatar = '🧙'; // default
+        const isFemale = p.gender === 'female';
+        
+        switch(p.class) {
+            case 'guerrier':
+                avatar = isFemale ? '👸' : '🤴';
+                break;
+            case 'magicien':
+                avatar = isFemale ? '🧙‍♀️' : '🧙‍♂️';
+                break;
+            case 'archer':
+                avatar = isFemale ? '🏹👩' : '🏹👨';
+                break;
+        }
+        avatarInlineEl.textContent = avatar;
+    }
+    
+    // Update inline weapon display
+    const weaponIconInlineEl = document.getElementById('equippedWeaponIconInline');
+    const weaponNameInlineEl = document.getElementById('equippedWeaponNameInline');
+    if (weaponIconInlineEl && weaponNameInlineEl) {
+        if (p.currentWeapon) {
+            weaponIconInlineEl.textContent = p.currentWeapon.icon || '⚔️';
+            weaponNameInlineEl.textContent = p.currentWeapon.name;
+        } else {
+            weaponIconInlineEl.textContent = '⚔️';
+            weaponNameInlineEl.textContent = 'Aucune';
+        }
+    }
+    
+    // Update inline armor display
+    const armorIconInlineEl = document.getElementById('equippedArmorIconInline');
+    const armorNameInlineEl = document.getElementById('equippedArmorNameInline');
+    if (armorIconInlineEl && armorNameInlineEl) {
+        if (p.currentArmor) {
+            armorIconInlineEl.textContent = '🛡️';
+            armorNameInlineEl.textContent = p.currentArmor.name;
+        } else {
+            armorIconInlineEl.textContent = '🛡️';
+            armorNameInlineEl.textContent = 'Aucune';
+        }
+    }
 }
 
 // Calculate difficulty indicator based on player vs enemy stats

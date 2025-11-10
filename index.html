@@ -46,15 +46,30 @@
         </div>
 
         <div class="game-stats" id="gameStats" style="display: none;">
-            <!-- Groupe 1: Informations personnelles (Nom, Classe, Race, Sexe) - Clickable -->
-            <div class="stat-box stat-group-character" onclick="toggleEquipmentModal()" style="cursor: pointer;" title="Cliquer pour voir l'équipement">
-                <div class="stat-label">Personnage 🔍</div>
+            <!-- Groupe 1: Informations personnelles (Nom, Classe, Race, Sexe) -->
+            <div class="stat-box stat-group-character">
+                <div class="stat-label">Personnage</div>
                 <div class="character-info-compact">
-                    <div><strong id="playerName">---</strong></div>
-                    <div style="font-size: 0.85em;"><span id="playerClass">⚔️ Guerrier</span> | <span id="playerRace">👤 Humain</span></div>
-                    <div style="font-size: 0.85em;" id="playerGender">♂️ Masculin</div>
-                    <div style="font-size: 0.85em; margin-top: 5px; display: flex; align-items: center; gap: 5px;">
-                        <div class="char-compact" onclick="event.stopPropagation(); toggleInventoryPanel()" style="cursor: pointer; display: inline-flex; align-items: center; gap: 3px; padding: 3px 6px; background: rgba(0,0,0,0.3); border-radius: 3px;" title="Ouvrir/Fermer le sac">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 5px;">
+                        <div id="characterAvatarInline" style="font-size: 2em; line-height: 1;">🧙</div>
+                        <div style="flex: 1;">
+                            <div><strong id="playerName">---</strong></div>
+                            <div style="font-size: 0.75em;"><span id="playerClass">⚔️ Guerrier</span> | <span id="playerRace">👤 Humain</span></div>
+                            <div style="font-size: 0.75em;" id="playerGender">♂️ Masculin</div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin-top: 5px;">
+                        <div class="char-compact" title="Arme équipée">
+                            <span class="char-label-small" id="equippedWeaponIconInline">⚔️</span>
+                            <span class="char-value-small" id="equippedWeaponNameInline">Aucune</span>
+                        </div>
+                        <div class="char-compact" title="Armure équipée">
+                            <span class="char-label-small" id="equippedArmorIconInline">🛡️</span>
+                            <span class="char-value-small" id="equippedArmorNameInline">Aucune</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 5px; display: flex; align-items: center; gap: 5px;">
+                        <div class="char-compact" onclick="toggleInventoryPanel()" style="cursor: pointer; display: inline-flex; align-items: center; gap: 3px; padding: 3px 6px; background: rgba(0,0,0,0.3); border-radius: 3px;" title="Ouvrir/Fermer le sac">
                             <span class="char-label-small">🎒</span>
                             <span class="char-value-small" id="inventoryCount">0/4</span>
                         </div>
