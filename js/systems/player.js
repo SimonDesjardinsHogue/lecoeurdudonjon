@@ -111,10 +111,16 @@ export function checkLevelUp() {
         p.strength += 5;
         p.defense += 3;
         
-        // Grant 1 stat point per level
-        p.statPoints = (p.statPoints || 0) + 1;
+        // Every 4 levels, increase armor class by +1
+        if (p.level % 4 === 0) {
+            p.defense += 1;
+        }
         
-        addCombatLog(`🎉 Niveau supérieur ! Vous êtes maintenant niveau ${p.level}/20 ! (+${hpIncrease} PV, +1 point de stats)`, 'victory');
+        // Grant stat points per level: +2 every 5 levels, +1 otherwise
+        const statPointsGained = (p.level % 5 === 0) ? 2 : 1;
+        p.statPoints = (p.statPoints || 0) + statPointsGained;
+        
+        addCombatLog(`🎉 Niveau supérieur ! Vous êtes maintenant niveau ${p.level}/20 ! (+${hpIncrease} PV, +${statPointsGained} point${statPointsGained > 1 ? 's' : ''} de stats)`, 'victory');
         
         // Play level up sound and show particles
         audioManager.playSound('levelup');
