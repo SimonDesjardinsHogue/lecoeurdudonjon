@@ -242,11 +242,9 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
                 <option value="damage" ${filterCategory === 'damage' ? 'selected' : ''}>⚔️ Force</option>
                 <option value="energy" ${filterCategory === 'energy' ? 'selected' : ''}>⚡ Énergie</option>
                 <option value="exp" ${filterCategory === 'exp' ? 'selected' : ''}>✨ Expérience</option>
-                <option value="shield" ${filterCategory === 'shield' ? 'selected' : ''}>🛡️ Boucliers</option>
+                <option value="classes" ${filterCategory === 'classes' ? 'selected' : ''}>🎖️ Classes</option>
                 <option value="weapon" ${filterCategory === 'weapon' ? 'selected' : ''}>⚔️ Armes</option>
                 <option value="armor" ${filterCategory === 'armor' ? 'selected' : ''}>🛡️ Armures</option>
-                <option value="book" ${filterCategory === 'book' ? 'selected' : ''}>📚 Livres</option>
-                <option value="quiver" ${filterCategory === 'quiver' ? 'selected' : ''}>🏹 Carquois</option>
             </select>
         </div>
         <div style="display: flex; align-items: center; gap: 8px;">
@@ -276,11 +274,11 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
     let filteredItems = filterCategory === 'all' 
         ? shopItems 
         : shopItems.filter(item => {
-            // For equipment types (shield, weapon, armor, book, quiver), check the type field
-            if (filterCategory === 'shield' || filterCategory === 'weapon' || filterCategory === 'armor' || filterCategory === 'book' || filterCategory === 'quiver') {
+            // For equipment types (weapon, armor), check the type field
+            if (filterCategory === 'weapon' || filterCategory === 'armor') {
                 return item.type === filterCategory;
             }
-            // For other categories (heal, damage, energy, exp), check the category field
+            // For other categories (heal, damage, energy, exp, classes), check the category field
             return item.category === filterCategory;
         });
     
