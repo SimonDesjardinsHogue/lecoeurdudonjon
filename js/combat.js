@@ -290,8 +290,8 @@ export function explore() {
         // NPC encounter
         meetNPC();
     } else {
-        // Monster encounter - 7% chance for dual monsters (temporarily 100% for demo)
-        const dualMonsterChance = Math.random() < 1.00;
+        // Monster encounter - 7% chance for dual monsters
+        const dualMonsterChance = Math.random() < 0.07;
         
         if (dualMonsterChance) {
             // Dual monster encounter - select two different enemies
