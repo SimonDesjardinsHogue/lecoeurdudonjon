@@ -70,14 +70,76 @@ function checkLevelUp(player) {
         // Stat increases
         player.maxHealth += 20;
         player.health = player.maxHealth;
-        player.strength += 5;
-        player.defense += 3;
+        player.maxEnergy += 10;
+        player.energy = player.maxEnergy;
+        
+        // Intelligent stat point allocation based on class
+        // Each level grants 3 stat points to distribute
+        const statPointsPerLevel = 3;
+        allocateStatPoints(player, statPointsPerLevel);
+    }
+}
+
+// Intelligently allocate stat points based on class priorities
+function allocateStatPoints(player, points) {
+    // Define stat priorities for each class
+    const classPriorities = {
+        guerrier: [
+            { stat: 'strength', weight: 0.4 },
+            { stat: 'constitution', weight: 0.3 },
+            { stat: 'defense', weight: 0.2 },
+            { stat: 'dexterity', weight: 0.1 }
+        ],
+        magicien: [
+            { stat: 'intelligence', weight: 0.5 },
+            { stat: 'wisdom', weight: 0.2 },
+            { stat: 'constitution', weight: 0.2 },
+            { stat: 'dexterity', weight: 0.1 }
+        ],
+        archer: [
+            { stat: 'dexterity', weight: 0.4 },
+            { stat: 'strength', weight: 0.3 },
+            { stat: 'constitution', weight: 0.2 },
+            { stat: 'wisdom', weight: 0.1 }
+        ]
+    };
+    
+    const priorities = classPriorities[player.class] || classPriorities.guerrier;
+    
+    // Distribute points based on weighted priorities
+    for (let i = 0; i < points; i++) {
+        // Use weighted random selection for variety
+        const rand = Math.random();
+        let cumulative = 0;
+        
+        for (const priority of priorities) {
+            cumulative += priority.weight;
+            if (rand <= cumulative) {
+                player[priority.stat]++;
+                
+                // Update derived stats
+                if (priority.stat === 'constitution') {
+                    player.maxHealth += 5;
+                    player.health += 5;
+                }
+                break;
+            }
+        }
     }
 }
 
 // Simulate intelligent item purchasing
 function simulatePurchasing(player) {
-    // Priority: healing if low health, then equipment for permanent upgrades, then potions
+    // Track equipped items to avoid duplicate purchases
+    if (!player.equippedItems) {
+        player.equippedItems = {
+            weapon: null,
+            armor: null,
+            classItem: null // shield/book/quiver
+        };
+    }
+    
+    // Priority: healing if low health, then equipment for permanent upgrades, then energy, then potions
     const purchasableItems = shopItems.filter(item => {
         // Can afford
         if (item.cost > player.gold) return false;
@@ -85,35 +147,78 @@ function simulatePurchasing(player) {
         // Check class restriction
         if (item.classRestriction && item.classRestriction !== player.class) return false;
         
+        // Check level requirement
+        if (item.levelRequirement && player.level < item.levelRequirement) return false;
+        
         return true;
     });
     
     if (purchasableItems.length === 0) return;
     
+    // Calculate urgency scores for different item types
+    const healthPercent = player.health / player.maxHealth;
+    const energyPercent = player.energy / player.maxEnergy;
+    const needsHealing = healthPercent < 0.6;
+    const needsEnergy = energyPercent < 0.3;
+    
     // Sort by priority with improved logic
     const sortedItems = purchasableItems.sort((a, b) => {
-        // If health is low (< 60%), prioritize healing
-        if (player.health < player.maxHealth * 0.6) {
+        // CRITICAL: If health is very low (< 40%), prioritize healing above all
+        if (healthPercent < 0.4) {
             if (a.category === 'heal' && b.category !== 'heal') return -1;
             if (a.category !== 'heal' && b.category === 'heal') return 1;
         }
         
-        // Prioritize equipment for permanent upgrades (better investment)
-        if (a.type === 'weapon' || a.type === 'armor') {
-            if (b.type !== 'weapon' && b.type !== 'armor') return -1;
-        }
-        if (b.type === 'weapon' || b.type === 'armor') {
-            if (a.type !== 'weapon' && a.type !== 'armor') return 1;
+        // HIGH PRIORITY: Equipment upgrades (weapons, armor, class items)
+        // These provide permanent benefits
+        const aIsEquipment = a.category === 'equipment' || a.category === 'classes';
+        const bIsEquipment = b.category === 'equipment' || b.category === 'classes';
+        
+        // Check if we need to upgrade this equipment slot
+        const aNeedsUpgrade = isEquipmentUpgrade(player, a);
+        const bNeedsUpgrade = isEquipmentUpgrade(player, b);
+        
+        if (aNeedsUpgrade && !bNeedsUpgrade) return -1;
+        if (!aNeedsUpgrade && bNeedsUpgrade) return 1;
+        
+        // MEDIUM PRIORITY: Health if needed
+        if (needsHealing) {
+            if (a.category === 'heal' && b.category !== 'heal') return -1;
+            if (a.category !== 'heal' && b.category === 'heal') return 1;
         }
         
-        // For similar items, prefer better value (higher bonus per cost)
-        if (a.category === 'equipment' && b.category === 'equipment') {
+        // MEDIUM PRIORITY: Energy if needed
+        if (needsEnergy) {
+            if (a.category === 'energy' && b.category !== 'energy') return -1;
+            if (a.category !== 'energy' && b.category === 'energy') return 1;
+        }
+        
+        // Prioritize equipment over consumables in general
+        if (aIsEquipment && !bIsEquipment) return -1;
+        if (!aIsEquipment && bIsEquipment) return 1;
+        
+        // For equipment, prefer better value (higher bonus per cost)
+        if (aIsEquipment && bIsEquipment) {
             const aValue = (a.bonus || 0) / a.cost;
             const bValue = (b.bonus || 0) / b.cost;
-            return bValue - aValue;
+            if (Math.abs(aValue - bValue) > 0.001) {
+                return bValue - aValue;
+            }
         }
         
-        // Higher cost items generally better for consumables
+        // For consumables, prefer items that match current needs
+        if (a.category === 'heal' && b.category === 'heal') {
+            // Buy just enough healing, not the most expensive
+            const aHealing = parseInt(a.description.match(/\d+/)?.[0] || 0);
+            const bHealing = parseInt(b.description.match(/\d+/)?.[0] || 0);
+            const healthNeeded = player.maxHealth - player.health;
+            
+            const aDiff = Math.abs(aHealing - healthNeeded);
+            const bDiff = Math.abs(bHealing - healthNeeded);
+            return aDiff - bDiff;
+        }
+        
+        // For other consumables, prefer higher tier
         return b.cost - a.cost;
     });
     
@@ -125,11 +230,12 @@ function simulatePurchasing(player) {
         player.itemsPurchased++;
         
         // Track items purchased by category
-        if (player.itemsPurchasedByCategory[itemToBuy.category] !== undefined) {
-            player.itemsPurchasedByCategory[itemToBuy.category]++;
+        const trackCategory = itemToBuy.category === 'classes' ? 'equipment' : itemToBuy.category;
+        if (player.itemsPurchasedByCategory[trackCategory] !== undefined) {
+            player.itemsPurchasedByCategory[trackCategory]++;
         }
         
-        // Apply item effect based on category
+        // Apply item effect based on category and type
         if (itemToBuy.category === 'heal') {
             const healAmount = parseInt(itemToBuy.description.match(/\d+/)?.[0] || 0);
             player.health = Math.min(player.maxHealth, player.health + healAmount);
@@ -140,9 +246,26 @@ function simulatePurchasing(player) {
             if (itemToBuy.type === 'weapon') {
                 const strBonus = itemToBuy.bonus || parseInt(itemToBuy.description.match(/\d+/)?.[0] || 0);
                 player.strength += strBonus;
+                player.equippedItems.weapon = itemToBuy;
             } else if (itemToBuy.type === 'armor') {
                 const defBonus = itemToBuy.bonus || parseInt(itemToBuy.description.match(/\d+/)?.[0] || 0);
                 player.defense += defBonus;
+                player.equippedItems.armor = itemToBuy;
+            }
+        } else if (itemToBuy.category === 'classes') {
+            // Class-specific items: shields, books, quivers
+            if (itemToBuy.type === 'shield') {
+                const defBonus = itemToBuy.bonus || 0;
+                player.defense += defBonus;
+                player.equippedItems.classItem = itemToBuy;
+            } else if (itemToBuy.type === 'book') {
+                const intBonus = itemToBuy.bonus || 0;
+                player.intelligence += intBonus;
+                player.equippedItems.classItem = itemToBuy;
+            } else if (itemToBuy.type === 'quiver') {
+                const dexBonus = itemToBuy.bonus || 0;
+                player.dexterity += dexBonus;
+                player.equippedItems.classItem = itemToBuy;
             }
         } else if (itemToBuy.category === 'energy') {
             const energyAmount = parseInt(itemToBuy.description.match(/\d+/)?.[0] || 0);
@@ -153,6 +276,26 @@ function simulatePurchasing(player) {
             checkLevelUp(player);
         }
     }
+}
+
+// Check if an item would be an upgrade over currently equipped item
+function isEquipmentUpgrade(player, item) {
+    if (item.category === 'equipment') {
+        if (item.type === 'weapon') {
+            const currentWeapon = player.equippedItems.weapon;
+            if (!currentWeapon) return true;
+            return (item.bonus || 0) > (currentWeapon.bonus || 0);
+        } else if (item.type === 'armor') {
+            const currentArmor = player.equippedItems.armor;
+            if (!currentArmor) return true;
+            return (item.bonus || 0) > (currentArmor.bonus || 0);
+        }
+    } else if (item.category === 'classes') {
+        const currentClassItem = player.equippedItems.classItem;
+        if (!currentClassItem) return true;
+        return (item.bonus || 0) > (currentClassItem.bonus || 0);
+    }
+    return false;
 }
 
 // Simulate combat
@@ -665,7 +808,7 @@ function analyzeResults(results) {
             minLevel: Math.min(...games.map(g => g.finalLevel)),
             maxKills: Math.max(...games.map(g => g.kills)),
             minKills: Math.min(...games.map(g => g.kills)),
-            percentReachedLevel20: (games.filter(g => g.reachedLevel100).length / games.length * 100)
+            percentReachedLevel20: (games.filter(g => g.reachedLevel20).length / games.length * 100)
         };
         
         analysis.byCombination[comboKey] = stats;
@@ -763,57 +906,6 @@ function generateBalanceReport(analysis) {
         
         const balanceScore = 100 - ((levelDeviation + winRateDeviation + killsDeviation) / 3 * 100);
         report.balanceScore.byClass[classKey] = balanceScore.toFixed(2);
-        
-        // Generate suggestions based on performance
-        if (stats.avgWinRate < avgWinRateOverall * 0.9) {
-            report.suggestions.push({
-                category: 'class',
-                class: classKey,
-                type: 'underpowered',
-                metric: 'winRate',
-                suggestion: `${stats.className} a un taux de victoire inférieur à la moyenne (${(stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverall * 100).toFixed(1)}%). Suggestion: Augmenter la force de base de +2 ou la défense de +1.`
-            });
-        }
-        
-        if (stats.avgWinRate > avgWinRateOverall * 1.1) {
-            report.suggestions.push({
-                category: 'class',
-                class: classKey,
-                type: 'overpowered',
-                metric: 'winRate',
-                suggestion: `${stats.className} a un taux de victoire supérieur à la moyenne (${(stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverall * 100).toFixed(1)}%). Suggestion: Réduire la force de base de -1 ou réduire les PV max de -10.`
-            });
-        }
-        
-        if (stats.avgLevel < avgLevelOverall * 0.9) {
-            report.suggestions.push({
-                category: 'class',
-                class: classKey,
-                type: 'progression',
-                metric: 'level',
-                suggestion: `${stats.className} atteint des niveaux inférieurs à la moyenne (${stats.avgLevel.toFixed(1)} vs ${avgLevelOverall.toFixed(1)}). Suggestion: Augmenter les gains d'XP de +10% pour cette classe ou réduire les requis d'XP par niveau de -5%.`
-            });
-        }
-        
-        if (stats.avgDeaths > avgKillsOverall * 0.3) {
-            report.suggestions.push({
-                category: 'class',
-                class: classKey,
-                type: 'survivability',
-                metric: 'deaths',
-                suggestion: `${stats.className} meurt trop souvent (${stats.avgDeaths.toFixed(1)} morts en moyenne). Suggestion: Augmenter les PV de base de +15 ou améliorer la défense de +2.`
-            });
-        }
-        
-        if (stats.avgGoldEarned - stats.avgGoldSpent < 50) {
-            report.suggestions.push({
-                category: 'class',
-                class: classKey,
-                type: 'economy',
-                metric: 'gold',
-                suggestion: `${stats.className} a peu d'or restant (${(stats.avgGoldEarned - stats.avgGoldSpent).toFixed(0)} or). Suggestion: Augmenter les récompenses en or de +15% ou réduire le coût des objets de base de -10%.`
-            });
-        }
     }
     
     // Calculate balance scores for races
@@ -824,37 +916,6 @@ function generateBalanceReport(analysis) {
         
         const balanceScore = 100 - ((levelDeviation + winRateDeviation + killsDeviation) / 3 * 100);
         report.balanceScore.byRace[raceKey] = balanceScore.toFixed(2);
-        
-        // Generate suggestions based on performance
-        if (stats.avgWinRate < avgWinRateOverallRace * 0.95) {
-            report.suggestions.push({
-                category: 'race',
-                race: raceKey,
-                type: 'underpowered',
-                metric: 'winRate',
-                suggestion: `${stats.raceName} a un taux de victoire inférieur à la moyenne (${(stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverallRace * 100).toFixed(1)}%). Suggestion: Ajuster les modificateurs de race (+1 constitution ou +1 dextérité).`
-            });
-        }
-        
-        if (stats.avgWinRate > avgWinRateOverallRace * 1.05) {
-            report.suggestions.push({
-                category: 'race',
-                race: raceKey,
-                type: 'overpowered',
-                metric: 'winRate',
-                suggestion: `${stats.raceName} a un taux de victoire supérieur à la moyenne (${(stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverallRace * 100).toFixed(1)}%). Suggestion: Réduire légèrement les modificateurs de race (-1 constitution ou -1 dextérité).`
-            });
-        }
-        
-        if (stats.avgLevel < avgLevelOverallRace * 0.95) {
-            report.suggestions.push({
-                category: 'race',
-                race: raceKey,
-                type: 'progression',
-                metric: 'level',
-                suggestion: `${stats.raceName} atteint des niveaux inférieurs à la moyenne (${stats.avgLevel.toFixed(1)} vs ${avgLevelOverallRace.toFixed(1)}). Suggestion: Augmenter le modificateur de constitution de +1.`
-            });
-        }
     }
     
     // Calculate balance scores for sexes
@@ -865,27 +926,151 @@ function generateBalanceReport(analysis) {
         
         const balanceScore = 100 - ((levelDeviation + winRateDeviation + killsDeviation) / 3 * 100);
         report.balanceScore.bySex[sexKey] = balanceScore.toFixed(2);
-        
-        // Generate suggestions based on performance
-        if (stats.avgWinRate < avgWinRateOverallSex * 0.95) {
-            report.suggestions.push({
-                category: 'sex',
-                sex: sexKey,
-                type: 'underpowered',
-                metric: 'winRate',
-                suggestion: `${stats.sexName} a un taux de victoire inférieur à la moyenne (${(stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverallSex * 100).toFixed(1)}%). Suggestion: Ajuster les stats de base (+1 force ou +1 défense).`
-            });
+    }
+    
+    // NEW REQUIREMENT: Only suggest for EXTREME cases - compare all classes/races/sexes
+    // Find the single most extreme underperformer for each metric
+    
+    // 1. Find class that dies the most (compared to others)
+    const avgDeathsOverall = average(allClasses.map(c => c.avgDeaths));
+    let worstDeathsClass = null;
+    let maxDeathDeviation = 0;
+    
+    for (const [classKey, stats] of Object.entries(analysis.byClass)) {
+        const deathDeviation = (stats.avgDeaths - avgDeathsOverall) / avgDeathsOverall;
+        if (deathDeviation > maxDeathDeviation && deathDeviation > 0.3) { // At least 30% more deaths
+            maxDeathDeviation = deathDeviation;
+            worstDeathsClass = { classKey, stats, deviation: deathDeviation };
         }
-        
-        if (stats.avgWinRate > avgWinRateOverallSex * 1.05) {
-            report.suggestions.push({
-                category: 'sex',
-                sex: sexKey,
-                type: 'overpowered',
-                metric: 'winRate',
-                suggestion: `${stats.sexName} a un taux de victoire supérieur à la moyenne (${(stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverallSex * 100).toFixed(1)}%). Suggestion: Réduire légèrement les stats de base (-1 force ou -1 défense).`
-            });
+    }
+    
+    if (worstDeathsClass) {
+        report.suggestions.push({
+            category: 'class',
+            class: worstDeathsClass.classKey,
+            type: 'survivability',
+            metric: 'deaths',
+            severity: 3,
+            suggestion: `${worstDeathsClass.stats.className} meurt beaucoup trop souvent comparé aux autres classes (${worstDeathsClass.stats.avgDeaths.toFixed(1)} morts vs ${avgDeathsOverall.toFixed(1)} en moyenne, +${(maxDeathDeviation * 100).toFixed(0)}%). Suggestion: Augmenter les PV de base de +20 ou améliorer la défense de +3.`
+        });
+    }
+    
+    // 2. Find class that kills the least (compared to others)
+    let worstKillsClass = null;
+    let maxKillDeficit = 0;
+    
+    for (const [classKey, stats] of Object.entries(analysis.byClass)) {
+        const killDeficit = (avgKillsOverall - stats.avgKills) / avgKillsOverall;
+        if (killDeficit > maxKillDeficit && killDeficit > 0.2) { // At least 20% fewer kills
+            maxKillDeficit = killDeficit;
+            worstKillsClass = { classKey, stats, deficit: killDeficit };
         }
+    }
+    
+    if (worstKillsClass) {
+        report.suggestions.push({
+            category: 'class',
+            class: worstKillsClass.classKey,
+            type: 'offense',
+            metric: 'kills',
+            severity: 2,
+            suggestion: `${worstKillsClass.stats.className} tue beaucoup moins d'ennemis que les autres classes (${worstKillsClass.stats.avgKills.toFixed(1)} kills vs ${avgKillsOverall.toFixed(1)} en moyenne, -${(maxKillDeficit * 100).toFixed(0)}%). Suggestion: Augmenter la force de base de +3 ou améliorer les gains d'XP de +15%.`
+        });
+    }
+    
+    // 3. Find class with the least gold (compared to others)
+    const avgFinalGoldOverall = average(allClasses.map(c => c.avgFinalGold));
+    let worstGoldClass = null;
+    let maxGoldDeficit = 0;
+    
+    for (const [classKey, stats] of Object.entries(analysis.byClass)) {
+        const goldDeficit = (avgFinalGoldOverall - stats.avgFinalGold) / avgFinalGoldOverall;
+        if (goldDeficit > maxGoldDeficit && goldDeficit > 0.3) { // At least 30% less gold
+            maxGoldDeficit = goldDeficit;
+            worstGoldClass = { classKey, stats, deficit: goldDeficit };
+        }
+    }
+    
+    if (worstGoldClass) {
+        report.suggestions.push({
+            category: 'class',
+            class: worstGoldClass.classKey,
+            type: 'economy',
+            metric: 'gold',
+            severity: 2,
+            suggestion: `${worstGoldClass.stats.className} termine avec beaucoup moins d'or que les autres classes (${worstGoldClass.stats.avgFinalGold.toFixed(0)} or vs ${avgFinalGoldOverall.toFixed(0)} en moyenne, -${(maxGoldDeficit * 100).toFixed(0)}%). Suggestion: Augmenter les récompenses en or de +25% pour cette classe ou réduire le coût de repos de -30%.`
+        });
+    }
+    
+    // 4. Find class with worst win rate (if extreme)
+    let worstWinRateClass = null;
+    let maxWinRateDeficit = 0;
+    
+    for (const [classKey, stats] of Object.entries(analysis.byClass)) {
+        const winRateDeficit = (avgWinRateOverall - stats.avgWinRate) / avgWinRateOverall;
+        if (winRateDeficit > maxWinRateDeficit && winRateDeficit > 0.15) { // At least 15% worse
+            maxWinRateDeficit = winRateDeficit;
+            worstWinRateClass = { classKey, stats, deficit: winRateDeficit };
+        }
+    }
+    
+    if (worstWinRateClass) {
+        report.suggestions.push({
+            category: 'class',
+            class: worstWinRateClass.classKey,
+            type: 'underpowered',
+            metric: 'winRate',
+            severity: 3,
+            suggestion: `${worstWinRateClass.stats.className} a un taux de victoire très inférieur aux autres classes (${(worstWinRateClass.stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverall * 100).toFixed(1)}% en moyenne, -${(maxWinRateDeficit * 100).toFixed(0)}%). Suggestion: Augmenter la force de base de +2 ET la défense de +2.`
+        });
+    }
+    
+    // 5. Check races for extreme differences
+    const avgDeathsRace = average(allRaces.map(r => r.avgDeaths));
+    let worstDeathsRace = null;
+    let maxDeathDeviationRace = 0;
+    
+    for (const [raceKey, stats] of Object.entries(analysis.byRace)) {
+        const deathDeviation = (stats.avgDeaths - avgDeathsRace) / avgDeathsRace;
+        if (deathDeviation > maxDeathDeviationRace && deathDeviation > 0.25) {
+            maxDeathDeviationRace = deathDeviation;
+            worstDeathsRace = { raceKey, stats, deviation: deathDeviation };
+        }
+    }
+    
+    if (worstDeathsRace) {
+        report.suggestions.push({
+            category: 'race',
+            race: worstDeathsRace.raceKey,
+            type: 'survivability',
+            metric: 'deaths',
+            severity: 2,
+            suggestion: `${worstDeathsRace.stats.raceName} meurt plus souvent que les autres races (${worstDeathsRace.stats.avgDeaths.toFixed(1)} morts vs ${avgDeathsRace.toFixed(1)} en moyenne, +${(maxDeathDeviationRace * 100).toFixed(0)}%). Suggestion: Augmenter le modificateur de constitution de +2.`
+        });
+    }
+    
+    // 6. Check sexes for extreme differences
+    const avgDeathsSex = average(allSexes.map(s => s.avgDeaths));
+    let worstDeathsSex = null;
+    let maxDeathDeviationSex = 0;
+    
+    for (const [sexKey, stats] of Object.entries(analysis.bySex)) {
+        const deathDeviation = (stats.avgDeaths - avgDeathsSex) / avgDeathsSex;
+        if (deathDeviation > maxDeathDeviationSex && deathDeviation > 0.20) {
+            maxDeathDeviationSex = deathDeviation;
+            worstDeathsSex = { sexKey, stats, deviation: deathDeviation };
+        }
+    }
+    
+    if (worstDeathsSex) {
+        report.suggestions.push({
+            category: 'sex',
+            sex: worstDeathsSex.sexKey,
+            type: 'survivability',
+            metric: 'deaths',
+            severity: 2,
+            suggestion: `${worstDeathsSex.stats.sexName} meurt plus souvent que l'autre sexe (${worstDeathsSex.stats.avgDeaths.toFixed(1)} morts vs ${avgDeathsSex.toFixed(1)} en moyenne, +${(maxDeathDeviationSex * 100).toFixed(0)}%). Suggestion: Augmenter les PV de base de +10 ou la défense de +1.`
+        });
     }
     
     // Overall game balance suggestions

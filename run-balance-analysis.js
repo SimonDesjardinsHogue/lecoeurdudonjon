@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // Automated Balance Analysis Runner
-// Runs 30,000 game simulations and generates a comprehensive balance report
+// Runs 3,600 game simulations and generates a comprehensive balance report
 // This script can be run from the command line to perform balance testing
 
 import { runBalanceTests, formatReportAsHTML } from './js/balance-tester.js';
@@ -12,15 +12,16 @@ console.log('║       Le Coeur du Dragon - Automated Balance Analysis         �
 console.log('╚════════════════════════════════════════════════════════════════╝\n');
 
 console.log('Starting comprehensive balance analysis...');
-console.log('This will simulate 60,000 games (2,500 per class-race-sex combination)');
+console.log('This will simulate 3,600 games (200 per class-race-sex combination)');
+console.log('18 combinations: 2 sexes × 3 races × 3 classes = 18');
 console.log('Testing level progression up to level 20 (maximum)');
-console.log('Estimated time: 2-5 minutes depending on your system\n');
+console.log('Estimated time: 30-60 seconds depending on your system\n');
 
 const startTime = Date.now();
 
-// Run the full balance test with 2500 iterations
+// Run the full balance test with 200 iterations per combination = 3600 total
 console.log('Running simulations...\n');
-const report = runBalanceTests(2500);
+const report = runBalanceTests(200);
 
 const endTime = Date.now();
 const duration = ((endTime - startTime) / 1000).toFixed(2);
