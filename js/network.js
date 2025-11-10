@@ -236,7 +236,9 @@ export async function submitScore() {
     xp: player.xp,
     className: player.className || 'Guerrier',
     race: player.race || 'humain',
-    gender: player.gender || 'male'
+    gender: player.gender || 'male',
+    strength: player.strength,
+    defense: player.defense
   };
   
   try {
