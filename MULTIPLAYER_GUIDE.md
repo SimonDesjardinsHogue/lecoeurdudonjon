@@ -220,6 +220,22 @@ lecoeurdudragon/
 
 ## Dépannage
 
+### 📖 Guide Complet de Dépannage
+
+Pour des instructions détaillées sur la résolution de problèmes de connexion, consultez le guide complet :
+
+**👉 [TROUBLESHOOTING_MULTIJOUEUR.md](TROUBLESHOOTING_MULTIJOUEUR.md)**
+
+Ce guide couvre :
+- ✅ Clarification : Un seul ordinateur doit lancer npm (pas tous)
+- 🔥 Configuration détaillée du firewall Windows et Linux
+- 🍎 Spécificités iOS/iPad
+- 🌐 Tests de connectivité réseau
+- 🔍 Diagnostics avancés
+- ✅ Checklist complète de dépannage
+
+### Problèmes Courants
+
 ### Le serveur ne démarre pas
 
 **Problème**: `node: command not found`
@@ -231,12 +247,19 @@ lecoeurdudragon/
 ### Les autres ne peuvent pas se connecter
 
 **Problème**: Connexion refusée
-- **Solution 1**: Vérifier le pare-feu (autoriser le port 3000)
+- **Solution 1**: Vérifier le pare-feu (autoriser le port 3000) - [Voir le guide détaillé](TROUBLESHOOTING_MULTIJOUEUR.md#étape-5--configurer-le-firewall-très-important)
 - **Solution 2**: Vérifier que tous les appareils sont sur le même réseau
-- **Solution 3**: Vérifier l'adresse IP du serveur
+- **Solution 3**: Vérifier l'adresse IP du serveur (le serveur affiche maintenant automatiquement les adresses réseau disponibles)
 
 **Problème**: Timeout de connexion
 - **Solution**: Redémarrer le routeur ou vérifier les paramètres réseau
+
+### Connexion depuis iPad/iPhone
+
+Pour les problèmes spécifiques à iOS :
+- Consultez la section [Spécificités iOS/iPad](TROUBLESHOOTING_MULTIJOUEUR.md#-spécificités-iosipad) du guide de dépannage
+- Vérifiez que vous utilisez `http://` et non `https://`
+- Désactivez le VPN et le Relais privé iCloud si activé
 
 ### Les scores ne se sauvegardent pas
 

@@ -5,6 +5,7 @@ import cors from 'cors';
 import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { networkInterfaces } from 'os';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -71,6 +72,26 @@ function getTopScores(limit = 10) {
       return b.gold - a.gold;
     })
     .slice(0, limit);
+}
+
+// Get network IP addresses
+function getNetworkAddresses() {
+  const interfaces = networkInterfaces();
+  const addresses = [];
+  
+  for (const name of Object.keys(interfaces)) {
+    for (const iface of interfaces[name]) {
+      // Skip internal (loopback) and non-IPv4 addresses
+      if (iface.family === 'IPv4' && !iface.internal) {
+        addresses.push({
+          name: name,
+          address: iface.address
+        });
+      }
+    }
+  }
+  
+  return addresses;
 }
 
 // ========== API Routes ==========
@@ -205,6 +226,8 @@ io.on('connection', (socket) => {
 initScoresFile();
 
 httpServer.listen(PORT, '0.0.0.0', () => {
+  const networkAddrs = getNetworkAddresses();
+  
   console.log('');
   console.log('╔═══════════════════════════════════════════════════════╗');
   console.log('║  ⚔️  Le Coeur du Dragon - Serveur Multijoueur LAN  ⚔️  ║');
@@ -212,11 +235,23 @@ httpServer.listen(PORT, '0.0.0.0', () => {
   console.log('');
   console.log(`✓ Serveur HTTP démarré sur le port ${PORT}`);
   console.log(`✓ WebSocket (Socket.IO) actif`);
-  console.log(`✓ Fichiers du jeu servis (HTML, CSS, JavaScript)`);
   console.log('');
-  console.log('Accès au jeu depuis le réseau local:');
+  console.log('Accès depuis le réseau local:');
   console.log(`  - http://localhost:${PORT}`);
-  console.log(`  - http://[ADRESSE-IP-LAN]:${PORT}`);
+  
+  if (networkAddrs.length > 0) {
+    networkAddrs.forEach(addr => {
+      console.log(`  - http://${addr.address}:${PORT} (${addr.name})`);
+    });
+  } else {
+    console.log(`  - http://[ADRESSE-IP-LAN]:${PORT}`);
+    console.log('');
+    console.log('⚠️  Aucune interface réseau détectée.');
+    console.log('   Pour trouver votre IP, utilisez:');
+    console.log('   - Windows: ipconfig');
+    console.log('   - Linux/Mac: ip addr ou ifconfig');
+  }
+  
   console.log('');
   console.log('Endpoints API disponibles:');
   console.log(`  GET  /api/health          - Vérification du serveur`);

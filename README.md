@@ -320,22 +320,30 @@ Jouez avec votre famille sur le réseau local et partagez un classement commun !
    npm install
    npm start
    ```
+   Le serveur affichera automatiquement les adresses IP disponibles pour la connexion.
 
-2. **Trouver l'adresse IP du serveur** :
-   - Windows : `ipconfig` (cherchez "Adresse IPv4")
-   - Mac/Linux : `ifconfig` ou `ip addr` (cherchez 192.168.x.x ou 10.x.x.x)
+2. **Partager l'adresse avec les autres joueurs** :
+   - Le serveur affiche les adresses réseau disponibles (ex: `http://192.168.68.61:3000`)
+   - Partagez cette adresse avec les autres joueurs
 
-3. **Configurer dans le jeu** :
-   - Allez dans Statistiques → Sauvegardes → Paramètres Multijoueur
-   - Entrez l'adresse IP et le port (ex: 192.168.1.100:3000)
-   - Testez la connexion
-   - Les scores seront automatiquement envoyés après chaque combat !
-
-4. **Jouer sur d'autres appareils** :
-   - Ouvrez `http://[IP-DU-SERVEUR]:3000` dans le navigateur
+3. **Jouer sur d'autres appareils** (iPad, téléphones, autres PC) :
+   - Ouvrez simplement `http://[IP-DU-SERVEUR]:3000` dans le navigateur
+   - Aucune installation nécessaire !
    - Les scores sont partagés en temps réel !
 
-📖 **Documentation complète** : [server/README.md](server/README.md)
+#### 🔧 Problèmes de Connexion ?
+
+Si vous ne pouvez pas vous connecter depuis un iPad ou autre appareil :
+
+📖 **[TROUBLESHOOTING_MULTIJOUEUR.md](TROUBLESHOOTING_MULTIJOUEUR.md)** - Guide complet de dépannage
+
+Ce guide explique :
+- Un seul PC doit lancer npm (pas tous les appareils)
+- Configuration du firewall Windows/Linux
+- Spécificités iOS/iPad
+- Tests de connectivité réseau
+
+📖 **Documentation complète** : [MULTIPLAYER_GUIDE.md](MULTIPLAYER_GUIDE.md)
 
 ## 🛠️ Technologie
 
