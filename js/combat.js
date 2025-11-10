@@ -242,7 +242,6 @@ export function explore() {
     
     // Update quest progress for exploring
     updateQuestProgress('explore', 1);
-    
     // Track exploration for achievements
     trackAchievementProgress('exploration', 1);
     
@@ -253,6 +252,17 @@ export function explore() {
         gameState.isDualCombat = false;
         gameState.inCombat = true;
         gameState.defending = false;
+        
+        // Mark that we're in a boss fight to prevent save export during combat
+        gameState.inBossCombat = true;
+        
+        // Create a checkpoint before boss fight
+        gameState.bossCheckpoint = {
+            playerHealth: gameState.player.health,
+            playerEnergy: gameState.player.energy,
+            playerMana: gameState.player.mana,
+            timestamp: Date.now()
+        };
         
         // Switch to combat music for boss encounter
         audioManager.startMusic('combat');
@@ -476,6 +486,10 @@ export function attack() {
             addCombatLog(`Vous obtenez un objet légendaire : ${legendaryItem.icon} ${legendaryItem.name} !`, 'victory');
             addCombatLog(`${legendaryItem.description}`, 'info');
             legendaryItem.effect(p);
+            
+            // Clear boss combat flag
+            gameState.inBossCombat = false;
+            delete gameState.bossCheckpoint;
         }
         
         checkLevelUp();
@@ -706,6 +720,12 @@ function handleDefeat() {
     clearSkillBuffs();
     resetCombatState();
     
+    // Clear boss combat flag if player dies to a boss
+    if (gameState.inBossCombat) {
+        gameState.inBossCombat = false;
+        delete gameState.bossCheckpoint;
+    }
+    
     // Reset survive quest progress since player died
     if (gameState.dailyQuests && gameState.dailyQuests.active) {
         gameState.dailyQuests.active.forEach(quest => {
@@ -758,14 +778,49 @@ export function flee() {
     if (!gameState.inCombat) return;
     
     const p = gameState.player;
+    const e = gameState.currentEnemy;
     
-    // Charisma improves flee chance: base 50% + (charisma modifier * 5%)
+    // Cannot flee from bosses
+    if (e && e.isBoss) {
+        addCombatLog('❌ Impossible de fuir un boss! Vous devez combattre!', 'damage');
+        audioManager.playSound('error');
+        return;
+    }
+    
+    // Initialize flee history if it doesn't exist
+    if (!p.fleeHistory) {
+        p.fleeHistory = [];
+    }
+    
+    // Clean up old flee history (keep only last 5 minutes)
+    const now = Date.now();
+    p.fleeHistory = p.fleeHistory.filter(time => now - time < 300000);
+    
+    // Reduce flee chance with recent flees to prevent abuse
+    const recentFleeCount = p.fleeHistory.length;
+    const fleePenalty = recentFleeCount * 0.1; // -10% per recent flee
+    
+    // Charisma improves flee chance: base 50% + (charisma modifier * 5%) - penalties
     const charismaMod = getStatModifier(p.charisma);
-    const baseFleeChance = 0.5 + (charismaMod * 0.05);
+    const baseFleeChance = 0.5 + (charismaMod * 0.05) - fleePenalty;
     const fleeChance = Math.min(0.9, Math.max(0.1, baseFleeChance)); // Cap between 10% and 90%
     
     if (Math.random() < fleeChance) {
-        addCombatLog('Vous fuyez le combat !', 'info');
+        // Calculate penalties for fleeing
+        const goldLost = Math.floor(p.gold * 0.05); // Lose 5% of gold
+        const xpLost = Math.floor(p.xp * 0.03); // Lose 3% of XP
+        
+        p.gold = Math.max(0, p.gold - goldLost);
+        p.xp = Math.max(0, p.xp - xpLost);
+        
+        // Record this flee
+        p.fleeHistory.push(now);
+        
+        let fleeMessage = 'Vous fuyez le combat !';
+        if (goldLost > 0 || xpLost > 0) {
+            fleeMessage += ` Vous perdez ${goldLost} or et ${xpLost} XP dans votre fuite.`;
+        }
+        addCombatLog(fleeMessage, 'info');
         
         // Track successful escape for achievements
         trackAchievementProgress('successful_escape', 1);
@@ -780,6 +835,8 @@ export function flee() {
         setTimeout(() => {
             gameState.inCombat = false;
             showScreen('mainScreen');
+            saveGame();
+            updateUI();
         }, 1000);
     } else {
         addCombatLog('Vous ne parvenez pas à fuir !', 'damage');

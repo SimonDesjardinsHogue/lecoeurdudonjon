@@ -82,6 +82,17 @@ export function loadGame() {
 
 // Export save to code
 export function exportSave() {
+    // Prevent save export during boss combat to avoid save-scumming
+    if (gameState.inBossCombat) {
+        const resultDiv = document.getElementById('exportResult');
+        const errorMsg = document.createElement('p');
+        errorMsg.style.color = '#ff6b6b';
+        errorMsg.textContent = '⚠️ Impossible de sauvegarder pendant un combat de boss!';
+        resultDiv.innerHTML = '';
+        resultDiv.appendChild(errorMsg);
+        return;
+    }
+    
     try {
         const saveData = JSON.stringify(gameState);
         const encoded = btoa(encodeURIComponent(saveData));
@@ -155,6 +166,70 @@ function fallbackCopy(text) {
     document.body.removeChild(textarea);
 }
 
+// Validation ranges for player properties (anti-cheat)
+const VALIDATION_RANGES = {
+    level: { min: 1, max: 20 },
+    health: { min: 1, max: 2000 },
+    maxHealth: { min: 1, max: 2000 },
+    strength: { min: 1, max: 100 },
+    defense: { min: 1, max: 100 },
+    dexterity: { min: 1, max: 100 },
+    constitution: { min: 1, max: 100 },
+    intelligence: { min: 1, max: 100 },
+    wisdom: { min: 1, max: 100 },
+    charisma: { min: 1, max: 100 },
+    gold: { min: 0, max: 999999 },
+    xp: { min: 0, max: 999999 },
+    statPoints: { min: 0, max: 40 },
+    kills: { min: 0, max: 99999 },
+    deaths: { min: 0, max: 99999 },
+    bossesDefeated: { min: 0, max: 5 },
+    energy: { min: 0, max: 200 },
+    maxEnergy: { min: 0, max: 200 },
+    mana: { min: 0, max: 200 },
+    maxMana: { min: 0, max: 200 }
+};
+
+// Validate player data against acceptable ranges
+function validatePlayerData(player) {
+    for (const [prop, range] of Object.entries(VALIDATION_RANGES)) {
+        if (player[prop] !== undefined) {
+            const value = player[prop];
+            if (typeof value !== 'number' || value < range.min || value > range.max) {
+                throw new Error(`Invalid ${prop}: ${value} (must be ${range.min}-${range.max})`);
+            }
+        }
+    }
+    
+    // Logical validations
+    if (player.health > player.maxHealth) {
+        throw new Error('Health cannot exceed maxHealth');
+    }
+    
+    if (player.energy > player.maxEnergy) {
+        throw new Error('Energy cannot exceed maxEnergy');
+    }
+    
+    if (player.mana > player.maxMana) {
+        throw new Error('Mana cannot exceed maxMana');
+    }
+    
+    // Level should roughly correlate with stats
+    const totalStats = (player.strength || 10) + (player.defense || 10) + 
+                       (player.dexterity || 10) + (player.constitution || 10) +
+                       (player.intelligence || 10) + (player.wisdom || 10) + 
+                       (player.charisma || 10);
+    const minExpectedStats = 70 + (player.level - 1) * 1; // Base 70 + 1 per level minimum
+    const maxExpectedStats = 70 + (player.level - 1) * 7 + 50; // Allow for items and bonuses
+    
+    if (totalStats < minExpectedStats || totalStats > maxExpectedStats) {
+        console.warn(`Suspicious stats total: ${totalStats} for level ${player.level}`);
+        // Don't throw, just warn - player might have special items
+    }
+    
+    return true;
+}
+
 // Import save from code
 export function importSave() {
     const code = document.getElementById('importCode').value.trim();
@@ -189,6 +264,9 @@ export function importSave() {
                 throw new Error(`Missing player property: ${prop}`);
             }
         }
+        
+        // Validate player data ranges (anti-cheat)
+        validatePlayerData(loadedState.player);
         
         // Add energy properties if they don't exist (for backwards compatibility)
         if (!('energy' in loadedState.player)) {
