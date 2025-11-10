@@ -109,7 +109,7 @@ app.get('/api/leaderboard', (req, res) => {
 
 // Submit score
 app.post('/api/score', (req, res) => {
-  const { playerId, playerName, level, kills, gold, xp, className, race, gender } = req.body;
+  const { playerId, playerName, level, kills, gold, xp, className, race, gender, strength, defense } = req.body;
   
   // Validation
   if (!playerId || !playerName) {
@@ -126,6 +126,9 @@ app.post('/api/score', (req, res) => {
     });
   }
   
+  // Calculate score for ranking
+  const calculatedScore = (level * 100) + (kills * 50) + ((strength || 10) * 10) + ((defense || 5) * 5);
+  
   // Create score entry
   const scoreEntry = {
     playerId,
@@ -137,6 +140,9 @@ app.post('/api/score', (req, res) => {
     className: className || 'Guerrier',
     race: race || 'Humain',
     gender: gender || 'male',
+    strength: strength || 10,
+    defense: defense || 5,
+    score: calculatedScore,
     timestamp: new Date().toISOString(),
     date: new Date().toLocaleDateString('fr-CA')
   };
