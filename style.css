@@ -227,7 +227,7 @@ body {
 
 .game-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
     gap: 10px;
     padding: 15px;
     background: rgba(139, 69, 19, 0.2);
@@ -628,12 +628,12 @@ input[type="text"]:focus {
 
 /* Characteristics Group Styling */
 .characteristics-group {
-    grid-column: span 1;
+    /* Removed grid-column to allow auto-fit to work naturally */
 }
 
 /* Character Info Group Styling */
 .stat-group-character {
-    grid-column: span 1;
+    /* Removed grid-column to allow auto-fit to work naturally */
 }
 
 .character-info {
@@ -657,7 +657,7 @@ input[type="text"]:focus {
 
 /* Combat Stats Group Styling */
 .stat-group-combat {
-    grid-column: span 1;
+    /* Removed grid-column to allow auto-fit to work naturally */
 }
 
 .combat-stats {
@@ -692,7 +692,7 @@ input[type="text"]:focus {
 
 /* Progression Group Styling */
 .stat-group-progression {
-    grid-column: span 1;
+    /* Removed grid-column to allow auto-fit to work naturally */
 }
 
 .progression-stats {
@@ -978,25 +978,7 @@ input[type="text"]:focus {
         font-size: 1.6em;
     }
 
-    .game-stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .stat-group-character {
-        grid-column: span 1;
-    }
-
-    .stat-group-combat {
-        grid-column: span 1;
-    }
-
-    .stat-group-progression {
-        grid-column: span 1;
-    }
-
-    .characteristics-group {
-        grid-column: span 1;
-    }
+    /* Removed grid-template-columns override to let auto-fit work naturally */
 
     .game-content {
         padding: 18px;
@@ -1023,25 +1005,7 @@ input[type="text"]:focus {
         max-width: 800px;
     }
 
-    .game-stats {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .stat-group-character {
-        grid-column: span 1;
-    }
-
-    .stat-group-combat {
-        grid-column: span 1;
-    }
-
-    .stat-group-progression-combined {
-        grid-column: span 1;
-    }
-
-    .characteristics-group {
-        grid-column: span 1;
-    }
+    /* Removed grid-template-columns override to let auto-fit work naturally */
 
     /* Class selection grid for larger tablets */
     .class-selection-grid {
@@ -1051,25 +1015,7 @@ input[type="text"]:focus {
 
 /* Default/Standard Desktops (1200px - 1919px) use base styles with 900px container */
 @media screen and (min-width: 1200px) and (max-width: 1919px) {
-    .game-stats {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .stat-group-character {
-        grid-column: span 1;
-    }
-
-    .stat-group-combat {
-        grid-column: span 1;
-    }
-
-    .stat-group-progression-combined {
-        grid-column: span 1;
-    }
-
-    .characteristics-group {
-        grid-column: span 1;
-    }
+    /* Removed grid-template-columns override to let auto-fit work naturally */
 
     /* Class selection grid for desktops */
     .class-selection-grid {
@@ -1108,7 +1054,7 @@ input[type="text"]:focus {
     }
 
     .game-stats {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         padding: 20px;
         gap: 15px;
     }
@@ -1459,7 +1405,7 @@ input[type="text"]:focus {
 
 /* Compact Progression and Characteristics */
 .stat-group-progression-combined {
-    grid-column: span 1;
+    /* Removed grid-column to allow auto-fit to work naturally */
 }
 
 .progression-compact {
