@@ -11,6 +11,79 @@ import { trackAchievementProgress, checkAchievements } from './achievements.js';
 import { submitScore, getNetworkState } from './network.js';
 import { getEventMultiplier } from './scheduled-events.js';
 
+// Roll initiative for combat
+// Returns the initiative roll (d10 + dexterity modifier)
+function rollInitiative(character) {
+    const d10Roll = Math.floor(Math.random() * 10) + 1; // Roll 1d10
+    // Use character's dexterity if available, otherwise estimate based on enemy type
+    let dexterity = character.dexterity;
+    if (dexterity === undefined && character.name) {
+        // Enemies don't have explicit dexterity, estimate based on type
+        // Ranged enemies get bonus dexterity, heavy enemies get penalty
+        if (character.isRanged) {
+            dexterity = 14; // Ranged enemies are more agile
+        } else if (character.name.includes('Golem') || character.name.includes('Titan')) {
+            dexterity = 8; // Heavy enemies are slower
+        } else {
+            dexterity = 10; // Default dexterity for enemies
+        }
+    } else if (dexterity === undefined) {
+        dexterity = 10; // Fallback default
+    }
+    const dexMod = getStatModifier(dexterity);
+    return d10Roll + dexMod;
+}
+
+// Determine who goes first in combat and display initiative results
+function determineInitiative() {
+    const player = gameState.player;
+    const enemy = gameState.currentEnemy;
+    
+    // Roll initiative for both combatants
+    const playerInitiative = rollInitiative(player);
+    const enemyInitiative = rollInitiative(enemy);
+    
+    // Store initiative results
+    gameState.playerInitiative = playerInitiative;
+    gameState.enemyInitiative = enemyInitiative;
+    
+    // Display initiative rolls
+    const playerDexMod = getStatModifier(player.dexterity);
+    
+    // Calculate enemy dexterity for display
+    let enemyDex = enemy.dexterity;
+    if (enemyDex === undefined) {
+        if (enemy.isRanged) {
+            enemyDex = 14;
+        } else if (enemy.name.includes('Golem') || enemy.name.includes('Titan')) {
+            enemyDex = 8;
+        } else {
+            enemyDex = 10;
+        }
+    }
+    const enemyDexMod = getStatModifier(enemyDex);
+    
+    addCombatLog(`⚡ Jets d'initiative !`, 'info');
+    addCombatLog(`Vous : ${playerInitiative} (Bonus DEX: ${playerDexMod >= 0 ? '+' : ''}${playerDexMod})`, 'player-damage');
+    addCombatLog(`${enemy.name} : ${enemyInitiative} (Bonus DEX: ${enemyDexMod >= 0 ? '+' : ''}${enemyDexMod})`, 'damage');
+    
+    // Determine who goes first
+    if (playerInitiative > enemyInitiative) {
+        gameState.playerHasInitiative = true;
+        addCombatLog(`✨ Vous agissez en premier !`, 'special');
+        return true; // Player goes first
+    } else if (enemyInitiative > playerInitiative) {
+        gameState.playerHasInitiative = false;
+        addCombatLog(`⚠️ ${enemy.name} agit en premier !`, 'damage');
+        return false; // Enemy goes first
+    } else {
+        // Tie - player wins
+        gameState.playerHasInitiative = true;
+        addCombatLog(`⚖️ Égalité ! Vous agissez en premier par défaut.`, 'special');
+        return true; // Player goes first on tie
+    }
+}
+
 // Check if player should face a boss (every 5 levels with probability)
 function shouldFaceBoss() {
     const p = gameState.player;
@@ -274,9 +347,20 @@ export function explore() {
         addCombatLog(`${gameState.currentEnemy.name} apparaît devant vous !`, 'info');
         addCombatLog(`${gameState.currentEnemy.description}`, 'info');
         addCombatLog(`Capacité spéciale : ${gameState.currentEnemy.abilityDescription}`, 'info');
+        
+        // Roll initiative
+        const playerGoesFirst = determineInitiative();
+        
         updateEnemyUI();
         saveGame();
         updateUI();
+        
+        // If enemy won initiative, they attack first
+        if (!playerGoesFirst) {
+            setTimeout(() => {
+                enemyAttack();
+            }, 2000);
+        }
         return;
     }
     
@@ -342,7 +426,18 @@ export function explore() {
             if (sortedEnemies[0].isRanged || sortedEnemies[1].isRanged) {
                 addCombatLog(`⚠️ Certains ennemis sont à distance et doivent s'approcher pour attaquer au corps à corps !`, 'info');
             }
+            
+            // Roll initiative
+            const playerGoesFirst = determineInitiative();
+            
             updateEnemyUI();
+            
+            // If enemy won initiative, they attack first
+            if (!playerGoesFirst) {
+                setTimeout(() => {
+                    enemyApproachOrAttack();
+                }, 2000);
+            }
         } else {
             // Single monster encounter - select enemy based on player level but ensure we don't exceed array bounds
             const maxEnemyIndex = Math.min(enemies.length - 1, gameState.player.level);
@@ -377,7 +472,18 @@ export function explore() {
                     addCombatLog(`🏹 En tant qu'Archer, vous pouvez tirer pendant son approche !`, 'special');
                 }
             }
+            
+            // Roll initiative
+            const playerGoesFirst = determineInitiative();
+            
             updateEnemyUI();
+            
+            // If enemy won initiative, they attack first
+            if (!playerGoesFirst) {
+                setTimeout(() => {
+                    enemyApproachOrAttack();
+                }, 2000);
+            }
         }
     }
     
