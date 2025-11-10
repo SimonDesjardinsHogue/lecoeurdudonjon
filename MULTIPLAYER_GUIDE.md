@@ -117,8 +117,10 @@ Cherchez une adresse 192.168.x.x ou 10.x.x.x
 
 1. Sur un autre appareil (téléphone, tablette, PC), ouvrir le navigateur
 2. Aller à `http://192.168.68.61:3000` (ou l'IP de votre serveur)
-3. Configurer le serveur comme à l'étape 5
-4. Jouer ! Les scores sont automatiquement partagés
+   - Le serveur héberge automatiquement le jeu complet
+   - Vous verrez la page d'accueil du jeu "Le Coeur du Dragon"
+3. Le serveur multijoueur est déjà configuré par défaut avec l'IP du serveur
+4. Jouer ! Les scores sont automatiquement partagés entre tous les appareils
 
 ## Architecture Technique
 

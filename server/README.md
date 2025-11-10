@@ -423,8 +423,10 @@ Si vous voyez des symboles étranges comme `ÔòöÔòÉ` au lieu de lignes:
 2. **Sur les autres appareils** (téléphones, tablettes, autres PCs):
    - Ouvrir le navigateur
    - Aller à `http://[IP-DU-SERVEUR]:3000`
-   - Configurer le serveur dans les paramètres du jeu
+   - Le jeu se charge automatiquement avec le serveur multijoueur déjà configuré
    - Jouer et partager le classement !
+
+**Note importante**: Le serveur héberge maintenant les fichiers du jeu complet (HTML, CSS, JavaScript) en plus des API endpoints. Cela signifie que tous les joueurs peuvent accéder au jeu directement via l'adresse du serveur, et le multijoueur sera automatiquement configuré.
 
 ## 🎯 Prochaines étapes
 

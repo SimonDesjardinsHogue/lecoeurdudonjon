@@ -62,39 +62,55 @@ run_test "Get leaderboard with scores" "curl -s http://localhost:3000/api/leader
 run_test "Get player scores" "curl -s http://localhost:3000/api/player/test1 | grep -q '\"count\":1'"
 
 echo ""
+echo "Running static file serving tests:"
+echo "-----------------------------------"
+
+# Test 6: Serve index.html
+run_test "Serve index.html" "curl -s -I http://localhost:3000/ | grep -q 'Content-Type: text/html'"
+
+# Test 7: Serve JavaScript files
+run_test "Serve JavaScript files" "curl -s -I http://localhost:3000/js/network.js | grep -q 'Content-Type: application/javascript'"
+
+# Test 8: Serve CSS files
+run_test "Serve CSS files" "curl -s -I http://localhost:3000/style.css | grep -q 'Content-Type: text/css'"
+
+# Test 9: CORS headers present
+run_test "CORS headers present" "curl -s -I http://localhost:3000/ | grep -q 'Access-Control-Allow-Origin'"
+
+echo ""
 echo "Running client module tests:"
 echo "----------------------------"
 
-# Test 6: Load network.js module
+# Test 10: Load network.js module
 run_test "Load network.js" "node --input-type=module -e \"import('./js/network.js').then(() => process.exit(0))\""
 
-# Test 7: Check if main.js imports network module
+# Test 11: Check if main.js imports network module
 run_test "main.js imports network" "grep -q \"import.*network.js\" js/main.js"
 
-# Test 8: Check if game-logic.js imports network module
+# Test 12: Check if game-logic.js imports network module
 run_test "game-logic.js imports network" "grep -q \"import.*network.js\" js/game-logic.js"
 
-# Test 9: Check if combat.js imports network module
+# Test 13: Check if combat.js imports network module
 run_test "combat.js imports network" "grep -q \"import.*network.js\" js/combat.js"
 
 echo ""
 echo "Running file structure tests:"
 echo "-----------------------------"
 
-# Test 10: Check server files exist
+# Test 14: Check server files exist
 run_test "server.js exists" "test -f server/server.js"
 run_test "package.json exists" "test -f server/package.json"
 run_test "Server README exists" "test -f server/README.md"
 run_test "Start scripts exist" "test -f server/start-server.sh && test -f server/start-server.bat"
 
-# Test 11: Check client files exist
+# Test 15: Check client files exist
 run_test "network.js exists" "test -f js/network.js"
 run_test "multiplayer-ui.js exists" "test -f js/multiplayer-ui.js"
 
-# Test 12: Check HTML has multiplayer screen
+# Test 16: Check HTML has multiplayer screen
 run_test "Multiplayer settings screen in HTML" "grep -q 'multiplayerSettingsScreen' index.html"
 
-# Test 13: Check scores persist
+# Test 17: Check scores persist
 run_test "Scores persisted to file" "test -f server/scores.json"
 
 # Cleanup

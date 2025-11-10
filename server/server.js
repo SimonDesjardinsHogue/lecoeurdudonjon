@@ -21,10 +21,14 @@ const io = new Server(httpServer, {
 // Configuration
 const PORT = process.env.PORT || 3000;
 const SCORES_FILE = join(__dirname, 'scores.json');
+const GAME_DIR = join(__dirname, '..'); // Parent directory contains the game files
 
 // Middleware
 app.use(cors());
 app.use(express.json());
+
+// Serve static game files from the parent directory
+app.use(express.static(GAME_DIR));
 
 // Initialize scores file if it doesn't exist
 function initScoresFile() {
@@ -208,8 +212,9 @@ httpServer.listen(PORT, '0.0.0.0', () => {
   console.log('');
   console.log(`✓ Serveur HTTP démarré sur le port ${PORT}`);
   console.log(`✓ WebSocket (Socket.IO) actif`);
+  console.log(`✓ Fichiers du jeu servis (HTML, CSS, JavaScript)`);
   console.log('');
-  console.log('Accès depuis le réseau local:');
+  console.log('Accès au jeu depuis le réseau local:');
   console.log(`  - http://localhost:${PORT}`);
   console.log(`  - http://[ADRESSE-IP-LAN]:${PORT}`);
   console.log('');
