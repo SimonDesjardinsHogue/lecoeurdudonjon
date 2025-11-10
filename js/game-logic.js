@@ -494,10 +494,10 @@ export async function runBalanceTest() {
         // Use setTimeout to allow UI to update
         await new Promise(resolve => setTimeout(resolve, 100));
         
-        // Run tests with progress updates (100 games per combination instead of 2500)
+        // Run tests with progress updates (200 games per combination = 3600 total)
         statusText.textContent = 'Simulation en cours...';
         
-        const report = await runBalanceTestsAsync(100, (progress) => {
+        const report = await runBalanceTestsAsync(200, (progress) => {
             // Update progress bar
             progressBar.style.width = `${progress.progress}%`;
             statusText.textContent = `Simulation en cours... ${progress.currentGames}/${progress.totalGames} (${progress.progress.toFixed(1)}%)`;
