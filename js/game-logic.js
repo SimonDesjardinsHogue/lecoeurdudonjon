@@ -494,13 +494,30 @@ export async function runBalanceTest() {
         // Use setTimeout to allow UI to update
         await new Promise(resolve => setTimeout(resolve, 100));
         
-        // Run tests with progress updates (200 games per combination = 3600 total)
+        // Track start time for estimation
+        const startTime = Date.now();
+        let lastUpdateTime = startTime;
+        
+        // Run tests with progress updates (500 games per combination = 9000 total)
         statusText.textContent = 'Simulation en cours...';
         
-        const report = await runBalanceTestsAsync(200, (progress) => {
+        const report = await runBalanceTestsAsync(500, (progress) => {
             // Update progress bar
             progressBar.style.width = `${progress.progress}%`;
-            statusText.textContent = `Simulation en cours... ${progress.currentGames}/${progress.totalGames} (${progress.progress.toFixed(1)}%)`;
+            
+            // Calculate time estimation
+            const currentTime = Date.now();
+            const elapsed = (currentTime - startTime) / 1000; // seconds
+            const estimatedTotal = progress.progress > 0 ? (elapsed / progress.progress) * 100 : 0;
+            const remaining = Math.max(0, estimatedTotal - elapsed);
+            
+            // Format time
+            const minutes = Math.floor(remaining / 60);
+            const seconds = Math.floor(remaining % 60);
+            const timeStr = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+            
+            statusText.textContent = `Simulation en cours... ${progress.currentGames}/${progress.totalGames} (${progress.progress.toFixed(1)}%) - Temps restant: ~${timeStr}`;
+            lastUpdateTime = currentTime;
         });
         
         progressBar.style.width = '95%';
@@ -508,12 +525,13 @@ export async function runBalanceTest() {
         
         await new Promise(resolve => setTimeout(resolve, 100));
         
-        // Format and display results
+        // Format and display results with total time
+        const totalTime = ((Date.now() - startTime) / 1000).toFixed(1);
         const htmlReport = formatReportAsHTML(report);
         resultsDiv.innerHTML = htmlReport;
         
         progressBar.style.width = '100%';
-        statusText.textContent = '✓ Test terminé avec succès !';
+        statusText.textContent = `✓ Test terminé avec succès en ${totalTime}s !`;
         
         // Hide progress after a delay
         setTimeout(() => {

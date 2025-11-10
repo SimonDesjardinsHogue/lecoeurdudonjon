@@ -1094,16 +1094,78 @@ function generateBalanceReport(analysis) {
         });
     }
     
-    // Level 20 progression suggestion
-    if (avgLevel20Percent < 10) {
+    // Level 20 progression suggestion - Target: Level 20 in ~14 hours
+    // Estimate: ~600-700 combats in 14 hours of gameplay (assuming 1-1.5 min per combat cycle)
+    const targetCombatsFor14Hours = 650; // Middle estimate
+    const targetLevel = 20;
+    const acceptableRange = 2; // +/- 2 levels
+    
+    // Calculate average progression rate from milestone data
+    // Use the average kills needed to reach level 20 across all games that reached it
+    const allGamesData = Object.values(analysis.byCombination).flatMap(combo => {
+        // We need to reconstruct the game data from stats
+        return Array(combo.gamesPlayed).fill(null);
+    });
+    
+    // Calculate from class stats (more reliable aggregation)
+    let totalGamesReachingLevel20 = 0;
+    let totalKillsToReachLevel20 = 0;
+    
+    for (const stats of Object.values(analysis.byClass)) {
+        const level20Stats = stats.milestones[20];
+        if (level20Stats && level20Stats.gamesReached > 0) {
+            totalGamesReachingLevel20 += level20Stats.gamesReached;
+            totalKillsToReachLevel20 += level20Stats.avgKills * level20Stats.gamesReached;
+        }
+    }
+    
+    // Calculate estimated level after 14 hours based on progression rate
+    let estimatedLevelAt14Hours = avgLevelOverall;
+    
+    if (totalGamesReachingLevel20 > 0) {
+        const avgKillsToLevel20 = totalKillsToReachLevel20 / totalGamesReachingLevel20;
+        
+        // Estimate what level would be reached with targetCombatsFor14Hours combats
+        // Linear interpolation based on kills to level 20
+        const progressionRate = targetLevel / avgKillsToLevel20;
+        estimatedLevelAt14Hours = Math.min(targetLevel, targetCombatsFor14Hours * progressionRate);
+    } else {
+        // If no one reached level 20, estimate based on average final level and kills
+        const avgFinalKills = average(allClasses.map(c => c.avgKills));
+        if (avgFinalKills > 0) {
+            const progressionRate = avgLevelOverall / avgFinalKills;
+            estimatedLevelAt14Hours = Math.min(targetLevel, targetCombatsFor14Hours * progressionRate);
+        }
+    }
+    
+    // Only suggest if estimated level is outside the acceptable range (18-22)
+    const minAcceptable = targetLevel - acceptableRange;
+    const maxAcceptable = targetLevel + acceptableRange;
+    
+    if (estimatedLevelAt14Hours < minAcceptable) {
+        // Progression is too slow
+        const levelDeficit = minAcceptable - estimatedLevelAt14Hours;
         report.suggestions.push({
             category: 'game',
             class: 'all',
             type: 'progression',
             metric: 'level20',
-            suggestion: `Seulement ${avgLevel20Percent.toFixed(1)}% des joueurs atteignent le niveau 20. Suggestion: Augmenter les gains d'XP de +20% ou réduire les requis d'XP par niveau.`
+            severity: 3,
+            suggestion: `Progression trop lente: Niveau ${estimatedLevelAt14Hours.toFixed(1)} estimé après 14h de jeu (cible: niveau ${targetLevel} ± ${acceptableRange}). Il manque ~${levelDeficit.toFixed(1)} niveaux. Suggestion: Augmenter les gains d'XP de +${Math.round(levelDeficit * 15)}% ou réduire les requis d'XP par niveau de -${Math.round(levelDeficit * 10)}%.`
+        });
+    } else if (estimatedLevelAt14Hours > maxAcceptable) {
+        // Progression is too fast
+        const levelSurplus = estimatedLevelAt14Hours - maxAcceptable;
+        report.suggestions.push({
+            category: 'game',
+            class: 'all',
+            type: 'progression',
+            metric: 'level20',
+            severity: 2,
+            suggestion: `Progression trop rapide: Niveau ${estimatedLevelAt14Hours.toFixed(1)} estimé après 14h de jeu (cible: niveau ${targetLevel} ± ${acceptableRange}). Il y a ~${levelSurplus.toFixed(1)} niveaux de trop. Suggestion: Réduire les gains d'XP de -${Math.round(levelSurplus * 10)}% ou augmenter les requis d'XP par niveau de +${Math.round(levelSurplus * 8)}%.`
         });
     }
+    // If estimatedLevelAt14Hours is between minAcceptable and maxAcceptable, no suggestion is added
     
     // Item pricing analysis
     const allGames = Object.values(analysis.byCombination).flatMap(combo => 
@@ -1156,6 +1218,7 @@ export function formatReportAsHTML(report) {
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Taux Victoire</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Kills Moy.</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Morts Moy.</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Or Récolté</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Or Final</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Équilibre</th>';
     html += '</tr></thead><tbody>';
@@ -1171,6 +1234,7 @@ export function formatReportAsHTML(report) {
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${(stats.avgWinRate * 100).toFixed(1)}%</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgKills.toFixed(1)}</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgDeaths.toFixed(1)}</td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgGoldEarned.toFixed(0)} 💰</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgFinalGold.toFixed(0)} 💰</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513; color: ${scoreColor}; font-weight: bold;">${balanceScore.toFixed(0)}/100</td>`;
         html += '</tr>';
@@ -1189,6 +1253,7 @@ export function formatReportAsHTML(report) {
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Taux Victoire</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Kills Moy.</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Morts Moy.</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Or Récolté</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Or Final</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Équilibre</th>';
     html += '</tr></thead><tbody>';
@@ -1204,6 +1269,7 @@ export function formatReportAsHTML(report) {
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${(stats.avgWinRate * 100).toFixed(1)}%</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgKills.toFixed(1)}</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgDeaths.toFixed(1)}</td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgGoldEarned.toFixed(0)} 💰</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgFinalGold.toFixed(0)} 💰</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513; color: ${scoreColor}; font-weight: bold;">${balanceScore.toFixed(0)}/100</td>`;
         html += '</tr>';
@@ -1222,6 +1288,7 @@ export function formatReportAsHTML(report) {
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Taux Victoire</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Kills Moy.</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Morts Moy.</th>';
+    html += '<th style="padding: 10px; border: 1px solid #8B4513;">Or Récolté</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Or Final</th>';
     html += '<th style="padding: 10px; border: 1px solid #8B4513;">Équilibre</th>';
     html += '</tr></thead><tbody>';
@@ -1237,6 +1304,7 @@ export function formatReportAsHTML(report) {
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${(stats.avgWinRate * 100).toFixed(1)}%</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgKills.toFixed(1)}</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgDeaths.toFixed(1)}</td>`;
+        html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgGoldEarned.toFixed(0)} 💰</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513;">${stats.avgFinalGold.toFixed(0)} 💰</td>`;
         html += `<td style="padding: 8px; border: 1px solid #8B4513; color: ${scoreColor}; font-weight: bold;">${balanceScore.toFixed(0)}/100</td>`;
         html += '</tr>';
