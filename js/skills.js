@@ -196,6 +196,12 @@ export function useSkill(skillId) {
     const player = gameState.player;
     const enemy = gameState.currentEnemy;
     
+    // Check distance for melee skills (warrior skills)
+    if (enemy.distance > 0 && player.class === 'guerrier') {
+        addCombatLog(`⚔️ Vous ne pouvez pas utiliser cette compétence de mêlée à distance !`, 'damage');
+        return false;
+    }
+    
     // Check energy or mana cost
     if (skill.energyCost) {
         if (player.energy < skill.energyCost) {

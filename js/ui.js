@@ -268,7 +268,11 @@ export function updateEnemyUI() {
     
     // Build enemy name with difficulty indicator (no icon in name anymore)
     const enemyNameElement = document.getElementById('enemyName');
-    enemyNameElement.innerHTML = `${e.name} <span style="color: ${difficulty.color}; font-size: 1.2em; margin-left: 5px;" title="${difficulty.title}">${difficulty.indicator}</span>`;
+    let distanceIndicator = '';
+    if (e.distance > 0) {
+        distanceIndicator = ` <span style="color: #ff9800; font-size: 0.9em;">📍 À distance</span>`;
+    }
+    enemyNameElement.innerHTML = `${e.name} <span style="color: ${difficulty.color}; font-size: 1.2em; margin-left: 5px;" title="${difficulty.title}">${difficulty.indicator}</span>${distanceIndicator}`;
     
     document.getElementById('enemyHealth').textContent = `HP: ${e.health}/${e.maxHealth}`;
     
@@ -316,7 +320,11 @@ export function updateEnemyUI() {
         const difficulty2 = getDifficultyIndicator(e2);
         const enemyName2Element = document.getElementById('enemyName2');
         if (enemyName2Element) {
-            enemyName2Element.innerHTML = `${e2.name} <span style="color: ${difficulty2.color}; font-size: 1.2em; margin-left: 5px;" title="${difficulty2.title}">${difficulty2.indicator}</span>`;
+            let distanceIndicator2 = '';
+            if (e2.distance > 0) {
+                distanceIndicator2 = ` <span style="color: #ff9800; font-size: 0.9em;">📍 À distance</span>`;
+            }
+            enemyName2Element.innerHTML = `${e2.name} <span style="color: ${difficulty2.color}; font-size: 1.2em; margin-left: 5px;" title="${difficulty2.title}">${difficulty2.indicator}</span>${distanceIndicator2}`;
         }
         
         const enemyHealth2Element = document.getElementById('enemyHealth2');

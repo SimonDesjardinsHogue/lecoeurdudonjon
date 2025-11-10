@@ -38,7 +38,8 @@ function createBossEnemy() {
         defense: Math.floor(bossTemplate.defense * levelMultiplier),
         gold: Math.floor(bossTemplate.gold * levelMultiplier),
         xp: Math.floor(bossTemplate.xp * levelMultiplier),
-        isBoss: true
+        isBoss: true,
+        distance: 0 // Bosses always start at melee range
     };
 }
 
@@ -310,12 +311,14 @@ export function explore() {
             const enemy1 = {
                 ...enemy1Template,
                 maxHealth: enemy1Template.health,
-                isBoss: false
+                isBoss: false,
+                distance: enemy1Template.isRanged ? 1 : 0 // Ranged enemies start at distance 1
             };
             const enemy2 = {
                 ...enemy2Template,
                 maxHealth: enemy2Template.health,
-                isBoss: false
+                isBoss: false,
+                distance: enemy2Template.isRanged ? 1 : 0 // Ranged enemies start at distance 1
             };
             
             // Sort by strength - stronger on left (index 0)
@@ -335,6 +338,10 @@ export function explore() {
             showScreen('combatScreen');
             document.getElementById('combatLog').innerHTML = '';
             addCombatLog(`Vous rencontrez ${sortedEnemies[0].name} et ${sortedEnemies[1].name} !`, 'info');
+            // Show distance info for ranged enemies
+            if (sortedEnemies[0].isRanged || sortedEnemies[1].isRanged) {
+                addCombatLog(`⚠️ Certains ennemis sont à distance et doivent s'approcher pour attaquer au corps à corps !`, 'info');
+            }
             updateEnemyUI();
         } else {
             // Single monster encounter - select enemy based on player level but ensure we don't exceed array bounds
@@ -344,7 +351,8 @@ export function explore() {
             gameState.currentEnemy = {
                 ...enemyTemplate,
                 maxHealth: enemyTemplate.health,
-                isBoss: false
+                isBoss: false,
+                distance: enemyTemplate.isRanged ? 1 : 0 // Ranged enemies start at distance 1
             };
             gameState.currentEnemies = null;
             gameState.isDualCombat = false;
@@ -358,6 +366,17 @@ export function explore() {
             showScreen('combatScreen');
             document.getElementById('combatLog').innerHTML = '';
             addCombatLog(`Vous rencontrez un ${gameState.currentEnemy.name} !`, 'info');
+            // Show distance info for ranged enemies
+            if (gameState.currentEnemy.isRanged) {
+                addCombatLog(`⚠️ L'ennemi est à distance et doit s'approcher pour attaquer au corps à corps !`, 'info');
+                if (gameState.player.class === 'guerrier') {
+                    addCombatLog(`⚔️ En tant que Guerrier, vous ne pouvez pas attaquer pendant son approche.`, 'info');
+                } else if (gameState.player.class === 'magicien') {
+                    addCombatLog(`🧙 En tant que Magicien, vous pouvez lancer des sorts pendant son approche !`, 'special');
+                } else if (gameState.player.class === 'archer') {
+                    addCombatLog(`🏹 En tant qu'Archer, vous pouvez tirer pendant son approche !`, 'special');
+                }
+            }
             updateEnemyUI();
         }
     }
@@ -372,6 +391,27 @@ export function attack() {
     
     const p = gameState.player;
     const e = gameState.currentEnemy;
+    
+    // Check if enemy is at distance and if warrior cannot attack
+    if (e.distance > 0) {
+        if (p.class === 'guerrier') {
+            addCombatLog(`⚔️ Vous ne pouvez pas attaquer l'ennemi à distance en tant que Guerrier !`, 'damage');
+            addCombatLog(`L'ennemi s'approche...`, 'info');
+            audioManager.playSound('error');
+            
+            // Enemy approaches and may attack
+            setTimeout(() => {
+                enemyApproachOrAttack();
+            }, 1000);
+            return;
+        }
+        // Mages and archers can attack at range
+        if (p.class === 'magicien') {
+            addCombatLog(`🧙 Vous lancez un sort à distance !`, 'special');
+        } else if (p.class === 'archer') {
+            addCombatLog(`🏹 Vous tirez une flèche !`, 'special');
+        }
+    }
     
     // Play attack sound and show particles
     audioManager.playSound('attack');
@@ -521,10 +561,81 @@ export function attack() {
     
     updateEnemyUI();
     
-    // Enemy attacks
+    // Enemy attacks or approaches
     setTimeout(() => {
-        enemyAttack();
+        enemyApproachOrAttack();
     }, 1000);
+}
+
+// Enemy approaches or attacks based on distance
+export function enemyApproachOrAttack() {
+    const e = gameState.currentEnemy;
+    
+    // Check if enemy needs to approach (is at distance)
+    if (e.distance > 0) {
+        e.distance = 0; // Enemy moves to melee range
+        addCombatLog(`${e.name} s'approche au corps à corps !`, 'info');
+        
+        // If enemy is ranged, they can still attack from range before closing
+        if (e.isRanged) {
+            addCombatLog(`${e.name} tire à distance avant de s'approcher !`, 'damage');
+            const p = gameState.player;
+            const enemyStrengthMod = getStatModifier(e.strength);
+            const playerDefenseMod = getStatModifier(p.defense);
+            
+            let defense = p.defense;
+            if (gameState.defending) {
+                defense *= 2;
+                gameState.defending = false;
+            }
+            
+            // Ranged attack - slightly reduced damage
+            const damageVariance = Math.floor(Math.random() * 10) - 2;
+            let rangedDamage = Math.max(1, Math.floor(e.strength * 0.8) + Math.floor(enemyStrengthMod * 0.8) - (defense + playerDefenseMod) + damageVariance);
+            
+            // Apply mana shield buff if active
+            rangedDamage = applyShieldBuff(rangedDamage);
+            
+            // Class-specific defensive abilities still apply
+            if (p.class === 'magicien' && Math.random() < 0.20) {
+                const reduction = Math.floor(rangedDamage * 0.30);
+                rangedDamage = rangedDamage - reduction;
+                addCombatLog(`✨ Bouclier arcanique ! Les dégâts sont réduits de ${reduction}.`, 'special');
+            }
+            
+            if (p.class === 'archer') {
+                const dexMod = getStatModifier(p.dexterity);
+                const dodgeChance = Math.min(0.18, dexMod * 0.018);
+                if (Math.random() < dodgeChance) {
+                    const reduction = Math.floor(rangedDamage * 0.35);
+                    rangedDamage = rangedDamage - reduction;
+                    addCombatLog(`💨 Esquive partielle ! Les dégâts sont réduits de ${reduction}.`, 'special');
+                }
+            }
+            
+            p.health -= rangedDamage;
+            addCombatLog(`Vous subissez ${rangedDamage} dégâts à distance !`, 'damage');
+            
+            // Play hit sound and show particles
+            audioManager.playSound('hit');
+            const playerStatsElement = document.getElementById('gameStats');
+            if (playerStatsElement) {
+                particleSystem.createHitEffect(playerStatsElement);
+            }
+            
+            if (p.health <= 0) {
+                handleDefeat();
+                return;
+            }
+        }
+        
+        updateUI();
+        updateEnemyUI();
+        return;
+    }
+    
+    // Enemy is at melee range, proceed with normal attack
+    enemyAttack();
 }
 
 // Enemy attacks player
