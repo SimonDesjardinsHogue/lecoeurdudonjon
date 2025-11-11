@@ -71,7 +71,7 @@ export function handleKeyPress(event) {
         return;
     }
     
-    // Main menu shortcuts (1-8)
+    // Main menu shortcuts (1-6)
     if (currentScreen === 'mainScreen') {
         switch (key) {
             case '1':
@@ -84,19 +84,13 @@ export function handleKeyPress(event) {
                 window.rest();
                 break;
             case '4':
-                window.showStats();
+                window.showStatsAndLeaderboard();
                 break;
             case '5':
-                window.showLeaderboard();
+                window.showProgressionMenu();
                 break;
             case '6':
-                window.showDailyQuests();
-                break;
-            case '7':
-                window.showDailyRewards();
-                break;
-            case '8':
-                window.showAchievements();
+                window.showOptionsMenu();
                 break;
         }
         return;

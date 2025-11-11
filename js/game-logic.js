@@ -271,6 +271,11 @@ export function showProgressionMenu() {
     showScreen('progressionMenuScreen');
 }
 
+// Show options menu (sauvegardes, nouvelle partie, paramètres réseau)
+export function showOptionsMenu() {
+    showScreen('optionsMenuScreen');
+}
+
 // Show save options
 export function showSaveOptions() {
     showScreen('saveOptionsScreen');

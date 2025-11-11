@@ -349,6 +349,7 @@
                         <div class="actions-column-title">📊 Informations</div>
                         <button onclick="showStatsAndLeaderboard()">📊 Statistiques (4)</button>
                         <button onclick="showProgressionMenu()">🏆 Progression (5)</button>
+                        <button onclick="showOptionsMenu()">⚙️ Options (6)</button>
                     </div>
                 </div>
             </div>
@@ -376,6 +377,20 @@
                     <button onclick="showDailyQuests()">📜 Défis Quotidiens</button>
                     <button onclick="showDailyRewards()">🎁 Récompenses</button>
                     <button onclick="showAchievements()">🏅 Succès</button>
+                    <button onclick="showMain()">🚪 Retour (ESC)</button>
+                </div>
+            </div>
+
+            <!-- Options Menu Screen -->
+            <div id="optionsMenuScreen" class="game-screen">
+                <div class="story-text">
+                    <h3>⚙️ Options</h3>
+                    <p>Gérez vos sauvegardes et paramètres du jeu.</p>
+                </div>
+                <div class="game-actions">
+                    <button onclick="showSaveOptions()">💾 Sauvegardes</button>
+                    <button onclick="resetGame()" style="background: linear-gradient(135deg, #8B0000 0%, #660000 100%);">🔄 Nouvelle Partie</button>
+                    <button onclick="showMultiplayerSettings()">🌐 Paramètres Multijoueur</button>
                     <button onclick="showMain()">🚪 Retour (ESC)</button>
                 </div>
             </div>
@@ -440,15 +455,7 @@
                     <h3>📊 Statistiques du Héros</h3>
                     <div id="detailedStats"></div>
                 </div>
-                <div class="game-actions-grid">
-                    <div class="actions-column">
-                        <div class="actions-column-title">💾 Informations</div>
-                        <button onclick="showSaveOptions()">💾 Sauvegardes</button>
-                        <button onclick="resetGame()" style="background: linear-gradient(135deg, #8B0000 0%, #660000 100%);">🔄 Nouvelle Partie</button>
-                        <button onclick="showMultiplayerSettings()">🌐 Paramètres Multijoueur</button>
-                    </div>
-                </div>
-                <div class="game-actions" style="margin-top: 20px;">
+                <div class="game-actions">
                     <button onclick="showStatsAndLeaderboard()">🚪 Retour (ESC)</button>
                 </div>
             </div>
@@ -488,7 +495,7 @@
                     </div>
                 </div>
                 <div class="game-actions">
-                    <button onclick="showStats()">🚪 Retour (ESC)</button>
+                    <button onclick="showOptionsMenu()">🚪 Retour (ESC)</button>
                     <button onclick="showMultiplayerSettings()">🌐 Paramètres Multijoueur</button>
                 </div>
             </div>
@@ -530,7 +537,7 @@
                     </div>
                 </div>
                 <div class="game-actions">
-                    <button onclick="showSaveOptions()">🚪 Retour (ESC)</button>
+                    <button onclick="showOptionsMenu()">🚪 Retour (ESC)</button>
                 </div>
             </div>
 
