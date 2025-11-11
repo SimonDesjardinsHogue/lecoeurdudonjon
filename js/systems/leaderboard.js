@@ -98,14 +98,19 @@ async function displayLocalLeaderboard() {
             const nameSection = document.createElement('div');
             nameSection.innerHTML = `
                 <strong>${medal}${player.name}</strong><br>
-                <small>Niveau ${player.level} | ${player.kills} victoires</small>
+                <small>Niveau ${player.level || 0} | ${player.kills || 0} victoires</small>
             `;
+            
+            // Provide default values for potentially missing fields
+            const displayScore = player.score || ((player.level || 0) * 100) + ((player.kills || 0) * 50) + ((player.strength || 10) * 10) + ((player.defense || 5) * 5);
+            const displayStrength = player.strength || 10;
+            const displayDefense = player.defense || 5;
             
             const statsSection = document.createElement('div');
             statsSection.style.textAlign = 'right';
             statsSection.innerHTML = `
-                <div style="color: #DAA520; font-weight: bold;">${player.score} pts</div>
-                <small>⚔️ ${player.strength} | 🛡️ ${player.defense}</small>
+                <div style="color: #DAA520; font-weight: bold;">${displayScore} pts</div>
+                <small>⚔️ ${displayStrength} | 🛡️ ${displayDefense}</small>
             `;
             
             playerDiv.appendChild(nameSection);
@@ -204,14 +209,19 @@ function updateLeaderboardDisplay(scores) {
             const nameSection = document.createElement('div');
             nameSection.innerHTML = `
                 <strong>${medal}${score.playerName}</strong><br>
-                <small>Niveau ${score.level} | ${score.kills} victoires</small>
+                <small>Niveau ${score.level || 0} | ${score.kills || 0} victoires</small>
             `;
+            
+            // Provide default values for potentially missing fields
+            const displayScore = score.score || ((score.level || 0) * 100) + ((score.kills || 0) * 50) + ((score.strength || 10) * 10) + ((score.defense || 5) * 5);
+            const displayStrength = score.strength || 10;
+            const displayDefense = score.defense || 5;
             
             const statsSection = document.createElement('div');
             statsSection.style.textAlign = 'right';
             statsSection.innerHTML = `
-                <div style="color: #DAA520; font-weight: bold;">${score.score} pts</div>
-                <small>⚔️ ${score.strength} | 🛡️ ${score.defense}</small>
+                <div style="color: #DAA520; font-weight: bold;">${displayScore} pts</div>
+                <small>⚔️ ${displayStrength} | 🛡️ ${displayDefense}</small>
             `;
             
             playerDiv.appendChild(nameSection);
