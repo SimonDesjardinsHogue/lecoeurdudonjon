@@ -8,7 +8,7 @@ Une quête légendaire de courage et d'honneur inspirée par Legend of the Red D
 
 ## 📖 Description
 
-Dans le royaume oublié de Valéria, les ténèbres s'étendent. Au cœur du donjon ancien se cache un artefact légendaire - le Coeur du Dragon - capable de sauver le royaume. 
+Dans le royaume oublié de Valéria, les ténèbres s'étendent. Au cœur de la forêt ancienne se cache un artefact légendaire - le Coeur du Dragon - capable de sauver le royaume. 
 
 Selon les anciennes légendes, Valéria était autrefois un royaume prospère, protégé par la magie du Cœur du Dragon. Mais lorsque l'artefact fut corrompu par les forces des ténèbres, le royaume sombra dans l'oubli. 
 
@@ -40,7 +40,7 @@ De mystérieux explorateurs, des frères et sœurs connus sous le nom des M&M, p
 Le jeu utilise des modules JavaScript ES6 qui nécessitent un serveur HTTP pour fonctionner correctement.
 
 **Option 1 - Jouer en ligne (Recommandé):**
-- Visitez directement: [https://simondesjardinshogue.github.io/lecoeurdudonjon/](https://simondesjardinshogue.github.io/lecoeurdudonjon/)
+- Visitez directement: [https://simondesjardinshogue.github.io/lecoeurdudragon/](https://simondesjardinshogue.github.io/lecoeurdudragon/)
 
 **Option 2 - Jouer en local:**
 
@@ -422,7 +422,7 @@ Les permissions suivantes sont configurées dans le workflow :
 Si vous forkez ce projet, suivez ces étapes détaillées pour activer GitHub Pages :
 
 1. **Accéder aux paramètres du dépôt**
-   - Allez sur la page de votre dépôt GitHub (`https://github.com/[votre-nom-utilisateur]/lecoeurdudonjon`)
+   - Allez sur la page de votre dépôt GitHub (`https://github.com/[votre-nom-utilisateur]/lecoeurdudragon`)
    - Cliquez sur l'onglet **Settings** (Paramètres) en haut à droite
 
 2. **Configurer GitHub Pages**
@@ -445,7 +445,7 @@ Si vous forkez ce projet, suivez ces étapes détaillées pour activer GitHub Pa
    - Une fois terminé, une coche verte ✓ apparaîtra
 
 5. **Accéder à votre site**
-   - Le site sera accessible à : `https://[votre-nom-utilisateur].github.io/lecoeurdudonjon/`
+   - Le site sera accessible à : `https://[votre-nom-utilisateur].github.io/lecoeurdudragon/`
    - L'URL exacte sera également affichée dans les paramètres **Pages** après le premier déploiement réussi
 
 #### Dépannage

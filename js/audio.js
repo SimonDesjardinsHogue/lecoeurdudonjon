@@ -374,7 +374,7 @@ class AudioManager {
     
     // Save settings to localStorage
     saveSettings() {
-        localStorage.setItem('lecoeurdudonjon_audio', JSON.stringify({
+        localStorage.setItem('lecoeurdudragon_audio', JSON.stringify({
             isMuted: this.isMuted,
             musicVolume: this.musicVolume,
             sfxVolume: this.sfxVolume
@@ -383,7 +383,7 @@ class AudioManager {
     
     // Load settings from localStorage
     loadSettings() {
-        const saved = localStorage.getItem('lecoeurdudonjon_audio');
+        const saved = localStorage.getItem('lecoeurdudragon_audio');
         if (saved) {
             try {
                 const settings = JSON.parse(saved);
