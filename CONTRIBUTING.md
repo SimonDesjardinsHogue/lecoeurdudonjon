@@ -7,7 +7,7 @@ Le jeu est organisé de manière **modulaire** pour faciliter la maintenance et 
 ### Architecture des Modules
 
 ```
-lecoeurdudonjon/
+lecoeurdudragon/
 ├── index.html              # Point d'entrée HTML
 ├── style.css               # Styles CSS
 └── js/                     # Modules JavaScript

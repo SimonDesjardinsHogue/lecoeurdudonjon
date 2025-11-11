@@ -1,7 +1,7 @@
 // Service Worker for Le Coeur du Dragon
 // Enables offline play and caching of game assets
 
-const CACHE_NAME = 'lecoeurdudonjon-v1.0.2';
+const CACHE_NAME = 'lecoeurdudragon-v1.0.2';
 const urlsToCache = [
   '/',
   '/index.html',

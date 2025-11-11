@@ -72,7 +72,7 @@ export function init() {
     
     // Show restore button if any saves exist
     const slots = getAllSaveSlots();
-    const hasSaves = Object.keys(slots).length > 0 || localStorage.getItem('lecoeurdudonjon_save');
+    const hasSaves = Object.keys(slots).length > 0 || localStorage.getItem('lecoeurdudragon_save');
     const restoreBtn = document.getElementById('restoreSaveBtn');
     if (hasSaves && restoreBtn) {
         restoreBtn.style.display = 'inline-block';
@@ -884,11 +884,12 @@ export function deleteAllSaves() {
             try {
                 // List of all localStorage keys used by the game
                 const keysToDelete = [
-                    'lecoeurdudonjon_save',           // Main game save
+                    'lecoeurdudragon_save',           // Main game save
+                    'lecoeurdudragon_saves',          // Save slots
                     'lecoeurdudragon_playerId',       // Multiplayer player ID
                     'lecoeurdudragon_serverUrl',      // Server configuration
-                    'lecoeurdudonjon_leaderboard',    // Local leaderboard
-                    'lecoeurdudonjon_audio'           // Audio settings
+                    'lecoeurdudragon_leaderboard',    // Local leaderboard
+                    'lecoeurdudragon_audio'           // Audio settings
                 ];
                 
                 // Delete each key

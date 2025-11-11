@@ -3,13 +3,13 @@ import { gameState } from './game-state.js';
 import { updateUI, showSaveIndicator } from './ui.js';
 
 // Constants for save slots
-const SAVE_SLOTS_KEY = 'lecoeurdudonjon_saves';
+const SAVE_SLOTS_KEY = 'lecoeurdudragon_saves';
 const MAX_SAVE_SLOTS = 10;
 
 // Save game to localStorage (backwards compatible with single save)
 export function saveGame() {
     // Keep the old single save for backwards compatibility
-    localStorage.setItem('lecoeurdudonjon_save', JSON.stringify(gameState));
+    localStorage.setItem('lecoeurdudragon_save', JSON.stringify(gameState));
     
     // Also save to the slot system
     saveToSlot(0); // Auto-save to slot 0
@@ -77,7 +77,7 @@ export function loadFromSlot(slotId) {
         applyBackwardsCompatibility();
         
         // Update localStorage with the loaded save for backwards compatibility
-        localStorage.setItem('lecoeurdudonjon_save', JSON.stringify(gameState));
+        localStorage.setItem('lecoeurdudragon_save', JSON.stringify(gameState));
         
         updateUI();
         return true;
@@ -146,7 +146,7 @@ function applyBackwardsCompatibility() {
 
 // Load game from localStorage (backwards compatible)
 export function loadGame() {
-    const saved = localStorage.getItem('lecoeurdudonjon_save');
+    const saved = localStorage.getItem('lecoeurdudragon_save');
     if (saved) {
         try {
             const loadedState = JSON.parse(saved);

@@ -29,7 +29,7 @@ export function showLeaderboard() {
 // Display local (single device) leaderboard
 async function displayLocalLeaderboard() {
     // Get all saved players from leaderboard storage
-    const leaderboardData = localStorage.getItem('lecoeurdudonjon_leaderboard');
+    const leaderboardData = localStorage.getItem('lecoeurdudragon_leaderboard');
     let players = [];
     
     if (leaderboardData) {
@@ -63,7 +63,7 @@ async function displayLocalLeaderboard() {
         }
         
         // Save updated leaderboard
-        localStorage.setItem('lecoeurdudonjon_leaderboard', JSON.stringify(players));
+        localStorage.setItem('lecoeurdudragon_leaderboard', JSON.stringify(players));
     }
     
     // Sort players by score (highest first)

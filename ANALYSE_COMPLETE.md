@@ -131,7 +131,7 @@ export function spendStatPoint(statName) {
     // Si la sauvegarde échoue, annuler les changements
     try {
         // Vérifier que la sauvegarde a bien eu lieu
-        const saved = localStorage.getItem('lecoeurdudonjon_save');
+        const saved = localStorage.getItem('lecoeurdudragon_save');
         if (!saved) {
             throw new Error('Save failed');
         }

@@ -1,5 +1,5 @@
 // Enemy Data Module
-// Enemy templates (20 types for levels 1-20)
+// Enemy templates (25 types for levels 1-20)
 // Note: isRanged indicates the enemy attacks from distance and needs to approach for melee
 export const enemies = [
     // Early game enemies (levels 1-5) - XP reduced by ~8%
