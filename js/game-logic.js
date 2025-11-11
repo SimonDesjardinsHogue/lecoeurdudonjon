@@ -2,7 +2,7 @@
 import { gameState, shopItems, rareItems, npcs, rarities, generateRandomStats, statNames, hasRandomStats, metals, getStatModifier } from './game-state.js';
 import { MAX_LEVEL } from './data/game-constants.js';
 import { updateUI, addCombatLog, showScreen } from './ui.js';
-import { saveGame, loadGame } from './save-load.js';
+import { saveGame, loadGame, getAllSaveSlots, loadFromSlot, deleteSaveSlot, saveToSlot } from './save-load.js';
 import { characterClasses, applyCharacterClass } from './character-classes.js';
 import { characterRaces, applyRaceModifiers } from './character-races.js';
 import { characterSexes, applySexBaseStats } from './character-sexes.js';
@@ -70,10 +70,11 @@ export function init() {
     checkAchievements();
     updateUI();
     
-    // Show restore button if save exists
-    const hasSave = localStorage.getItem('lecoeurdudonjon_save');
+    // Show restore button if any saves exist
+    const slots = getAllSaveSlots();
+    const hasSaves = Object.keys(slots).length > 0 || localStorage.getItem('lecoeurdudonjon_save');
     const restoreBtn = document.getElementById('restoreSaveBtn');
-    if (hasSave && restoreBtn) {
+    if (hasSaves && restoreBtn) {
         restoreBtn.style.display = 'inline-block';
     }
 }
@@ -346,14 +347,291 @@ export function resetGame() {
     }
 }
 
-// Restore save from start screen
+// Show save selection modal
 export function restoreSaveFromStart() {
-    const saved = localStorage.getItem('lecoeurdudonjon_save');
-    if (saved && gameState.player.name) {
+    showSaveSelectionModal();
+}
+
+// Show the save selection modal
+export function showSaveSelectionModal() {
+    const slots = getAllSaveSlots();
+    const slotIds = Object.keys(slots).sort((a, b) => {
+        // Sort by timestamp, newest first
+        const timeA = slots[a].metadata?.timestamp || 0;
+        const timeB = slots[b].metadata?.timestamp || 0;
+        return timeB - timeA;
+    });
+    
+    if (slotIds.length === 0) {
+        alert('Aucune partie sauvegardée trouvée !');
+        return;
+    }
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.id = 'saveSelectionModal';
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    modalContent.style.maxWidth = '600px';
+    
+    // Title
+    const title = document.createElement('h2');
+    title.style.cssText = 'color: #DAA520; margin-bottom: 20px; text-align: center;';
+    title.textContent = '📥 Choisir une Sauvegarde';
+    
+    // Close button
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'modal-close';
+    closeBtn.innerHTML = '&times;';
+    closeBtn.onclick = () => closeSaveSelectionModal();
+    
+    // Container for save slots
+    const slotsContainer = document.createElement('div');
+    slotsContainer.style.cssText = 'max-height: 400px; overflow-y: auto; margin-bottom: 20px;';
+    
+    // Create save slot items
+    slotIds.forEach(slotId => {
+        const saveData = slots[slotId];
+        const metadata = saveData.metadata;
+        
+        const slotItem = document.createElement('div');
+        slotItem.className = 'shop-item';
+        slotItem.style.cssText = 'display: flex; align-items: center; gap: 15px; cursor: pointer; margin-bottom: 10px; transition: transform 0.2s;';
+        slotItem.onmouseover = () => slotItem.style.transform = 'scale(1.02)';
+        slotItem.onmouseout = () => slotItem.style.transform = 'scale(1)';
+        
+        // Icon
+        const icon = document.createElement('div');
+        icon.style.cssText = 'font-size: 2.5em; min-width: 50px; text-align: center;';
+        icon.textContent = metadata.classIcon || '⚔️';
+        
+        // Details
+        const details = document.createElement('div');
+        details.style.cssText = 'flex: 1;';
+        
+        const nameLevel = document.createElement('div');
+        nameLevel.style.cssText = 'font-weight: bold; color: #DAA520; font-size: 1.1em;';
+        nameLevel.textContent = `${metadata.playerName} - Niveau ${metadata.level}`;
+        
+        const classRace = document.createElement('div');
+        classRace.style.cssText = 'color: #ddd; font-size: 0.9em; margin-top: 3px;';
+        classRace.textContent = `${metadata.className} | ${metadata.raceName || 'Humain'}`;
+        
+        const goldDate = document.createElement('div');
+        goldDate.style.cssText = 'color: #999; font-size: 0.85em; margin-top: 3px;';
+        goldDate.textContent = `💰 ${metadata.gold} | 📅 ${metadata.dateString}`;
+        
+        details.appendChild(nameLevel);
+        details.appendChild(classRace);
+        details.appendChild(goldDate);
+        
+        // Actions
+        const actions = document.createElement('div');
+        actions.style.cssText = 'display: flex; flex-direction: column; gap: 5px;';
+        
+        const loadBtn = document.createElement('button');
+        loadBtn.textContent = '▶️ Charger';
+        loadBtn.style.cssText = 'padding: 8px 15px; font-size: 0.9em;';
+        loadBtn.onclick = (e) => {
+            e.stopPropagation();
+            loadSaveFromModal(slotId);
+        };
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = '🗑️ Supprimer';
+        deleteBtn.style.cssText = 'padding: 8px 15px; font-size: 0.9em; background: linear-gradient(135deg, #8B0000 0%, #660000 100%);';
+        deleteBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (confirm(`Êtes-vous sûr de vouloir supprimer la sauvegarde "${metadata.playerName}" ?`)) {
+                deleteSaveSlot(slotId);
+                showSaveSelectionModal(); // Refresh the modal
+            }
+        };
+        
+        actions.appendChild(loadBtn);
+        actions.appendChild(deleteBtn);
+        
+        slotItem.appendChild(icon);
+        slotItem.appendChild(details);
+        slotItem.appendChild(actions);
+        
+        // Make the whole item clickable (except buttons)
+        slotItem.onclick = () => loadSaveFromModal(slotId);
+        
+        slotsContainer.appendChild(slotItem);
+    });
+    
+    // Close button at bottom
+    const closeBottomBtn = document.createElement('button');
+    closeBottomBtn.textContent = '❌ Annuler';
+    closeBottomBtn.style.cssText = 'width: 100%; padding: 12px;';
+    closeBottomBtn.onclick = () => closeSaveSelectionModal();
+    
+    modalContent.appendChild(closeBtn);
+    modalContent.appendChild(title);
+    modalContent.appendChild(slotsContainer);
+    modalContent.appendChild(closeBottomBtn);
+    modal.appendChild(modalContent);
+    
+    // Remove existing modal if any
+    const existingModal = document.getElementById('saveSelectionModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    document.body.appendChild(modal);
+}
+
+// Load save from modal
+function loadSaveFromModal(slotId) {
+    if (loadFromSlot(slotId)) {
+        closeSaveSelectionModal();
         showScreen('mainScreen');
         updateUI();
     } else {
-        alert('Aucune partie sauvegardée trouvée !');
+        alert('Erreur lors du chargement de la sauvegarde !');
+    }
+}
+
+// Close save selection modal
+function closeSaveSelectionModal() {
+    const modal = document.getElementById('saveSelectionModal');
+    if (modal) {
+        modal.remove();
+    }
+}
+
+// Show manual save modal
+export function showManualSaveModal() {
+    const slots = getAllSaveSlots();
+    
+    // Create modal
+    const modal = document.createElement('div');
+    modal.id = 'manualSaveModal';
+    modal.className = 'modal';
+    modal.style.display = 'flex';
+    
+    const modalContent = document.createElement('div');
+    modalContent.className = 'modal-content';
+    modalContent.style.maxWidth = '500px';
+    
+    // Title
+    const title = document.createElement('h2');
+    title.style.cssText = 'color: #DAA520; margin-bottom: 20px; text-align: center;';
+    title.textContent = '💾 Créer une Sauvegarde Manuelle';
+    
+    // Close button
+    const closeBtn = document.createElement('span');
+    closeBtn.className = 'modal-close';
+    closeBtn.innerHTML = '&times;';
+    closeBtn.onclick = () => closeManualSaveModal();
+    
+    // Description
+    const description = document.createElement('p');
+    description.style.cssText = 'margin-bottom: 20px; text-align: center;';
+    description.textContent = 'Choisissez un emplacement pour sauvegarder votre progression actuelle.';
+    
+    // Container for save slots
+    const slotsContainer = document.createElement('div');
+    slotsContainer.style.cssText = 'max-height: 400px; overflow-y: auto; margin-bottom: 20px;';
+    
+    // Create save slot options (slots 1-10, slot 0 is auto-save)
+    for (let i = 1; i <= 10; i++) {
+        const existingSave = slots[i];
+        
+        const slotItem = document.createElement('div');
+        slotItem.className = 'shop-item';
+        slotItem.style.cssText = 'display: flex; align-items: center; gap: 15px; cursor: pointer; margin-bottom: 10px; transition: transform 0.2s;';
+        slotItem.onmouseover = () => slotItem.style.transform = 'scale(1.02)';
+        slotItem.onmouseout = () => slotItem.style.transform = 'scale(1)';
+        
+        // Slot number
+        const slotNum = document.createElement('div');
+        slotNum.style.cssText = 'font-size: 1.5em; font-weight: bold; color: #DAA520; min-width: 40px; text-align: center;';
+        slotNum.textContent = `#${i}`;
+        
+        // Details
+        const details = document.createElement('div');
+        details.style.cssText = 'flex: 1;';
+        
+        if (existingSave && existingSave.metadata) {
+            const metadata = existingSave.metadata;
+            
+            const nameLevel = document.createElement('div');
+            nameLevel.style.cssText = 'font-weight: bold; color: #ddd;';
+            nameLevel.textContent = `${metadata.playerName} - Niveau ${metadata.level}`;
+            
+            const dateInfo = document.createElement('div');
+            dateInfo.style.cssText = 'color: #999; font-size: 0.85em; margin-top: 3px;';
+            dateInfo.textContent = `Sauvegardé: ${metadata.dateString}`;
+            
+            details.appendChild(nameLevel);
+            details.appendChild(dateInfo);
+        } else {
+            const emptyText = document.createElement('div');
+            emptyText.style.cssText = 'color: #999; font-style: italic;';
+            emptyText.textContent = 'Emplacement vide';
+            details.appendChild(emptyText);
+        }
+        
+        // Save button
+        const saveBtn = document.createElement('button');
+        saveBtn.textContent = existingSave ? '💾 Écraser' : '💾 Sauvegarder';
+        saveBtn.style.cssText = 'padding: 8px 15px; font-size: 0.9em;';
+        saveBtn.onclick = (e) => {
+            e.stopPropagation();
+            if (existingSave) {
+                if (confirm(`Voulez-vous écraser la sauvegarde "${existingSave.metadata.playerName}" ?`)) {
+                    saveToSlot(i);
+                    alert('Sauvegarde créée avec succès !');
+                    closeManualSaveModal();
+                }
+            } else {
+                saveToSlot(i);
+                alert('Sauvegarde créée avec succès !');
+                closeManualSaveModal();
+            }
+        };
+        
+        slotItem.appendChild(slotNum);
+        slotItem.appendChild(details);
+        slotItem.appendChild(saveBtn);
+        
+        slotItem.onclick = () => saveBtn.click();
+        
+        slotsContainer.appendChild(slotItem);
+    }
+    
+    // Close button at bottom
+    const closeBottomBtn = document.createElement('button');
+    closeBottomBtn.textContent = '❌ Annuler';
+    closeBottomBtn.style.cssText = 'width: 100%; padding: 12px;';
+    closeBottomBtn.onclick = () => closeManualSaveModal();
+    
+    modalContent.appendChild(closeBtn);
+    modalContent.appendChild(title);
+    modalContent.appendChild(description);
+    modalContent.appendChild(slotsContainer);
+    modalContent.appendChild(closeBottomBtn);
+    modal.appendChild(modalContent);
+    
+    // Remove existing modal if any
+    const existingModal = document.getElementById('manualSaveModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    document.body.appendChild(modal);
+}
+
+// Close manual save modal
+function closeManualSaveModal() {
+    const modal = document.getElementById('manualSaveModal');
+    if (modal) {
+        modal.remove();
     }
 }
 
