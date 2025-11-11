@@ -270,12 +270,12 @@ export function showStats() {
     leftColumn.appendChild(createStatParagraph('Points de vie', `${p.health}/${p.maxHealth}`));
     leftColumn.appendChild(createStatParagraph('Énergie', `${p.energy}/${p.maxEnergy}`));
     leftColumn.appendChild(createStatParagraph('Classe d\'armure', p.defense));
-    leftColumn.appendChild(createStatParagraph('Force', p.strength));
-    leftColumn.appendChild(createStatParagraph('Dextérité', p.dexterity));
-    leftColumn.appendChild(createStatParagraph('Constitution', p.constitution));
-    leftColumn.appendChild(createStatParagraph('Intelligence', p.intelligence));
-    leftColumn.appendChild(createStatParagraph('Sagesse', p.wisdom));
-    leftColumn.appendChild(createStatParagraph('Charisme', p.charisma));
+    leftColumn.appendChild(createStatParagraph('Puissance', p.puissance));
+    leftColumn.appendChild(createStatParagraph('Adresse', p.adresse));
+    leftColumn.appendChild(createStatParagraph('Puissance', p.puissance));
+    leftColumn.appendChild(createStatParagraph('Esprit', p.esprit));
+    leftColumn.appendChild(createStatParagraph('Esprit', p.esprit));
+    leftColumn.appendChild(createStatParagraph('Présence', p.presence));
     
     // Right column: Gameplay progression info
     const rightColumn = document.createElement('div');
@@ -346,13 +346,11 @@ export function resetGame() {
         gameState.player.level = 1;
         gameState.player.health = 100;
         gameState.player.maxHealth = 100;
-        gameState.player.strength = 10;
+        gameState.player.puissance = 10;
         gameState.player.defense = 5;
-        gameState.player.dexterity = 10;
-        gameState.player.constitution = 10;
-        gameState.player.intelligence = 10;
-        gameState.player.wisdom = 10;
-        gameState.player.charisma = 10;
+        gameState.player.adresse = 10;
+        gameState.player.esprit = 10;
+        gameState.player.presence = 10;
         gameState.player.statPoints = 0;
         gameState.player.gold = 75;
         gameState.player.xp = 0;
@@ -754,9 +752,11 @@ export function showAchievements() {
                     const rewardParts = [];
                     if (achievement.reward.gold) rewardParts.push(`+${achievement.reward.gold} or`);
                     if (achievement.reward.xp) rewardParts.push(`+${achievement.reward.xp} XP`);
-                    if (achievement.reward.strength) rewardParts.push(`+${achievement.reward.strength} Force`);
+                    if (achievement.reward.puissance) rewardParts.push(`+${achievement.reward.puissance} Puissance`);
                     if (achievement.reward.defense) rewardParts.push(`+${achievement.reward.defense} Défense`);
-                    if (achievement.reward.dexterity) rewardParts.push(`+${achievement.reward.dexterity} Dextérité`);
+                    if (achievement.reward.adresse) rewardParts.push(`+${achievement.reward.adresse} Adresse`);
+                    if (achievement.reward.esprit) rewardParts.push(`+${achievement.reward.esprit} Esprit`);
+                    if (achievement.reward.presence) rewardParts.push(`+${achievement.reward.presence} Présence`);
                     if (achievement.reward.maxHealth) rewardParts.push(`+${achievement.reward.maxHealth} HP max`);
                     if (achievement.reward.maxEnergy) rewardParts.push(`+${achievement.reward.maxEnergy} Énergie max`);
                     reward.textContent = `Récompense: ${rewardParts.join(', ')}`;

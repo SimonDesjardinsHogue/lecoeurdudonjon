@@ -31,7 +31,7 @@ export const achievements = [
         description: 'Vaincre 50 ennemis',
         category: 'combat',
         requirement: { type: 'kills', value: 50 },
-        reward: { gold: 250, strength: 2 }
+        reward: { gold: 250, puissance: 2 }
     },
     {
         id: 'legendary_hero',
@@ -40,7 +40,7 @@ export const achievements = [
         description: 'Vaincre 100 ennemis',
         category: 'combat',
         requirement: { type: 'kills', value: 100 },
-        reward: { gold: 500, strength: 3, defense: 2 }
+        reward: { gold: 500, puissance: 3, defense: 2 }
     },
     {
         id: 'first_boss',
@@ -103,7 +103,7 @@ export const achievements = [
         description: 'Atteindre le niveau 20',
         category: 'progression',
         requirement: { type: 'level', value: 20 },
-        reward: { gold: 500, maxHealth: 50, strength: 5 }
+        reward: { gold: 500, maxHealth: 50, puissance: 5 }
     },
     {
         id: 'survivor',
@@ -148,7 +148,7 @@ export const achievements = [
         description: 'Explorer le donjon 100 fois',
         category: 'exploration',
         requirement: { type: 'explorations', value: 100 },
-        reward: { dexterity: 5 }
+        reward: { adresse: 5 }
     },
     {
         id: 'lucky_charm',
@@ -157,7 +157,7 @@ export const achievements = [
         description: 'Fuir avec succès 10 combats',
         category: 'challenge',
         requirement: { type: 'successful_escapes', value: 10 },
-        reward: { dexterity: 3 }
+        reward: { adresse: 3 }
     }
 ];
 
@@ -257,17 +257,25 @@ function unlockAchievement(achievement) {
         player.xp += reward.xp;
         rewardText.push(`+${reward.xp} XP`);
     }
-    if (reward.strength) {
-        player.strength += reward.strength;
-        rewardText.push(`+${reward.strength} Force`);
+    if (reward.puissance) {
+        player.puissance += reward.puissance;
+        rewardText.push(`+${reward.puissance} Puissance`);
     }
     if (reward.defense) {
         player.defense += reward.defense;
         rewardText.push(`+${reward.defense} Défense`);
     }
-    if (reward.dexterity) {
-        player.dexterity += reward.dexterity;
-        rewardText.push(`+${reward.dexterity} Dextérité`);
+    if (reward.adresse) {
+        player.adresse += reward.adresse;
+        rewardText.push(`+${reward.adresse} Adresse`);
+    }
+    if (reward.esprit) {
+        player.esprit += reward.esprit;
+        rewardText.push(`+${reward.esprit} Esprit`);
+    }
+    if (reward.presence) {
+        player.presence += reward.presence;
+        rewardText.push(`+${reward.presence} Présence`);
     }
     if (reward.maxHealth) {
         player.maxHealth += reward.maxHealth;

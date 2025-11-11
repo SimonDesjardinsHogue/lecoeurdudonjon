@@ -255,7 +255,7 @@ export function attack() {
     }
     
     // Player attacks
-    const strengthMod = getStatModifier(p.strength);
+    const puissanceMod = getStatModifier(p.puissance);
     const enemyDefenseMod = getStatModifier(e.defense);
     
     // Apply event strength multiplier
@@ -263,7 +263,7 @@ export function attack() {
     
     // Calculate base damage with increased randomness: -3 to +10
     const damageVariance = Math.floor(Math.random() * 14) - 3;
-    let playerDamage = Math.max(1, Math.floor((p.strength + strengthMod) * eventStrengthMultiplier) - (e.defense + enemyDefenseMod) + damageVariance);
+    let playerDamage = Math.max(1, Math.floor((p.puissance + puissanceMod) * eventStrengthMultiplier) - (e.defense + enemyDefenseMod) + damageVariance);
     
     // Critical hit chance (10% base + event bonus)
     const baseCriticalChance = 0.10;
@@ -444,7 +444,7 @@ export function enemyApproachOrAttack() {
             }
             
             if (p.class === 'archer') {
-                const dexMod = getStatModifier(p.dexterity);
+                const dexMod = getStatModifier(p.adresse);
                 const dodgeChance = Math.min(0.18, dexMod * 0.018);
                 if (Math.random() < dodgeChance) {
                     const reduction = Math.floor(rangedDamage * 0.35);
@@ -494,9 +494,9 @@ export function enemyAttack() {
     }
     
     // Check for natural dodge based on dexterity
-    const dexterityMod = getStatModifier(p.dexterity);
+    const adresseMod = getStatModifier(p.adresse);
     // Base dodge chance: 5% + (dexterity modifier * 2%)
-    const baseDodgeChance = 0.05 + (dexterityMod * 0.02);
+    const baseDodgeChance = 0.05 + (adresseMod * 0.02);
     if (Math.random() < baseDodgeChance) {
         addCombatLog(`⚡ Vous esquivez l'attaque avec agilité !`, 'special');
         updateUI();
@@ -629,7 +629,7 @@ export function enemyAttack() {
     
     // Archer: DEX-based dodge - chance to reduce damage based on dexterity
     if (p.class === 'archer') {
-        const dexMod = getStatModifier(p.dexterity);
+        const dexMod = getStatModifier(p.adresse);
         const dodgeChance = Math.min(0.18, dexMod * 0.018); // Up to 18% dodge chance
         if (Math.random() < dodgeChance) {
             const reduction = Math.floor(enemyDamage * 0.35);
@@ -752,8 +752,8 @@ export function flee() {
     const fleePenalty = recentFleeCount * 0.1; // -10% per recent flee
     
     // Charisma improves flee chance: base 50% + (charisma modifier * 5%) - penalties
-    const charismaMod = getStatModifier(p.charisma);
-    const baseFleeChance = 0.5 + (charismaMod * 0.05) - fleePenalty;
+    const presenceMod = getStatModifier(p.presence);
+    const baseFleeChance = 0.5 + (presenceMod * 0.05) - fleePenalty;
     const fleeChance = Math.min(0.9, Math.max(0.1, baseFleeChance)); // Cap between 10% and 90%
     
     if (Math.random() < fleeChance) {

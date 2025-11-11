@@ -264,13 +264,11 @@ const VALIDATION_RANGES = {
     level: { min: 1, max: 20 },
     health: { min: 1, max: 2000 },
     maxHealth: { min: 1, max: 2000 },
-    strength: { min: 1, max: 100 },
+    puissance: { min: 1, max: 100 },
     defense: { min: 1, max: 100 },
-    dexterity: { min: 1, max: 100 },
-    constitution: { min: 1, max: 100 },
-    intelligence: { min: 1, max: 100 },
-    wisdom: { min: 1, max: 100 },
-    charisma: { min: 1, max: 100 },
+    adresse: { min: 1, max: 100 },
+    esprit: { min: 1, max: 100 },
+    presence: { min: 1, max: 100 },
     gold: { min: 0, max: 999999 },
     xp: { min: 0, max: 999999 },
     statPoints: { min: 0, max: 40 },
@@ -308,12 +306,11 @@ function validatePlayerData(player) {
     }
     
     // Level should roughly correlate with stats
-    const totalStats = (player.strength || 10) + (player.defense || 10) + 
-                       (player.dexterity || 10) + (player.constitution || 10) +
-                       (player.intelligence || 10) + (player.wisdom || 10) + 
-                       (player.charisma || 10);
-    const minExpectedStats = 70 + (player.level - 1) * 1; // Base 70 + 1 per level minimum
-    const maxExpectedStats = 70 + (player.level - 1) * 7 + 50; // Allow for items and bonuses
+    const totalStats = (player.puissance || 10) + (player.defense || 10) + 
+                       (player.adresse || 10) + (player.esprit || 10) +
+                       (player.presence || 10);
+    const minExpectedStats = 50 + (player.level - 1) * 1; // Base 50 + 1 per level minimum (adjusted for 4 stats)
+    const maxExpectedStats = 50 + (player.level - 1) * 5 + 40; // Allow for items and bonuses
     
     if (totalStats < minExpectedStats || totalStats > maxExpectedStats) {
         console.warn(`Suspicious stats total: ${totalStats} for level ${player.level}`);
@@ -346,8 +343,36 @@ export function importSave() {
             throw new Error('Invalid state structure');
         }
         
+        // MIGRATION: Convert old stats to new stats (backward compatibility)
+        if (loadedState.player && loadedState.player.strength !== undefined) {
+            // Old save format detected - migrate to new format
+            const p = loadedState.player;
+            
+            // Puissance = average of strength and constitution
+            if (!p.puissance) {
+                p.puissance = Math.floor(((p.strength || 10) + (p.constitution || 10)) / 2);
+            }
+            
+            // Adresse = dexterity
+            if (!p.adresse) {
+                p.adresse = p.dexterity || 10;
+            }
+            
+            // Esprit = average of intelligence and wisdom
+            if (!p.esprit) {
+                p.esprit = Math.floor(((p.intelligence || 10) + (p.wisdom || 10)) / 2);
+            }
+            
+            // Présence = charisma
+            if (!p.presence) {
+                p.presence = p.charisma || 10;
+            }
+            
+            console.log('Migrated old save to new stat system');
+        }
+        
         // Validate player object and required properties
-        const requiredPlayerProps = ['name', 'level', 'health', 'maxHealth', 'strength', 'defense', 'gold', 'xp', 'xpToLevel', 'kills', 'gamesPlayed'];
+        const requiredPlayerProps = ['name', 'level', 'health', 'maxHealth', 'defense', 'gold', 'xp', 'xpToLevel', 'kills', 'gamesPlayed'];
         if (!loadedState.player || typeof loadedState.player !== 'object') {
             throw new Error('Missing player data');
         }
@@ -382,12 +407,26 @@ export function importSave() {
             loadedState.player.classIcon = '⚔️';
         }
         
+        // Ensure new stats exist (with defaults if needed)
+        if (!('puissance' in loadedState.player)) {
+            loadedState.player.puissance = 10;
+        }
+        if (!('adresse' in loadedState.player)) {
+            loadedState.player.adresse = 10;
+        }
+        if (!('esprit' in loadedState.player)) {
+            loadedState.player.esprit = 10;
+        }
+        if (!('presence' in loadedState.player)) {
+            loadedState.player.presence = 10;
+        }
+        
         // Validate property types for all player properties
         if (typeof loadedState.player.name !== 'string' || 
             typeof loadedState.player.level !== 'number' ||
             typeof loadedState.player.health !== 'number' ||
             typeof loadedState.player.maxHealth !== 'number' ||
-            typeof loadedState.player.strength !== 'number' ||
+            typeof loadedState.player.puissance !== 'number' ||
             typeof loadedState.player.defense !== 'number' ||
             typeof loadedState.player.gold !== 'number' ||
             typeof loadedState.player.xp !== 'number' ||

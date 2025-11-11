@@ -20,9 +20,9 @@ export const skills = {
             energyCost: 25,
             cooldown: 3,
             effect: (player, enemy) => {
-                const strengthMod = getStatModifier(player.strength);
+                const puissanceMod = getStatModifier(player.puissance);
                 const enemyDefenseMod = getStatModifier(enemy.defense);
-                const damage = Math.max(1, (player.strength * 2) + (strengthMod * 2) - (enemy.defense + enemyDefenseMod) + Math.floor(Math.random() * 10));
+                const damage = Math.max(1, (player.puissance * 2) + (puissanceMod * 2) - (enemy.defense + enemyDefenseMod) + Math.floor(Math.random() * 10));
                 enemy.health -= damage;
                 addCombatLog(`💥 Charge Puissante ! Vous infligez ${damage} dégâts massifs !`, 'special');
                 audioManager.playSound('attack');
@@ -37,9 +37,9 @@ export const skills = {
             energyCost: 20,
             cooldown: 4,
             effect: (player, enemy) => {
-                const strengthMod = getStatModifier(player.strength);
+                const puissanceMod = getStatModifier(player.puissance);
                 const enemyDefenseMod = getStatModifier(enemy.defense);
-                const damage = Math.max(1, player.strength + strengthMod - (enemy.defense + enemyDefenseMod) + Math.floor(Math.random() * 5));
+                const damage = Math.max(1, player.puissance + puissanceMod - (enemy.defense + enemyDefenseMod) + Math.floor(Math.random() * 5));
                 enemy.health -= damage;
                 player.defense += 5;
                 gameState.skillBuffs = gameState.skillBuffs || {};
@@ -59,8 +59,8 @@ export const skills = {
             energyCost: 30,
             cooldown: 3,
             effect: (player, enemy) => {
-                const intelligenceMod = getStatModifier(player.intelligence);
-                const damage = Math.floor(player.intelligence * 1.5) + Math.floor(intelligenceMod * 1.5) + Math.floor(Math.random() * 15);
+                const espritMod = getStatModifier(player.esprit);
+                const damage = Math.floor(player.esprit * 1.5) + Math.floor(espritMod * 1.5) + Math.floor(Math.random() * 15);
                 enemy.health -= damage;
                 addCombatLog(`🔥 Boule de Feu ! Dégâts magiques de ${damage} !`, 'special');
                 audioManager.playSound('attack');
@@ -75,10 +75,10 @@ export const skills = {
             energyCost: 25,
             cooldown: 5,
             effect: (player, enemy) => {
-                const intelligenceMod = getStatModifier(player.intelligence);
+                const espritMod = getStatModifier(player.esprit);
                 gameState.skillBuffs = gameState.skillBuffs || {};
                 gameState.skillBuffs.manaShield = 3;
-                gameState.skillBuffs.manaShieldAmount = Math.floor(player.intelligence * 2) + (intelligenceMod * 2);
+                gameState.skillBuffs.manaShieldAmount = Math.floor(player.esprit * 2) + (espritMod * 2);
                 addCombatLog(`✨ Bouclier de Mana activé ! Absorbe jusqu'à ${gameState.skillBuffs.manaShieldAmount} dégâts.`, 'special');
                 audioManager.playSound('defend');
                 return { type: 'shield' };
@@ -92,8 +92,8 @@ export const skills = {
             manaCost: 20,
             cooldown: 2,
             effect: (player, enemy) => {
-                const intelligenceMod = getStatModifier(player.intelligence);
-                const damage = Math.floor(player.intelligence * 1.8) + Math.floor(intelligenceMod * 2) + Math.floor(Math.random() * 12);
+                const espritMod = getStatModifier(player.esprit);
+                const damage = Math.floor(player.esprit * 1.8) + Math.floor(espritMod * 2) + Math.floor(Math.random() * 12);
                 enemy.health -= damage;
                 addCombatLog(`⚡ Éclair Foudroyant ! Dégâts électriques de ${damage} !`, 'special');
                 audioManager.playSound('attack');
@@ -108,9 +108,9 @@ export const skills = {
             manaCost: 25,
             cooldown: 3,
             effect: (player, enemy) => {
-                const intelligenceMod = getStatModifier(player.intelligence);
+                const espritMod = getStatModifier(player.esprit);
                 const wisdomMod = getStatModifier(player.wisdom);
-                const damage = Math.floor(player.intelligence * 1.6) + Math.floor(intelligenceMod * 1.5) + Math.floor(wisdomMod * 1.5) + Math.floor(Math.random() * 18);
+                const damage = Math.floor(player.esprit * 1.6) + Math.floor(espritMod * 1.5) + Math.floor(wisdomMod * 1.5) + Math.floor(Math.random() * 18);
                 enemy.health -= damage;
                 addCombatLog(`❄️ Lance de Glace ! Dégâts glacials de ${damage} !`, 'special');
                 audioManager.playSound('attack');
@@ -127,11 +127,11 @@ export const skills = {
             energyCost: 25,
             cooldown: 3,
             effect: (player, enemy) => {
-                const strengthMod = getStatModifier(player.strength);
+                const puissanceMod = getStatModifier(player.puissance);
                 const enemyDefenseMod = getStatModifier(enemy.defense);
                 let totalDamage = 0;
                 for (let i = 0; i < 3; i++) {
-                    const damage = Math.max(1, Math.floor(player.strength * 0.6) + Math.floor(strengthMod * 0.6) - (Math.floor(enemy.defense * 0.5) + Math.floor(enemyDefenseMod * 0.5)) + Math.floor(Math.random() * 5));
+                    const damage = Math.max(1, Math.floor(player.puissance * 0.6) + Math.floor(puissanceMod * 0.6) - (Math.floor(enemy.defense * 0.5) + Math.floor(enemyDefenseMod * 0.5)) + Math.floor(Math.random() * 5));
                     totalDamage += damage;
                 }
                 enemy.health -= totalDamage;
@@ -148,10 +148,10 @@ export const skills = {
             energyCost: 30,
             cooldown: 4,
             effect: (player, enemy) => {
-                const strengthMod = getStatModifier(player.strength);
-                const dexterityMod = getStatModifier(player.dexterity);
+                const puissanceMod = getStatModifier(player.puissance);
+                const adresseMod = getStatModifier(player.adresse);
                 const enemyDefenseMod = getStatModifier(enemy.defense);
-                const damage = Math.max(1, (player.strength + strengthMod + player.dexterity + dexterityMod) - (enemy.defense + enemyDefenseMod) + Math.floor(Math.random() * 15));
+                const damage = Math.max(1, (player.puissance + puissanceMod + player.adresse + adresseMod) - (enemy.defense + enemyDefenseMod) + Math.floor(Math.random() * 15));
                 enemy.health -= damage;
                 addCombatLog(`🎯 Tir Visé critique ! ${damage} dégâts précis !`, 'special');
                 audioManager.playSound('attack');

@@ -15,8 +15,8 @@ export function healPlayer(amount) {
     const oldHealth = p.health;
     
     // Wisdom increases healing effectiveness: +5% per wisdom modifier point
-    const wisdomMod = getStatModifier(p.wisdom);
-    const healingBonus = 1 + (wisdomMod * 0.05);
+    const espritMod = getStatModifier(p.esprit);
+    const healingBonus = 1 + (espritMod * 0.05);
     const finalAmount = Math.floor(amount * healingBonus);
     
     p.health = Math.min(p.maxHealth, p.health + finalAmount);
@@ -39,8 +39,8 @@ export function restoreEnergy(amount) {
     const p = gameState.player;
     
     // Wisdom increases energy restoration: +5% per wisdom modifier point
-    const wisdomMod = getStatModifier(p.wisdom);
-    const energyBonus = 1 + (wisdomMod * 0.05);
+    const espritMod = getStatModifier(p.esprit);
+    const energyBonus = 1 + (espritMod * 0.05);
     const finalAmount = Math.floor(amount * energyBonus);
     
     p.energy = Math.min(p.maxEnergy, p.energy + finalAmount);
@@ -53,8 +53,8 @@ export function restoreMana(amount) {
     const p = gameState.player;
     
     // Intelligence increases mana restoration: +5% per intelligence modifier point
-    const intelligenceMod = getStatModifier(p.intelligence);
-    const manaBonus = 1 + (intelligenceMod * 0.05);
+    const espritMod = getStatModifier(p.esprit);
+    const manaBonus = 1 + (espritMod * 0.05);
     const finalAmount = Math.floor(amount * manaBonus);
     
     p.mana = Math.min(p.maxMana, p.mana + finalAmount);
@@ -144,7 +144,7 @@ export function spendStatPoint(statName) {
     }
     
     // Valid stat names
-    const validStats = ['strength', 'dexterity', 'constitution', 'intelligence', 'wisdom', 'charisma'];
+    const validStats = ['puissance', 'adresse', 'esprit', 'presence'];
     
     if (!validStats.includes(statName)) {
         console.error(`Invalid stat name: ${statName}`);
@@ -153,12 +153,10 @@ export function spendStatPoint(statName) {
     
     // Confirm spending the point
     const statDisplayNames = {
-        'strength': 'Force',
-        'dexterity': 'Dextérité',
-        'constitution': 'Constitution',
-        'intelligence': 'Intelligence',
-        'wisdom': 'Sagesse',
-        'charisma': 'Charisme'
+        'puissance': 'Puissance',
+        'adresse': 'Adresse',
+        'esprit': 'Esprit',
+        'presence': 'Présence'
     };
     
     if (!confirm(`Voulez-vous ajouter 1 point à ${statDisplayNames[statName]} ?`)) {
@@ -169,8 +167,8 @@ export function spendStatPoint(statName) {
     p[statName]++;
     p.statPoints--;
     
-    // If constitution increases, also increase max health by 2
-    if (statName === 'constitution') {
+    // If puissance increases, also increase max health by 2 (like old constitution)
+    if (statName === 'puissance') {
         p.maxHealth += 2;
         p.health += 2; // Also heal by 2
         addCombatLog(`✨ +1 ${statDisplayNames[statName]} ! (+2 PV max)`, 'info');
