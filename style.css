@@ -1520,6 +1520,89 @@ input[type="text"]:focus {
     .characteristics-grid-compact {
         grid-template-columns: repeat(3, 1fr);
     }
+    
+    /* Improve button sizes for touch on mobile */
+    button {
+        min-height: 44px; /* Apple's recommended minimum touch target size */
+        padding: 14px 20px;
+        font-size: 1em;
+    }
+    
+    /* Make game action buttons more prominent on mobile */
+    .game-actions button {
+        min-height: 50px;
+        font-size: 1.05em;
+        font-weight: bold;
+    }
+    
+    /* Combat buttons - larger for quick access */
+    #combatScreen .game-actions button {
+        min-height: 56px;
+        font-size: 1.1em;
+        padding: 16px 24px;
+    }
+    
+    /* Improve combat log visibility on mobile */
+    .combat-log {
+        max-height: 180px;
+        font-size: 0.95em;
+        padding: 12px;
+    }
+    
+    /* Better scrollable areas on mobile */
+    .combat-log::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .combat-log::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 4px;
+    }
+    
+    .combat-log::-webkit-scrollbar-thumb {
+        background: #8B4513;
+        border-radius: 4px;
+    }
+    
+    /* Improve modal visibility on mobile */
+    .modal-content {
+        max-width: 95%;
+        max-height: 90vh;
+        overflow-y: auto;
+        margin: 20px auto;
+    }
+    
+    /* Better spacing for touch targets in forms */
+    input[type="text"],
+    input[type="radio"],
+    input[type="checkbox"] {
+        min-height: 44px;
+    }
+    
+    /* Improve class selection touch targets */
+    .class-option {
+        min-height: 80px;
+        padding: 14px;
+    }
+    
+    /* Prevent text selection on buttons (better for touch) */
+    button {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: rgba(218, 165, 32, 0.3);
+    }
+    
+    /* Larger enemy info boxes on mobile for better visibility */
+    .enemy-info {
+        padding: 14px;
+        min-height: 120px;
+    }
+    
+    .enemy-icon {
+        font-size: 2.5em;
+    }
 }
 
 /* Two-column stats layout */

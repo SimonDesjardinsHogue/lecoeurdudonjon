@@ -16,6 +16,7 @@ import { applyFirstVictoryBonus, showFirstVictoryNotification } from './daily-re
 import { determineInitiative } from './combat/initiative.js';
 import { shouldFaceBoss, createBossEnemy } from './combat/boss.js';
 import { triggerRandomEvent } from './combat/events.js';
+import { showTouchHint } from './touch-gestures.js';
 export { triggerRandomEvent };
 
 // Start exploring the dungeon
@@ -69,6 +70,9 @@ export function explore() {
         updateEnemyUI();
         saveGame();
         updateUI();
+        
+        // Show touch hint for mobile users
+        showTouchHint('💡 Balayez ← pour défendre, → pour fuir');
         
         // If enemy won initiative, they attack first
         if (!playerGoesFirst) {
@@ -147,6 +151,9 @@ export function explore() {
             
             updateEnemyUI();
             
+            // Show touch hint for mobile users
+            showTouchHint('💡 Balayez ← pour défendre, → pour fuir');
+            
             // If enemy won initiative, they attack first
             if (!playerGoesFirst) {
                 setTimeout(() => {
@@ -192,6 +199,9 @@ export function explore() {
             const playerGoesFirst = determineInitiative();
             
             updateEnemyUI();
+            
+            // Show touch hint for mobile users
+            showTouchHint('💡 Balayez ← pour défendre, → pour fuir');
             
             // If enemy won initiative, they attack first
             if (!playerGoesFirst) {
