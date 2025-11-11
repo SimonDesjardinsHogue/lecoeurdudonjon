@@ -15,6 +15,7 @@ import { submitScore, fetchLeaderboard, getNetworkState } from './network.js';
 import { hasEventEffect, getEventMultiplier } from './scheduled-events.js';
 import { initializeShopItems, initializeShopAvailability, getRestockTimeRemaining, isItemUnavailable, showShop, buyItem, meetWanderingMerchant, buyRareItem } from './systems/shop.js';
 import { meetNPC, meetJeweler, buyMetal, sellMetal } from './systems/npc.js';
+import { triggerRandomEvent } from './combat/events.js';
 import { healPlayer, restoreEnergy, restoreMana, addExperience, checkLevelUp, spendStatPoint } from './systems/player.js';
 import { useInventoryItem, sellInventoryItem } from './systems/inventory.js';
 import { showLeaderboard } from './systems/leaderboard.js';
@@ -206,6 +207,34 @@ export function rest() {
     alert(`Vous dormez à l'auberge jusqu'à demain 6h00 du matin (heure de Toronto). Vos points de vie sont restaurés !${bonusMessage} Vous pourrez reprendre l'aventure à ${next6AMString}.${costMessage}`);
 }
 
+// Visit the village
+export function visitVillage() {
+    // Check if player has enough energy to visit the village
+    if (gameState.player.energy < 5) {
+        alert('Vous êtes trop fatigué pour visiter le village ! Allez dormir à l\'auberge pour récupérer votre énergie.');
+        return;
+    }
+    
+    // Consume energy for visiting the village
+    gameState.player.energy = Math.max(0, gameState.player.energy - 5);
+    
+    // Random encounter - 20% random event, 30% NPC, 50% go directly to shop
+    const encounterRoll = Math.random();
+    
+    if (encounterRoll < 0.2) {
+        // Random event (village-specific)
+        triggerRandomEvent('village');
+    } else if (encounterRoll < 0.5) {
+        // NPC encounter (village-specific)
+        meetNPC('village');
+    } else {
+        // Go directly to the shop
+        showShop();
+    }
+    
+    saveGame();
+    updateUI();
+}
 
 // Show stats
 export function showStats() {
