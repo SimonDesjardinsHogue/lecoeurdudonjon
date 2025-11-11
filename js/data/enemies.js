@@ -1,5 +1,5 @@
 // Enemy Data Module
-// Enemy templates (30 types for levels 1-20)
+// Enemy templates (34 types for levels 1-24)
 // Note: isRanged indicates the enemy attacks from distance and needs to approach for melee
 export const enemies = [
     // Early game enemies (levels 1-5) - XP reduced by ~8%
@@ -38,10 +38,16 @@ export const enemies = [
     { name: 'Gardien Ancien de la Forêt', icon: '🛡️🌲', health: 270, strength: 44, defense: 27, gold: 430, xp: 391 },
     { name: 'Titan de Fer', icon: '🤖', health: 280, strength: 45, defense: 26, gold: 455, xp: 414 },
     { name: 'Tireur d\'Élite Démoniaque', icon: '🎯😈', health: 265, strength: 46, defense: 24, gold: 478, xp: 442, isRanged: true },
-    { name: 'Archidémon', icon: '👿', health: 300, strength: 48, defense: 28, gold: 506, xp: 460 }
+    { name: 'Archidémon', icon: '👿', health: 300, strength: 48, defense: 28, gold: 506, xp: 460 },
+    
+    // Legendary enemies (levels 21-24)
+    { name: 'Seigneur des Ombres', icon: '🌑', health: 320, strength: 50, defense: 30, gold: 531, xp: 483 },
+    { name: 'Golem Titanesque', icon: '🗿', health: 340, strength: 52, defense: 32, gold: 556, xp: 506, isRanged: false },
+    { name: 'Dragon Noir Ancestral', icon: '🐲', health: 360, strength: 54, defense: 34, gold: 582, xp: 529, isRanged: true },
+    { name: 'Champion du Chaos', icon: '⚔️👿', health: 380, strength: 56, defense: 36, gold: 607, xp: 552 }
 ];
 
-// Boss templates - appear every 5 levels
+// Boss templates - appear every 5 levels (and at level 24 for final boss)
 export const bosses = [
     { 
         name: 'Troll des Cavernes', 
@@ -102,5 +108,17 @@ export const bosses = [
         description: 'Un dragon légendaire gardien des trésors',
         ability: 'breath_weapon',
         abilityDescription: 'Souffle de dragon infligeant des dégâts massifs'
+    },
+    { 
+        name: 'Le Cœur du Dragon Corrompu', 
+        icon: '💎🐉', 
+        health: 500, 
+        strength: 45, 
+        defense: 28, 
+        gold: 1000, 
+        xp: 800,
+        description: 'L\'artefact légendaire corrompu par les ténèbres',
+        ability: 'corruption_wave',
+        abilityDescription: 'Vague de corruption infligeant des dégâts massifs et réduisant la défense'
     }
 ];

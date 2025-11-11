@@ -3,7 +3,7 @@
 export const GAME_VERSION = '1.1.0';
 
 // Maximum level constant
-export const MAX_LEVEL = 20;
+export const MAX_LEVEL = 24;
 
 // Rarity system definitions
 export const rarities = {
