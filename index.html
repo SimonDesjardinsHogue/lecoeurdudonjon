@@ -347,12 +347,36 @@
                     </div>
                     <div class="actions-column">
                         <div class="actions-column-title">📊 Informations</div>
-                        <button onclick="showStats()">📊 Voir Statistiques (4)</button>
-                        <button onclick="showLeaderboard()">🏆 Classement (5)</button>
-                        <button onclick="showDailyQuests()">📜 Défis Quotidiens (6)</button>
-                        <button onclick="showDailyRewards()">🎁 Récompenses (7)</button>
-                        <button onclick="showAchievements()">🏅 Succès (8)</button>
+                        <button onclick="showStatsAndLeaderboard()">📊 Statistiques (4)</button>
+                        <button onclick="showProgressionMenu()">🏆 Progression (5)</button>
                     </div>
+                </div>
+            </div>
+
+            <!-- Stats and Leaderboard Menu Screen -->
+            <div id="statsAndLeaderboardScreen" class="game-screen">
+                <div class="story-text">
+                    <h3>📊 Statistiques et Classement</h3>
+                    <p>Consultez vos statistiques personnelles ou le classement des héros.</p>
+                </div>
+                <div class="game-actions">
+                    <button onclick="showStats()">📊 Statistiques du Héros</button>
+                    <button onclick="showLeaderboard()">🏆 Classement</button>
+                    <button onclick="showMain()">🚪 Retour (ESC)</button>
+                </div>
+            </div>
+
+            <!-- Progression Menu Screen -->
+            <div id="progressionMenuScreen" class="game-screen">
+                <div class="story-text">
+                    <h3>🏆 Progression</h3>
+                    <p>Suivez vos défis, récompenses et succès.</p>
+                </div>
+                <div class="game-actions">
+                    <button onclick="showDailyQuests()">📜 Défis Quotidiens</button>
+                    <button onclick="showDailyRewards()">🎁 Récompenses</button>
+                    <button onclick="showAchievements()">🏅 Succès</button>
+                    <button onclick="showMain()">🚪 Retour (ESC)</button>
                 </div>
             </div>
 
@@ -416,10 +440,16 @@
                     <h3>📊 Statistiques du Héros</h3>
                     <div id="detailedStats"></div>
                 </div>
-                <div class="game-actions">
-                    <button onclick="showMain()">🚪 Retour (ESC)</button>
-                    <button onclick="showSaveOptions()">💾 Sauvegardes</button>
-                    <button onclick="resetGame()" style="background: linear-gradient(135deg, #8B0000 0%, #660000 100%);">🔄 Nouvelle Partie</button>
+                <div class="game-actions-grid">
+                    <div class="actions-column">
+                        <div class="actions-column-title">💾 Informations</div>
+                        <button onclick="showSaveOptions()">💾 Sauvegardes</button>
+                        <button onclick="resetGame()" style="background: linear-gradient(135deg, #8B0000 0%, #660000 100%);">🔄 Nouvelle Partie</button>
+                        <button onclick="showMultiplayerSettings()">🌐 Paramètres Multijoueur</button>
+                    </div>
+                </div>
+                <div class="game-actions" style="margin-top: 20px;">
+                    <button onclick="showStatsAndLeaderboard()">🚪 Retour (ESC)</button>
                 </div>
             </div>
 

@@ -261,6 +261,16 @@ export function showStats() {
     statsDiv.appendChild(twoColumnContainer);
 }
 
+// Show stats and leaderboard menu
+export function showStatsAndLeaderboard() {
+    showScreen('statsAndLeaderboardScreen');
+}
+
+// Show progression menu (défis, récompenses, succès)
+export function showProgressionMenu() {
+    showScreen('progressionMenuScreen');
+}
+
 // Show save options
 export function showSaveOptions() {
     showScreen('saveOptionsScreen');
