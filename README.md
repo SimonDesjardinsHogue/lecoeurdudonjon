@@ -11,7 +11,7 @@
 
 **Une quête légendaire de courage et d'honneur inspirée par Legend of the Red Dragon**
 
-**🎯 Un RPG complet avec 10-15 heures de gameplay | 20 niveaux | 5 Boss épiques | 3 Classes uniques**
+**🎯 Un RPG complet avec 12-18 heures de gameplay | 24 niveaux | 4 Boss épiques | 3 Classes uniques**
 
 [🎮 Jouer Maintenant](https://simondesjardinshogue.github.io/lecoeurdudragon/) | [📖 Documentation](CONTRIBUTING.md) | [📝 Changelog](CHANGELOG.md) | [🐛 Reporter un Bug](https://github.com/SimonDesjardinsHogue/lecoeurdudragon/issues)
 
@@ -46,15 +46,15 @@ Selon les anciennes légendes, Valéria était autrefois un royaume prospère, p
 
 De mystérieux explorateurs, des frères et sœurs connus sous le nom des M&M, parcourent maintenant les ruines du royaume. Ils déchiffrent les inscriptions anciennes et découvrent les secrets perdus de Valéria, aidant les héros courageux dans leur quête pour restaurer la lumière.
 
-**Votre mission** : Atteindre le niveau 20, vaincre les 5 Boss légendaires et restaurer le Cœur du Dragon pour sauver Valéria !
+**Votre mission** : Atteindre le niveau 24, vaincre les 4 Boss légendaires et restaurer le Cœur du Dragon pour sauver Valéria !
 
 ### ✨ Caractéristiques Principales
-- 🎮 **Gameplay Riche** : 10-15 heures pour compléter la quête principale
+- 🎮 **Gameplay Riche** : 12-18 heures pour compléter la quête principale
 - ⚔️ **Combat Tactique** : Système de combat avec compétences spéciales et stratégie
-- 🏆 **5 Boss Épiques** : Chacun avec des capacités uniques et des récompenses légendaires
+- 🏆 **4 Boss Épiques** : Chacun avec des capacités uniques et des récompenses légendaires
 - 👥 **3 Classes Jouables** : Guerrier, Magicien, Archer - chacune avec son propre style de jeu
 - 🧝 **3 Races** : Humain, Elfe, Nain - chacune avec des modificateurs de stats uniques
-- 📈 **Progression Profonde** : 20 niveaux, 7 statistiques, système de points de stats
+- 📈 **Progression Profonde** : 24 niveaux, 7 statistiques, système de points de stats
 - 🛍️ **Économie Complète** : Commerce, armes, armures, potions, objets légendaires
 - 🎲 **Événements Aléatoires** : Énigmes, choix moraux, trésors, pièges
 - 🏅 **Système de Succès** : Débloquez des accomplissements

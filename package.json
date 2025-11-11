@@ -1,7 +1,7 @@
 {
   "name": "lecoeurdudragon",
   "version": "1.1.0",
-  "description": "Un RPG épique inspiré par Legend of the Red Dragon - 20 niveaux, 5 Boss légendaires, 3 classes de héros. Explorez le royaume de Valéria dans cette aventure médiévale-fantastique.",
+  "description": "Un RPG épique inspiré par Legend of the Red Dragon - 24 niveaux, 4 Boss légendaires, 3 classes de héros. Explorez le royaume de Valéria dans cette aventure médiévale-fantastique.",
   "main": "index.html",
   "scripts": {
     "start": "npx http-server -p 8000",
