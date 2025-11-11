@@ -7,6 +7,8 @@ import { explore, attack, defend, flee, enemyAttack, useCombatPotion, skipDefend
 import { exportSave, importSave } from './save-load.js';
 import { audioManager } from './audio.js';
 import { initKeyboardHandler } from './keyboard-handler.js';
+import { initTouchGestures, showTouchHint } from './touch-gestures.js';
+import { addMobileHelpButton, showFirstTimeMobileHelp } from './mobile-help.js';
 import { useSkill as useSkillFn } from './skills.js';
 import { updateUI, updateEnemyUI, updateSkillsUI, updateCombatInventoryUI, updateShopInventoryUI, toggleInventoryPanel, updateInventoryPanel, toggleEquipmentModal, updateEquipmentModal, updateEventBanner, getCurrentDisplayedEvent } from './ui.js';
 import { initNetwork, configureServer, getNetworkState, submitScore, fetchLeaderboard, checkServerHealth, requestLeaderboardUpdate, retryDefaultServerConnection } from './network.js';
@@ -73,6 +75,15 @@ window.addEventListener('load', () => {
     
     // Initialize keyboard handler
     initKeyboardHandler();
+    
+    // Initialize touch gestures for mobile
+    initTouchGestures();
+    
+    // Add mobile help button
+    addMobileHelpButton();
+    
+    // Show first-time mobile help if needed
+    showFirstTimeMobileHelp();
     
     // Initialize scheduled events
     scheduledEventsModule.initializeScheduledEvents();
