@@ -77,7 +77,7 @@ Puis ouvrez votre navigateur à: `http://localhost:8000/`
 
 ### Statistiques de Jeu
 - **Niveau Maximum** : 20
-- **Nombre d'Ennemis** : 25 types différents (+ 5 Boss uniques)
+- **Nombre d'Ennemis** : 30 types différents (+ 5 Boss uniques)
 - **Temps de Jeu Estimé** : ~10-15 heures pour atteindre le niveau maximum
 - **Classes de Personnages** : 3 classes uniques (Guerrier, Magicien, Archer)
 - **Races de Personnages** : 3 races (Humain, Elfe, Nain)
@@ -180,21 +180,24 @@ Débloquez des succès en accomplissant des exploits :
 
 ### Ennemis et Boss
 
-#### 25 Types d'Ennemis (Niveaux 1-20)
+#### 30 Types d'Ennemis (Niveaux 1-20)
 1. **Rat Géant** 🐀 - Niveau débutant (30 HP, 7 Force)
 2. **Gobelin** 👺 - Facile (50 HP, 9 Force)
 3. **Gobelin Archer** 🏹👺 - Facile (45 HP, 10 Force)
 4. **Araignée Géante** 🕷️ - Facile (55 HP, 10 Force)
-5. **Squelette** 💀 - Moyen (60 HP, 12 Force)
-6. **Squelette Archer** 🏹💀 - Moyen (55 HP, 13 Force)
-7. **Orc** 👹 - Moyen-Difficile (80 HP, 15 Force)
-8. **Bandit** 🗡️ - Moyen (75 HP, 14 Force)
-9. **Bandit Arbalétrier** 🎯🗡️ - Moyen (70 HP, 16 Force)
-10. **Loup-Garou** 🐺 - Difficile (100 HP, 18 Force)
-11. **Zombie** 🧟 - Difficile (90 HP, 16 Force)
-12. **Sorcier Noir** 🧙 - Très Difficile (110 HP, 20 Force)
-13. **Dragon Mineur** 🐉 - Très Difficile (150 HP, 23 Force)
-14-25. **Et 12 ennemis avancés** pour les niveaux 11-20 !
+5. **Loup Sauvage** 🐺 - Facile (48 HP, 11 Force)
+6. **Sanglier Enragé** 🐗 - Facile (58 HP, 11 Force)
+7. **Squelette** 💀 - Moyen (60 HP, 12 Force)
+8. **Squelette Archer** 🏹💀 - Moyen (55 HP, 13 Force)
+9. **Orc** 👹 - Moyen-Difficile (80 HP, 15 Force)
+10. **Bandit** 🗡️ - Moyen (75 HP, 14 Force)
+11. **Bandit Arbalétrier** 🎯🗡️ - Moyen (70 HP, 16 Force)
+12. **Ours de la Forêt** 🐻 - Difficile (95 HP, 17 Force)
+13. **Loup-Garou** 🐺 - Difficile (100 HP, 18 Force)
+14. **Zombie** 🧟 - Difficile (90 HP, 16 Force)
+15. **Sorcier Noir** 🧙 - Très Difficile (110 HP, 20 Force)
+16. **Dragon Mineur** 🐉 - Très Difficile (150 HP, 23 Force)
+17-30. **Et 14 ennemis avancés** pour les niveaux 11-20, incluant l'Esprit de la Forêt Corrompu et le Gardien Ancien de la Forêt !
 
 #### 5 Boss Légendaires
 Chaque boss a des capacités spéciales uniques et récompense un objet légendaire !
