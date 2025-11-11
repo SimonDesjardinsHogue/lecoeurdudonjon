@@ -37,6 +37,14 @@
         <div class="game-header">
             <h1>⚔️ Le Coeur du Dragon ⚔️</h1>
             <div class="subtitle">Une quête légendaire de courage et d'honneur</div>
+            <button id="languageToggle" class="language-toggle" onclick="toggleLanguageMenu()" title="Changer la langue / Change language">
+                🌐
+            </button>
+            <div id="languageMenu" class="language-menu" style="display: none;">
+                <button onclick="changeLanguage('fr')" data-lang="fr">🇫🇷 Français</button>
+                <button onclick="changeLanguage('en')" data-lang="en">🇬🇧 English</button>
+                <button onclick="changeLanguage('es')" data-lang="es">🇪🇸 Español</button>
+            </div>
             <button id="audioToggle" class="audio-toggle" onclick="toggleAudio()" title="Activer/Désactiver le son">
                 🔊
             </button>

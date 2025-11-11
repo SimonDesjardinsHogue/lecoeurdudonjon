@@ -15,6 +15,8 @@ import { initNetwork, configureServer, getNetworkState, submitScore, fetchLeader
 import { showMultiplayerSettings, saveServerConfig, testServerConnection, disableMultiplayer, showConnectionNotification, dismissConnectionNotification } from './multiplayer-ui.js';
 import * as scheduledEventsModule from './scheduled-events.js';
 import * as dailyRewardsModule from './daily-rewards.js';
+import { initI18n, setLanguage, getCurrentLanguage, getLanguageFlag } from './i18n/i18n.js';
+import { updateLanguageUI } from './i18n/language-ui.js';
 
 // Make scheduled events module available globally for UI updates
 window.scheduledEventsModule = scheduledEventsModule;
@@ -41,6 +43,70 @@ function toggleAudio() {
         audioToggle.classList.toggle('muted', isMuted);
     }
 }
+
+// Toggle language menu
+function toggleLanguageMenu() {
+    const menu = document.getElementById('languageMenu');
+    if (menu) {
+        const isVisible = menu.style.display === 'block';
+        menu.style.display = isVisible ? 'none' : 'block';
+        
+        // Update active state
+        if (!isVisible) {
+            updateLanguageMenuActiveState();
+        }
+    }
+}
+
+// Update active state in language menu
+function updateLanguageMenuActiveState() {
+    const currentLang = getCurrentLanguage();
+    const buttons = document.querySelectorAll('.language-menu button');
+    buttons.forEach(btn => {
+        const lang = btn.getAttribute('data-lang');
+        if (lang === currentLang) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+}
+
+// Change language
+function changeLanguage(lang) {
+    if (setLanguage(lang)) {
+        // Update all UI text
+        updateLanguageUI();
+        
+        // Update language toggle button with flag
+        const languageToggle = document.getElementById('languageToggle');
+        if (languageToggle) {
+            languageToggle.textContent = getLanguageFlag(lang);
+        }
+        
+        // Close the menu
+        const menu = document.getElementById('languageMenu');
+        if (menu) {
+            menu.style.display = 'none';
+        }
+        
+        // Update active state
+        updateLanguageMenuActiveState();
+    }
+}
+
+// Close language menu when clicking outside
+document.addEventListener('click', (event) => {
+    const menu = document.getElementById('languageMenu');
+    const toggle = document.getElementById('languageToggle');
+    
+    if (menu && toggle && menu.style.display === 'block') {
+        if (!menu.contains(event.target) && !toggle.contains(event.target)) {
+            menu.style.display = 'none';
+        }
+    }
+});
+
 
 // Register Service Worker for offline support (PWA)
 let deferredPrompt;
@@ -139,6 +205,21 @@ window.dismissInstallBanner = dismissInstallBanner;
 
 // Initialize game on load
 window.addEventListener('load', () => {
+    // Initialize i18n first
+    const currentLang = initI18n();
+    
+    // Update language toggle button with current language flag
+    const languageToggle = document.getElementById('languageToggle');
+    if (languageToggle) {
+        languageToggle.textContent = getLanguageFlag(currentLang);
+    }
+    
+    // Update all UI text with current language
+    updateLanguageUI();
+    
+    // Update active state in language menu
+    updateLanguageMenuActiveState();
+    
     init();
     
     // Initialize network module for LAN multiplayer
@@ -223,6 +304,8 @@ window.restoreSaveFromStart = restoreSaveFromStart;
 window.meetNPC = meetNPC;
 window.showLeaderboard = showLeaderboard;
 window.toggleAudio = toggleAudio;
+window.toggleLanguageMenu = toggleLanguageMenu;
+window.changeLanguage = changeLanguage;
 window.showDailyQuests = showDailyQuestsScreen;
 window.showDailyRewards = dailyRewardsModule.showDailyRewardsScreen;
 window.startChest = dailyRewardsModule.startChest;
