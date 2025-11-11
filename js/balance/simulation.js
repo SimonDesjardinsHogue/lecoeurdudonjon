@@ -290,7 +290,13 @@ function isEquipmentUpgrade(player, item) {
 
 // Simulate combat
 export function simulateCombat(player, enemy) {
-    const enemyCopy = { ...enemy, health: enemy.health, maxHealth: enemy.health };
+    // Ensure enemy has puissance (convert from strength if needed)
+    const enemyCopy = { 
+        ...enemy, 
+        puissance: enemy.puissance || enemy.strength,
+        health: enemy.health, 
+        maxHealth: enemy.health 
+    };
     
     let turns = 0;
     const maxTurns = 100; // Prevent infinite loops
@@ -407,7 +413,7 @@ export function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxC
             enemy = {
                 ...bossTemplate,
                 health: Math.floor(bossTemplate.health * levelMultiplier * 1.5),
-                puissance: Math.floor(bossTemplate.puissance * levelMultiplier * 1.3),
+                puissance: Math.floor((bossTemplate.puissance || bossTemplate.strength) * levelMultiplier * 1.3),
                 defense: Math.floor(bossTemplate.defense * levelMultiplier * 1.2),
                 gold: Math.floor(bossTemplate.gold * levelMultiplier * 2.0),
                 xp: Math.floor(bossTemplate.xp * levelMultiplier * xpMultiplier),
@@ -421,7 +427,7 @@ export function simulateGame(classKey, raceKey = 'humain', sexKey = 'male', maxC
             enemy = {
                 ...enemyTemplate,
                 health: Math.floor(enemyTemplate.health * scaleFactor * 1.3), // Much more HP
-                puissance: Math.floor(enemyTemplate.puissance * scaleFactor * 1.2), // Stronger
+                puissance: Math.floor((enemyTemplate.puissance || enemyTemplate.strength) * scaleFactor * 1.2), // Stronger
                 defense: Math.floor(enemyTemplate.defense * scaleFactor * 1.1),
                 gold: Math.floor(enemyTemplate.gold * scaleFactor * 1.5),
                 xp: Math.floor(enemyTemplate.xp * scaleFactor * xpBonus) // Reduced XP gains
