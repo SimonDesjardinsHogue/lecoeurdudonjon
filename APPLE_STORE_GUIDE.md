@@ -807,6 +807,8 @@ https://simondesjardinshogue.github.io/lecoeurdudragon/privacy-policy.html
 **Détails importants** :
 - ✅ **Aucun coût supplémentaire** - pas d'achats in-app, pas d'abonnement
 - 🎮 **Jeu complet** - tout le contenu est inclus dans le prix d'achat
+- 🚫 **Aucune publicité** - expérience de jeu sans interruption
+- 🔒 **Aucune cueillette d'information** - respect total de votre vie privée
 - 👨‍👩‍👧‍👦 **Mode LAN familial** - jouez en réseau local avec votre famille pour du plaisir sans frais additionnels
 - 💝 **Achat unique** - payez une fois, jouez pour toujours
 

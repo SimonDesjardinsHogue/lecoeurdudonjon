@@ -49,7 +49,8 @@
 **Aucun coût supplémentaire** :
 - ✅ Pas d'achats in-app
 - ✅ Pas d'abonnement
-- ✅ Pas de publicité intrusive
+- ✅ Aucune publicité
+- ✅ Aucune cueillette d'information personnelle
 - ✅ Jeu complet inclus dans le prix d'achat
 
 **Mode multijoueur LAN familial inclus** :
