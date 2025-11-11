@@ -6,11 +6,11 @@ export const characterClasses = {
         icon: '⚔️',
         description: 'Un combattant robuste avec beaucoup de points de vie et une bonne classe d\'armure',
         maxHealth: 148,
-        puissance: 14,    // High power (strength + endurance)
+        puissance: 15,    // Highest - strength and endurance
         defense: 9,
-        adresse: 10,      // Average skill
-        esprit: 9,        // Low spirit
-        presence: 10,     // Average presence
+        adresse: 14,      // Good - dexterity
+        esprit: 12,       // Lowest - intelligence and wisdom
+        presence: 13,     // Decent - leadership and charisma
         maxEnergy: 100
     },
     magicien: {
@@ -18,11 +18,11 @@ export const characterClasses = {
         icon: '🧙',
         description: 'Un lanceur de sorts puissant mais fragile',
         maxHealth: 122,
-        puissance: 8,     // Low power
+        puissance: 12,    // Lowest - physical strength
         defense: 6,
-        adresse: 10,      // Average skill
-        esprit: 16,       // High spirit (intelligence + wisdom)
-        presence: 12,     // Good presence
+        adresse: 13,      // Decent - dexterity
+        esprit: 15,       // Highest - intelligence and wisdom
+        presence: 14,     // Good - charisma for spells
         maxEnergy: 100
     },
     archer: {
@@ -30,11 +30,11 @@ export const characterClasses = {
         icon: '🏹',
         description: 'Un combattant équilibré avec une bonne dextérité',
         maxHealth: 128,
-        puissance: 12,    // Good power
+        puissance: 13,    // Decent - strength for bows
         defense: 8,
-        adresse: 15,      // High skill (dexterity + agility)
-        esprit: 11,       // Average spirit
-        presence: 10,     // Average presence
+        adresse: 15,      // Highest - dexterity and agility
+        esprit: 14,       // Good - wisdom and perception
+        presence: 12,     // Lowest - less social
         maxEnergy: 100
     }
 };

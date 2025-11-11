@@ -5,7 +5,7 @@ import { updateUI, addCombatLog, showScreen } from './ui.js';
 import { saveGame, loadGame, getAllSaveSlots, loadFromSlot, deleteSaveSlot, saveToSlot } from './save-load.js';
 import { characterClasses, applyCharacterClass } from './character-classes.js';
 import { characterRaces, applyRaceModifiers } from './character-races.js';
-import { characterSexes, applySexBaseStats } from './character-sexes.js';
+import { characterSexes, applySexModifiers } from './character-sexes.js';
 import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 import { initializeDailyQuests, checkDailyReset, updateQuestProgress, showDailyQuestsScreen } from './daily-quests.js';
@@ -119,13 +119,14 @@ export function startGame() {
     gameState.player.gender = selectedGender.value;
     gameState.player.gamesPlayed++;
     
-    // Apply sex-based base stats first
-    applySexBaseStats(gameState.player, selectedGender.value);
-    
-    // Apply character class (overrides base stats)
+    // Apply character stats in correct order:
+    // 1. Class sets base stats
     applyCharacterClass(gameState.player, selectedClass.value);
     
-    // Then apply race modifiers on top
+    // 2. Sex modifies stats
+    applySexModifiers(gameState.player, selectedGender.value);
+    
+    // 3. Race modifies stats
     applyRaceModifiers(gameState.player, selectedRace.value);
     
     saveGame();
