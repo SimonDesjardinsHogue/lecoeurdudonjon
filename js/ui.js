@@ -264,11 +264,13 @@ export function updateUI() {
     const shieldSlotInline = document.getElementById('equippedShieldSlotInline');
     const bookSlotInline = document.getElementById('equippedBookSlotInline');
     const quiverSlotInline = document.getElementById('equippedQuiverSlotInline');
+    const amuletSlotInline = document.getElementById('equippedAmuletSlotInline');
     
     // Hide all class-specific slots by default
     if (shieldSlotInline) shieldSlotInline.style.display = 'none';
     if (bookSlotInline) bookSlotInline.style.display = 'none';
     if (quiverSlotInline) quiverSlotInline.style.display = 'none';
+    if (amuletSlotInline) amuletSlotInline.style.display = 'none';
     
     // Show and update the appropriate slot based on class
     if (p.class === 'guerrier' && shieldSlotInline) {
@@ -310,8 +312,8 @@ export function updateUI() {
                 quiverNameInlineEl.textContent = 'Aucun';
             }
         }
-        
-        // Show amulet for enchanteur
+    } else if (p.class === 'enchanteur' && amuletSlotInline) {
+        amuletSlotInline.style.display = 'block';
         const amuletIconInlineEl = document.getElementById('equippedAmuletIconInline');
         const amuletNameInlineEl = document.getElementById('equippedAmuletNameInline');
         if (amuletIconInlineEl && amuletNameInlineEl) {
