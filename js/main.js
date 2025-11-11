@@ -1,5 +1,5 @@
 // Main Entry Point Module
-import { init, startGame, rest, showStats, showSaveOptions, showMain, resetGame, restoreSaveFromStart, showLeaderboard, showDailyQuestsScreen, showAchievements, showBalanceTest, runBalanceTest, useInventoryItem, sellInventoryItem, showAdminLogin, showAdminPanel, showServerHosting, spendStatPoint, deleteAllSaves } from './game-logic.js';
+import { init, startGame, rest, showStats, showSaveOptions, showMain, resetGame, restoreSaveFromStart, showLeaderboard, showDailyQuestsScreen, showAchievements, showBalanceTest, runBalanceTest, useInventoryItem, sellInventoryItem, showAdminLogin, showAdminPanel, showServerHosting, spendStatPoint, deleteAllSaves, showSaveSelectionModal, showManualSaveModal } from './game-logic.js';
 import { showShop, buyItem, buyRareItem } from './systems/shop.js';
 import { meetNPC, meetJeweler, buyMetal, sellMetal } from './systems/npc.js';
 import { explore, attack, defend, flee, enemyAttack, useCombatPotion, skipDefendTurn } from './combat.js';
@@ -232,6 +232,10 @@ window.showAdminLogin = showAdminLogin;
 window.showAdminPanel = showAdminPanel;
 window.showServerHosting = showServerHosting;
 window.deleteAllSaves = deleteAllSaves;
+
+// Expose save management functions
+window.showSaveSelectionModal = showSaveSelectionModal;
+window.showManualSaveModal = showManualSaveModal;
 
 // Expose event info popup function
 window.showEventInfoPopup = function() {

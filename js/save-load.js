@@ -2,13 +2,149 @@
 import { gameState } from './game-state.js';
 import { updateUI, showSaveIndicator } from './ui.js';
 
-// Save game to localStorage
+// Constants for save slots
+const SAVE_SLOTS_KEY = 'lecoeurdudonjon_saves';
+const MAX_SAVE_SLOTS = 10;
+
+// Save game to localStorage (backwards compatible with single save)
 export function saveGame() {
+    // Keep the old single save for backwards compatibility
     localStorage.setItem('lecoeurdudonjon_save', JSON.stringify(gameState));
+    
+    // Also save to the slot system
+    saveToSlot(0); // Auto-save to slot 0
     showSaveIndicator();
 }
 
-// Load game from localStorage
+// Get all save slots
+export function getAllSaveSlots() {
+    const savedSlots = localStorage.getItem(SAVE_SLOTS_KEY);
+    if (!savedSlots) {
+        return {};
+    }
+    try {
+        return JSON.parse(savedSlots);
+    } catch (e) {
+        console.error('Error loading save slots:', e);
+        return {};
+    }
+}
+
+// Save to a specific slot
+export function saveToSlot(slotId) {
+    const slots = getAllSaveSlots();
+    
+    // Create save metadata
+    const saveData = {
+        gameState: gameState,
+        metadata: {
+            playerName: gameState.player.name,
+            level: gameState.player.level,
+            gold: gameState.player.gold,
+            className: gameState.player.className || 'Guerrier',
+            classIcon: gameState.player.classIcon || '⚔️',
+            raceName: gameState.player.raceName || 'Humain',
+            timestamp: Date.now(),
+            dateString: new Date().toLocaleString('fr-FR')
+        }
+    };
+    
+    slots[slotId] = saveData;
+    localStorage.setItem(SAVE_SLOTS_KEY, JSON.stringify(slots));
+}
+
+// Load from a specific slot
+export function loadFromSlot(slotId) {
+    const slots = getAllSaveSlots();
+    const saveData = slots[slotId];
+    
+    if (!saveData || !saveData.gameState) {
+        return false;
+    }
+    
+    try {
+        const loadedState = saveData.gameState;
+        
+        // Copy properties to gameState
+        if (loadedState.player) {
+            Object.assign(gameState.player, loadedState.player);
+        }
+        gameState.currentEnemy = loadedState.currentEnemy;
+        gameState.inCombat = loadedState.inCombat;
+        gameState.defending = loadedState.defending;
+        
+        // Apply backwards compatibility fixes
+        applyBackwardsCompatibility();
+        
+        // Update localStorage with the loaded save for backwards compatibility
+        localStorage.setItem('lecoeurdudonjon_save', JSON.stringify(gameState));
+        
+        updateUI();
+        return true;
+    } catch (e) {
+        console.error('Error loading from slot:', e);
+        return false;
+    }
+}
+
+// Delete a specific save slot
+export function deleteSaveSlot(slotId) {
+    const slots = getAllSaveSlots();
+    delete slots[slotId];
+    localStorage.setItem(SAVE_SLOTS_KEY, JSON.stringify(slots));
+}
+
+// Apply backwards compatibility fixes
+function applyBackwardsCompatibility() {
+    // Add energy properties if they don't exist
+    if (!gameState.player.hasOwnProperty('energy')) {
+        gameState.player.energy = 100;
+    }
+    if (!gameState.player.hasOwnProperty('maxEnergy')) {
+        gameState.player.maxEnergy = 100;
+    }
+    if (!gameState.player.hasOwnProperty('lastSleepTime')) {
+        gameState.player.lastSleepTime = null;
+    }
+    // Add character class properties if they don't exist
+    if (!gameState.player.hasOwnProperty('class')) {
+        gameState.player.class = 'guerrier';
+    }
+    if (!gameState.player.hasOwnProperty('className')) {
+        gameState.player.className = 'Guerrier';
+    }
+    if (!gameState.player.hasOwnProperty('classIcon')) {
+        gameState.player.classIcon = '⚔️';
+    }
+    // Add weapon damage property if it doesn't exist
+    if (!gameState.player.hasOwnProperty('weaponDamage')) {
+        gameState.player.weaponDamage = 0;
+    }
+    // Add equipment tracking properties if they don't exist
+    if (!gameState.player.hasOwnProperty('currentWeapon')) {
+        gameState.player.currentWeapon = null;
+    }
+    if (!gameState.player.hasOwnProperty('currentArmor')) {
+        gameState.player.currentArmor = null;
+    }
+    // Add mana properties if they don't exist
+    if (!gameState.player.hasOwnProperty('mana')) {
+        gameState.player.mana = 100;
+    }
+    if (!gameState.player.hasOwnProperty('maxMana')) {
+        gameState.player.maxMana = 100;
+    }
+    
+    // Add shop state if it doesn't exist
+    if (!gameState.shop) {
+        gameState.shop = {
+            unavailableItemIndices: [],
+            nextRestockTime: null
+        };
+    }
+}
+
+// Load game from localStorage (backwards compatible)
 export function loadGame() {
     const saved = localStorage.getItem('lecoeurdudonjon_save');
     if (saved) {
@@ -25,55 +161,12 @@ export function loadGame() {
             gameState.inCombat = loadedState.inCombat;
             gameState.defending = loadedState.defending;
             
-            // Add energy properties if they don't exist (for backwards compatibility)
-            if (!gameState.player.hasOwnProperty('energy')) {
-                gameState.player.energy = 100;
-            }
-            if (!gameState.player.hasOwnProperty('maxEnergy')) {
-                gameState.player.maxEnergy = 100;
-            }
-            if (!gameState.player.hasOwnProperty('lastSleepTime')) {
-                gameState.player.lastSleepTime = null;
-            }
-            // Add character class properties if they don't exist (for backwards compatibility)
-            if (!gameState.player.hasOwnProperty('class')) {
-                gameState.player.class = 'guerrier';
-            }
-            if (!gameState.player.hasOwnProperty('className')) {
-                gameState.player.className = 'Guerrier';
-            }
-            if (!gameState.player.hasOwnProperty('classIcon')) {
-                gameState.player.classIcon = '⚔️';
-            }
-            // Add weapon damage property if it doesn't exist (for backwards compatibility)
-            if (!gameState.player.hasOwnProperty('weaponDamage')) {
-                gameState.player.weaponDamage = 0;
-            }
-            // Add equipment tracking properties if they don't exist (for backwards compatibility)
-            if (!gameState.player.hasOwnProperty('currentWeapon')) {
-                gameState.player.currentWeapon = null;
-            }
-            if (!gameState.player.hasOwnProperty('currentArmor')) {
-                gameState.player.currentArmor = null;
-            }
-            // Add mana properties if they don't exist (for backwards compatibility)
-            if (!gameState.player.hasOwnProperty('mana')) {
-                gameState.player.mana = 100;
-            }
-            if (!gameState.player.hasOwnProperty('maxMana')) {
-                gameState.player.maxMana = 100;
-            }
-            
-            // Add shop state if it doesn't exist (for backwards compatibility)
             if (loadedState.shop) {
                 gameState.shop = loadedState.shop;
             }
-            if (!gameState.shop) {
-                gameState.shop = {
-                    unavailableItemIndices: [],
-                    nextRestockTime: null
-                };
-            }
+            
+            // Apply backwards compatibility fixes
+            applyBackwardsCompatibility();
         } catch (e) {
             console.error('Error loading save:', e);
         }
