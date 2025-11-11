@@ -1443,7 +1443,7 @@ input[type="text"]:focus {
 
 .characteristics-grid-compact {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 6px;
     margin-top: 8px;
 }
@@ -1547,7 +1547,7 @@ input[type="text"]:focus {
     }
     
     .characteristics-grid-compact {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
     
     /* Improve button sizes for touch on mobile */
