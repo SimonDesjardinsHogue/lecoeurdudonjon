@@ -405,6 +405,20 @@ Le jeu est entièrement côté client et peut être :
 - Hébergé sur GitHub Pages (déploiement automatique configuré)
 - Déployé sur n'importe quel serveur web statique
 - Ouvert localement dans un navigateur
+- **Publié comme application mobile** (PWA ou Google Play Store)
+
+### 📱 Publication Mobile
+
+Le jeu peut être installé comme une application mobile :
+- **Progressive Web App (PWA)** : Installation directe depuis le navigateur
+- **Google Play Store** : Via Trusted Web Activities (TWA)
+
+📖 **Guide complet** : Consultez [GOOGLE_APP_GUIDE.md](GOOGLE_APP_GUIDE.md) et [GOOGLE_APP_REQUIREMENTS.md](GOOGLE_APP_REQUIREMENTS.md) pour les instructions détaillées sur :
+- Comment publier le jeu en tant que PWA
+- Comment soumettre au Google Play Store
+- Les améliorations nécessaires
+- Les requirements techniques
+- Une checklist complète de publication
 
 ### Hébergement sur GitHub Pages
 
