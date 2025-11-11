@@ -47,76 +47,52 @@ export const enemies = [
     { name: 'Champion du Chaos', icon: '⚔️👿', health: 380, strength: 56, defense: 36, gold: 607, xp: 552 }
 ];
 
-// Boss templates - appear every 5 levels (and at level 24 for final boss)
+// Boss templates - appear at levels 6, 12, 18, and 24
 export const bosses = [
-    { 
-        name: 'Troll des Cavernes', 
-        icon: '👹', 
-        health: 200, 
-        strength: 25, 
-        defense: 15, 
-        gold: 202, 
-        xp: 230,
-        description: 'Un troll massif avec une peau de pierre',
-        ability: 'regeneration',
-        abilityDescription: 'Se régénère de 4-7 HP chaque tour'
-    },
-    { 
-        name: 'Seigneur Liche', 
-        icon: '💀', 
-        health: 250, 
-        strength: 28, 
-        defense: 18, 
-        gold: 304, 
-        xp: 322,
-        description: 'Un sorcier mort-vivant aux pouvoirs nécromantiques',
-        ability: 'life_drain',
-        abilityDescription: 'Vole 15 HP et les ajoute à sa santé'
-    },
     { 
         name: 'Hydre à Trois Têtes', 
         icon: '🐉', 
-        health: 300, 
-        strength: 33, 
-        defense: 20, 
-        gold: 405, 
-        xp: 414,
+        health: 250, 
+        strength: 28, 
+        defense: 18, 
+        gold: 300, 
+        xp: 350,
         description: 'Une hydre féroce crachant du venin',
         ability: 'triple_attack',
         abilityDescription: 'Attaque trois fois de suite'
     },
     { 
+        name: 'Seigneur Liche', 
+        icon: '💀', 
+        health: 320, 
+        strength: 35, 
+        defense: 22, 
+        gold: 450, 
+        xp: 500,
+        description: 'Un sorcier mort-vivant aux pouvoirs nécromantiques',
+        ability: 'life_drain',
+        abilityDescription: 'Vole 15 HP et les ajoute à sa santé'
+    },
+    { 
         name: 'Démon des Flammes', 
         icon: '😈', 
-        health: 350, 
-        strength: 37, 
-        defense: 22, 
-        gold: 506, 
-        xp: 506,
+        health: 380, 
+        strength: 42, 
+        defense: 25, 
+        gold: 600, 
+        xp: 650,
         description: 'Un démon entouré de flammes infernales',
         ability: 'fire_burst',
         abilityDescription: 'Inflige des dégâts de feu ignorant 50% de la défense'
     },
     { 
-        name: 'Dragon Ancien', 
-        icon: '🐲', 
-        health: 400, 
-        strength: 41, 
-        defense: 25, 
-        gold: 759, 
-        xp: 644,
-        description: 'Un dragon légendaire gardien des trésors',
-        ability: 'breath_weapon',
-        abilityDescription: 'Souffle de dragon infligeant des dégâts massifs'
-    },
-    { 
         name: 'Le Cœur du Dragon Corrompu', 
         icon: '💎🐉', 
         health: 500, 
-        strength: 45, 
-        defense: 28, 
+        strength: 50, 
+        defense: 30, 
         gold: 1000, 
-        xp: 800,
+        xp: 900,
         description: 'L\'artefact légendaire corrompu par les ténèbres',
         ability: 'corruption_wave',
         abilityDescription: 'Vague de corruption infligeant des dégâts massifs et réduisant la défense'

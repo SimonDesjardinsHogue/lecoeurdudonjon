@@ -3,20 +3,22 @@
 
 import { gameState, bosses } from '../game-state.js';
 
-// Check if player should face a boss (every 5 levels with probability, plus level 24)
+// Check if player should face a boss (at levels 6, 12, 18, and 24)
 export function shouldFaceBoss() {
     const p = gameState.player;
-    // Boss possible at levels 5, 10, 15, 20, and 24 (final boss)
+    // Boss possible at levels 6, 12, 18, and 24
     // 25% chance to encounter boss when at a boss level and haven't defeated this boss yet
-    const isAtBossLevel = ((p.level % 5 === 0) || p.level === 24) && p.kills > 0 && getBossIndexForLevel(p.level) > p.bossesDefeated - 1;
+    const bossLevels = [6, 12, 18, 24];
+    const isAtBossLevel = bossLevels.includes(p.level) && p.kills > 0 && getBossIndexForLevel(p.level) > p.bossesDefeated - 1;
     const bossSpawnChance = 0.25; // 25% chance
     return isAtBossLevel && Math.random() < bossSpawnChance;
 }
 
 // Helper function to get the correct boss index for a given level
 function getBossIndexForLevel(level) {
-    if (level === 24) return 5; // Final boss (index 5)
-    return Math.floor(level / 5) - 1; // Levels 5, 10, 15, 20 -> indices 0, 1, 2, 3, 4
+    const bossLevels = [6, 12, 18, 24];
+    const index = bossLevels.indexOf(level);
+    return index; // Returns 0 for level 6, 1 for level 12, 2 for level 18, 3 for level 24
 }
 
 // Create boss enemy
@@ -26,7 +28,8 @@ export function createBossEnemy() {
     const bossTemplate = bosses[bossIndex];
     
     // Scale boss stats based on player level
-    const baseLevelForBoss = bossIndex < 4 ? (bossIndex + 1) * 5 : 24; // Levels 5,10,15,20 for first 4, level 24 for final
+    const bossLevels = [6, 12, 18, 24];
+    const baseLevelForBoss = bossLevels[bossIndex] || 24;
     const levelMultiplier = 1 + (p.level - baseLevelForBoss) * 0.1;
     
     return {
