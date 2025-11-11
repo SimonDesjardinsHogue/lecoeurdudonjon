@@ -4,6 +4,8 @@ Une quête légendaire de courage et d'honneur inspirée par Legend of the Red D
 
 **🎯 Un RPG complet avec 10-15 heures de gameplay | 20 niveaux | 5 Boss épiques | 3 Classes uniques**
 
+**Version actuelle : 1.1.0** | [📝 Voir les changements](CHANGELOG.md)
+
 ![Game Screenshot](https://github.com/user-attachments/assets/589cfd57-3726-44ea-b8e6-5f2b63bcc5c9)
 
 ## 📖 Description

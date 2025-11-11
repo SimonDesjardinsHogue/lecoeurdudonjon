@@ -1,4 +1,7 @@
 // Game Constants Module
+// Game version
+export const GAME_VERSION = '1.1.0';
+
 // Maximum level constant
 export const MAX_LEVEL = 20;
 
