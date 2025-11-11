@@ -15,8 +15,19 @@ const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
     origin: "*",
-    methods: ["GET", "POST"]
-  }
+    methods: ["GET", "POST"],
+    credentials: false
+  },
+  // Safari/iOS compatible Socket.IO configuration
+  transports: ['polling', 'websocket'], // Safari prefers polling first
+  allowEIO3: true, // Support older Engine.IO clients
+  pingTimeout: 60000, // 60 seconds
+  pingInterval: 25000, // 25 seconds
+  upgradeTimeout: 30000, // 30 seconds for upgrade
+  maxHttpBufferSize: 1e6, // 1MB
+  // Allow reconnection
+  allowUpgrades: true,
+  cookie: false // Disable cookies for better Safari compatibility
 });
 
 // Configuration

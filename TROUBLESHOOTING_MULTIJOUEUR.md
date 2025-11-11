@@ -377,6 +377,33 @@ Cependant, si vous avez des problèmes :
 - Désactivez le **Relais privé iCloud** (iOS 15+) :
   - Réglages → [Votre nom] → iCloud → Relais privé → Désactiver
 
+### 🔧 Correctifs Safari/iPad (Nouvelle Version)
+
+**Important** : Une nouvelle version du jeu a été déployée avec des corrections spécifiques pour Safari/iPad :
+
+✅ **WebSocket amélioré** : Safari utilise maintenant "polling" en premier, puis passe à WebSocket
+✅ **Timeouts augmentés** : 10 secondes pour les requêtes réseau (au lieu de 5s)
+✅ **Reconnexion automatique** : Jusqu'à 5 tentatives de reconnexion
+✅ **Mode CORS optimisé** : Meilleure compatibilité cross-origin
+
+**Si vous rencontrez toujours des problèmes** :
+
+1. **Videz le cache Safari** :
+   - Réglages → Safari → Effacer historique et données de sites
+   - Confirmez "Effacer"
+   - Fermez et rouvrez Safari
+   - Retournez sur `http://192.168.68.61:3000`
+
+2. **Redémarrez le serveur** (pour activer les nouveaux paramètres) :
+   - Sur le PC serveur, arrêtez le serveur (Ctrl+C)
+   - Relancez : `npm start`
+
+3. **Vérifiez la console Safari** (mode développeur) :
+   - Activez le mode développeur : Réglages → Safari → Avancé → Inspecteur web
+   - Ouvrez le jeu dans Safari
+   - Allez sur Mac : Safari → Développement → [Votre iPad] → [Onglet du jeu]
+   - Regardez les erreurs dans la console
+
 ### Ajouter à l'écran d'accueil
 
 Pour une meilleure expérience, ajoutez le jeu à l'écran d'accueil :

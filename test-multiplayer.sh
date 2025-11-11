@@ -34,6 +34,10 @@ run_test() {
     fi
 }
 
+# Clean up old test data
+echo "Cleaning up old test data..."
+rm -f server/scores.json
+
 # Start server in background
 echo "Starting test server..."
 cd server

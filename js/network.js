@@ -155,8 +155,20 @@ export function connectToServer() {
         return;
       }
       
+      // Safari/iOS compatible configuration
+      // Safari prefers polling first, then upgrades to websocket
       networkState.socket = io(networkState.serverUrl, {
-        transports: ['websocket', 'polling']
+        transports: ['polling', 'websocket'], // Safari: polling first
+        reconnection: true,
+        reconnectionAttempts: 5,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax: 5000,
+        timeout: 20000, // Safari needs longer timeout
+        forceNew: true,
+        // Additional options for Safari/iOS compatibility
+        upgrade: true,
+        rememberUpgrade: true,
+        autoConnect: true
       });
       
       networkState.socket.on('connect', () => {
@@ -178,6 +190,16 @@ export function connectToServer() {
       
       networkState.socket.on('connect_error', (error) => {
         console.error('Erreur de connexion au serveur:', error.message);
+        networkState.connected = false;
+        updateConnectionStatus(false);
+      });
+      
+      networkState.socket.on('reconnect_attempt', (attemptNumber) => {
+        console.log(`🔄 Tentative de reconnexion ${attemptNumber}...`);
+      });
+      
+      networkState.socket.on('reconnect_failed', () => {
+        console.error('❌ Échec de reconnexion après plusieurs tentatives');
         networkState.connected = false;
         updateConnectionStatus(false);
       });
@@ -242,13 +264,23 @@ export async function submitScore() {
   };
   
   try {
+    // Create an AbortController for timeout (Safari compatible)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
     const response = await fetch(`${networkState.serverUrl}/api/score`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(scoreData)
+      body: JSON.stringify(scoreData),
+      signal: controller.signal,
+      // Safari-specific options
+      cache: 'no-cache',
+      mode: 'cors'
     });
+    
+    clearTimeout(timeoutId);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -258,6 +290,10 @@ export async function submitScore() {
     console.log('✓ Score envoyé au serveur:', result);
     return { success: true, data: result };
   } catch (error) {
+    if (error.name === 'AbortError') {
+      console.error('Erreur envoi du score: Timeout');
+      return { success: false, error: 'Timeout' };
+    }
     console.error('Erreur envoi du score:', error);
     return { success: false, error: error.message };
   }
@@ -270,7 +306,18 @@ export async function fetchLeaderboard(limit = 10) {
   }
   
   try {
-    const response = await fetch(`${networkState.serverUrl}/api/leaderboard?limit=${limit}`);
+    // Create an AbortController for timeout (Safari compatible)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    const response = await fetch(`${networkState.serverUrl}/api/leaderboard?limit=${limit}`, {
+      signal: controller.signal,
+      // Safari-specific options
+      cache: 'no-cache',
+      mode: 'cors'
+    });
+    
+    clearTimeout(timeoutId);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -280,6 +327,10 @@ export async function fetchLeaderboard(limit = 10) {
     console.log('✓ Classement reçu du serveur:', result.count, 'scores');
     return { success: true, scores: result.scores };
   } catch (error) {
+    if (error.name === 'AbortError') {
+      console.error('Erreur récupération du classement: Timeout');
+      return { success: false, error: 'Timeout', scores: [] };
+    }
     console.error('Erreur récupération du classement:', error);
     return { success: false, error: error.message, scores: [] };
   }
@@ -294,7 +345,18 @@ export async function fetchPlayerScores(playerId = null) {
   const id = playerId || getPlayerId();
   
   try {
-    const response = await fetch(`${networkState.serverUrl}/api/player/${id}`);
+    // Create an AbortController for timeout (Safari compatible)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    const response = await fetch(`${networkState.serverUrl}/api/player/${id}`, {
+      signal: controller.signal,
+      // Safari-specific options
+      cache: 'no-cache',
+      mode: 'cors'
+    });
+    
+    clearTimeout(timeoutId);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -304,6 +366,10 @@ export async function fetchPlayerScores(playerId = null) {
     console.log('✓ Scores personnels reçus:', result.count, 'scores');
     return { success: true, scores: result.scores };
   } catch (error) {
+    if (error.name === 'AbortError') {
+      console.error('Erreur récupération scores personnels: Timeout');
+      return { success: false, error: 'Timeout', scores: [] };
+    }
     console.error('Erreur récupération scores personnels:', error);
     return { success: false, error: error.message, scores: [] };
   }
@@ -316,12 +382,22 @@ export async function checkServerHealth() {
   }
   
   try {
+    // Create an AbortController for timeout (Safari compatible)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
     const response = await fetch(`${networkState.serverUrl}/api/health`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json'
-      }
+      },
+      signal: controller.signal,
+      // Safari-specific options
+      cache: 'no-cache',
+      mode: 'cors'
     });
+    
+    clearTimeout(timeoutId);
     
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -330,6 +406,10 @@ export async function checkServerHealth() {
     const result = await response.json();
     return { success: true, data: result };
   } catch (error) {
+    if (error.name === 'AbortError') {
+      console.error('Serveur non accessible: Timeout (>10s)');
+      return { success: false, error: 'Timeout' };
+    }
     console.error('Serveur non accessible:', error);
     return { success: false, error: error.message };
   }
