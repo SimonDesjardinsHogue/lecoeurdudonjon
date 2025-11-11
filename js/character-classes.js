@@ -8,9 +8,9 @@ export const characterClasses = {
         maxHealth: 148,
         puissance: 15,    // Highest - strength and endurance
         defense: 9,
-        adresse: 13,      // Decent - dexterity
+        adresse: 14,      // Good - dexterity
         esprit: 12,       // Lowest - intelligence and wisdom
-        presence: 14,     // Good - leadership and charisma
+        presence: 13,     // Decent - leadership and charisma
         maxEnergy: 100
     },
     magicien: {
