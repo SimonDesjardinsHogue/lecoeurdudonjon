@@ -1,37 +1,37 @@
 // Character Sexes Module
-// Provides base stats for male and female characters
+// Provides stat modifiers for male and female characters
 
 export const characterSexes = {
     male: {
         name: 'Masculin',
         icon: '♂️',
-        puissance: 14,     // PUI (average of old FOR 15 + CON 13)
-        adresse: 16,       // ADR (from old DEX)
-        esprit: 14,        // ESP (average of old INT 18 + SAG 10)
-        presence: 11       // PRE (from old CHA)
+        puissanceMod: 1,   // +1 to power (stronger)
+        adresseMod: 0,     // No modifier to skill
+        espritMod: 0,      // No modifier to spirit
+        presenceMod: -1    // -1 to presence (less charismatic)
     },
     female: {
         name: 'Féminin',
         icon: '♀️',
-        puissance: 13,     // PUI (average of old FOR 14 + CON 13)
-        adresse: 16,       // ADR (from old DEX)
-        esprit: 14,        // ESP (average of old INT 18 + SAG 10)
-        presence: 12       // PRE (from old CHA)
+        puissanceMod: -1,  // -1 to power (less strong)
+        adresseMod: 0,     // No modifier to skill
+        espritMod: 0,      // No modifier to spirit
+        presenceMod: 1     // +1 to presence (more charismatic)
     }
 };
 
-// Apply sex-based base stats to player
-// This should be called BEFORE applying class and race modifiers
-export function applySexBaseStats(player, sexKey) {
+// Apply sex-based stat modifiers to player
+// This should be called AFTER applying class base stats
+export function applySexModifiers(player, sexKey) {
     const sex = characterSexes[sexKey];
     if (!sex) {
         console.error(`Unknown character sex: ${sexKey}`);
         return;
     }
     
-    // Set base stats from sex
-    player.puissance = sex.puissance;
-    player.adresse = sex.adresse;
-    player.esprit = sex.esprit;
-    player.presence = sex.presence;
+    // Apply stat modifiers from sex
+    player.puissance += sex.puissanceMod;
+    player.adresse += sex.adresseMod;
+    player.esprit += sex.espritMod;
+    player.presence += sex.presenceMod;
 }

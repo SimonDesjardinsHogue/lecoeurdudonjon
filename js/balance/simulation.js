@@ -3,7 +3,7 @@
 
 import { characterClasses, applyCharacterClass } from '../character-classes.js';
 import { characterRaces, applyRaceModifiers } from '../character-races.js';
-import { characterSexes, applySexBaseStats } from '../character-sexes.js';
+import { characterSexes, applySexModifiers } from '../character-sexes.js';
 import { enemies, bosses, getStatModifier } from '../game-state.js';
 import { shopItems } from '../data/shop-items.js';
 
@@ -41,9 +41,12 @@ export function createSimulatedPlayer(classKey, raceKey = 'humain', sexKey = 'ma
         metals: { or: 0, platine: 0, argent: 0, cuivre: 0 }
     };
     
-    // Apply character class and race
-    applySexBaseStats(player, sexKey);
+    // Apply character stats in correct order:
+    // 1. Class sets base stats
+    // 2. Sex modifies stats
+    // 3. Race modifies stats
     applyCharacterClass(player, classKey);
+    applySexModifiers(player, sexKey);
     applyRaceModifiers(player, raceKey);
     
     return player;
