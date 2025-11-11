@@ -289,8 +289,29 @@ Avant de soumettre à Google Play :
 - [ ] Description complète rédigée
 - [ ] Politique de confidentialité accessible
 - [ ] Classification du contenu complétée
-- [ ] Prix défini (Gratuit recommandé)
+- [ ] Prix défini ($3.86 CAD - voir section Prix ci-dessous)
 - [ ] Pays de distribution sélectionnés
+
+## 💰 Prix et Monétisation
+
+**Prix de vente** : **$3.86 CAD**
+
+**Détails importants** :
+- ✅ **Aucun coût supplémentaire** - pas d'achats in-app, pas d'abonnement
+- 🎮 **Jeu complet** - tout le contenu est inclus dans le prix d'achat
+- 👨‍👩‍👧‍👦 **Mode LAN familial** - jouez en réseau local avec votre famille pour du plaisir sans frais additionnels
+- 💝 **Achat unique** - payez une fois, jouez pour toujours
+
+**Stratégie de prix** :
+- Le prix de $3.86 CAD est défini pour équilibrer le profit entre iOS ($4.99 CAD) et Android
+- Ce prix tient compte des différences de commission des plateformes (30% Apple vs 15-30% Google)
+- Aucun coût caché ou frais supplémentaire pour les joueurs
+
+**Avantages pour les joueurs** :
+- Jeu complet sans restrictions
+- Mode multijoueur LAN gratuit pour jouer en famille
+- Aucune publicité intrusive
+- Mises à jour gratuites
 
 ## 🎯 Publication
 

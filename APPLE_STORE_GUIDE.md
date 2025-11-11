@@ -802,12 +802,19 @@ https://simondesjardinshogue.github.io/lecoeurdudragon/privacy-policy.html
 
 #### Prix
 
-**Options** :
-- **Gratuit** ✅ Recommandé
-- Payant : 0.99 USD - 999.99 USD
+**Prix de vente** : **$4.99 CAD**
+
+**Détails importants** :
+- ✅ **Aucun coût supplémentaire** - pas d'achats in-app, pas d'abonnement
+- 🎮 **Jeu complet** - tout le contenu est inclus dans le prix d'achat
+- 👨‍👩‍👧‍👦 **Mode LAN familial** - jouez en réseau local avec votre famille pour du plaisir sans frais additionnels
+- 💝 **Achat unique** - payez une fois, jouez pour toujours
+
+**Options alternatives** :
+- Gratuit avec publicités
 - Freemium avec achats in-app
 
-**Recommandation** : Gratuit pour maximiser adoption
+**Note** : Le prix de $4.99 CAD permet d'équilibrer le profit tout en maintenant l'accessibilité pour les joueurs.
 
 ---
 

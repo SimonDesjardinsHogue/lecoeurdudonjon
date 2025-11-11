@@ -23,6 +23,7 @@
 
 ## 📑 Table des Matières
 
+- [Prix et Disponibilité](#-prix-et-disponibilité)
 - [Description](#-description)
 - [Caractéristiques Principales](#-caractéristiques-principales)
 - [Comment Jouer](#-comment-jouer)
@@ -35,6 +36,30 @@
 - [Contribuer](#-contribuer)
 - [Sécurité](#-sécurité)
 - [Licence](#-licence)
+
+---
+
+## 💰 Prix et Disponibilité
+
+**Disponible sur les plateformes mobiles** :
+- 🍎 **iOS (App Store)** : $4.99 CAD
+- 🤖 **Android (Google Play)** : $3.86 CAD
+- 🌐 **Version Web (PWA)** : Gratuite sur [GitHub Pages](https://simondesjardinshogue.github.io/lecoeurdudragon/)
+
+**Aucun coût supplémentaire** :
+- ✅ Pas d'achats in-app
+- ✅ Pas d'abonnement
+- ✅ Pas de publicité intrusive
+- ✅ Jeu complet inclus dans le prix d'achat
+
+**Mode multijoueur LAN familial inclus** :
+- 👨‍👩‍👧‍👦 Jouez en réseau local avec votre famille
+- 🎮 Partagez le plaisir sans frais additionnels
+- 🏆 Classements et compétition amicale en temps réel
+
+Pour plus d'informations sur la publication mobile, consultez :
+- [Guide Apple App Store](APPLE_STORE_GUIDE.md)
+- [Guide Google Play Store](GOOGLE_PLAY_PUBLICATION.md)
 
 ---
 
