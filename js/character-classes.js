@@ -6,23 +6,11 @@ export const characterClasses = {
         icon: '⚔️',
         description: 'Un combattant robuste avec beaucoup de points de vie et une bonne classe d\'armure',
         maxHealth: 148,
-        puissance: 15,    // Highest - strength and endurance
+        puissance: 15,    // Dominant - strength and endurance
         defense: 9,
-        adresse: 14,      // Good - dexterity
-        esprit: 12,       // Lowest - intelligence and wisdom
-        presence: 13,     // Decent - leadership and charisma
-        maxEnergy: 100
-    },
-    magicien: {
-        name: 'Magicien',
-        icon: '🧙',
-        description: 'Un lanceur de sorts puissant mais fragile',
-        maxHealth: 122,
-        puissance: 12,    // Lowest - physical strength
-        defense: 6,
-        adresse: 13,      // Decent - dexterity
-        esprit: 15,       // Highest - intelligence and wisdom
-        presence: 14,     // Good - charisma for spells
+        adresse: 14,      // Secondary - dexterity
+        esprit: 12,       // Lower - intelligence and wisdom
+        presence: 13,     // Lower - leadership and charisma
         maxEnergy: 100
     },
     archer: {
@@ -30,11 +18,35 @@ export const characterClasses = {
         icon: '🏹',
         description: 'Un combattant équilibré avec une bonne dextérité',
         maxHealth: 128,
-        puissance: 13,    // Decent - strength for bows
+        puissance: 12,    // Lower - strength for bows
         defense: 8,
-        adresse: 15,      // Highest - dexterity and agility
-        esprit: 14,       // Good - wisdom and perception
-        presence: 12,     // Lowest - less social
+        adresse: 15,      // Dominant - dexterity and agility
+        esprit: 14,       // Secondary - wisdom and perception
+        presence: 13,     // Lower - less social
+        maxEnergy: 100
+    },
+    magicien: {
+        name: 'Magicien',
+        icon: '🧙',
+        description: 'Un lanceur de sorts puissant mais fragile',
+        maxHealth: 122,
+        puissance: 12,    // Lower - physical strength
+        defense: 6,
+        adresse: 13,      // Lower - dexterity
+        esprit: 15,       // Dominant - intelligence and wisdom
+        presence: 14,     // Secondary - charisma for spells
+        maxEnergy: 100
+    },
+    enchanteur: {
+        name: 'Enchanteur',
+        icon: '🌀',
+        description: 'Un manipulateur des esprits et des perceptions, maître du contrôle mental et des illusions',
+        maxHealth: 125,
+        puissance: 14,    // Secondary - physical presence
+        defense: 7,
+        adresse: 12,      // Lower - dexterity
+        esprit: 13,       // Lower - intelligence and wisdom
+        presence: 15,     // Dominant - charisma for manipulation
         maxEnergy: 100
     }
 };

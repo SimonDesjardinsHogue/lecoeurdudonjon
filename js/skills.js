@@ -158,6 +158,67 @@ export const skills = {
                 return { damage, type: 'critical' };
             }
         }
+    ],
+    enchanteur: [
+        {
+            id: 'illusion_persuasive',
+            name: 'Illusion Persuasive',
+            icon: '🌀',
+            description: 'Altère la réalité pour l\'adversaire, causant des dégâts psychiques (utilise du mana)',
+            manaCost: 22,
+            cooldown: 3,
+            effect: (player, enemy) => {
+                const espritMod = getStatModifier(player.esprit);
+                const presenceMod = getStatModifier(player.presence);
+                const damage = Math.floor(player.esprit * 1.4) + Math.floor(espritMod * 1.3) + Math.floor(presenceMod * 1.2) + Math.floor(Math.random() * 14);
+                enemy.health -= damage;
+                addCombatLog(`🌀 Illusion Persuasive ! L'ennemi subit ${damage} dégâts psychiques !`, 'special');
+                audioManager.playSound('attack');
+                return { damage, type: 'magic' };
+            }
+        },
+        {
+            id: 'suggestion_mentale',
+            name: 'Suggestion Mentale',
+            icon: '🧠',
+            description: 'Influence l\'esprit de l\'adversaire pour réduire son attaque pendant 3 tours (utilise du mana)',
+            manaCost: 20,
+            cooldown: 4,
+            effect: (player, enemy) => {
+                const presenceMod = getStatModifier(player.presence);
+                const reduction = Math.floor(player.presence * 0.3) + Math.floor(presenceMod * 0.3) + 2;
+                gameState.skillBuffs = gameState.skillBuffs || {};
+                gameState.skillBuffs.suggestionMentale = 3;
+                gameState.skillBuffs.enemyAttackReduction = reduction;
+                // Apply the debuff to the enemy
+                enemy.puissance = Math.max(1, enemy.puissance - reduction);
+                addCombatLog(`🧠 Suggestion Mentale ! L'attaque de l'ennemi est réduite de ${reduction} pour 3 tours !`, 'special');
+                audioManager.playSound('defend');
+                return { type: 'debuff' };
+            }
+        },
+        {
+            id: 'presence_obsedante',
+            name: 'Présence Obsédante',
+            icon: '👁️',
+            description: 'Inspire la fascination ou la peur, augmentant la défense et la présence pendant 3 tours (utilise du mana)',
+            manaCost: 25,
+            cooldown: 5,
+            effect: (player, enemy) => {
+                const presenceMod = getStatModifier(player.presence);
+                const defenseBonus = Math.floor(player.presence * 0.4) + Math.floor(presenceMod * 0.4) + 3;
+                const presenceBonus = Math.floor(player.presence * 0.3) + 2;
+                gameState.skillBuffs = gameState.skillBuffs || {};
+                gameState.skillBuffs.presenceObsedante = 3;
+                gameState.skillBuffs.presenceDefenseBonus = defenseBonus;
+                gameState.skillBuffs.presencePresenceBonus = presenceBonus;
+                player.defense += defenseBonus;
+                player.presence += presenceBonus;
+                addCombatLog(`👁️ Présence Obsédante activée ! +${defenseBonus} Défense et +${presenceBonus} Présence pour 3 tours !`, 'special');
+                audioManager.playSound('defend');
+                return { type: 'buff' };
+            }
+        }
     ]
 };
 
@@ -285,6 +346,35 @@ export function updateSkillBuffs() {
             delete buffs.dodgeChance;
         }
     }
+    
+    if (buffs.suggestionMentale !== undefined) {
+        buffs.suggestionMentale--;
+        if (buffs.suggestionMentale <= 0) {
+            const enemy = gameState.currentEnemy;
+            if (enemy && buffs.enemyAttackReduction) {
+                enemy.puissance += buffs.enemyAttackReduction;
+            }
+            addCombatLog('🧠 Effet de Suggestion Mentale terminé.', 'info');
+            delete buffs.suggestionMentale;
+            delete buffs.enemyAttackReduction;
+        }
+    }
+    
+    if (buffs.presenceObsedante !== undefined) {
+        buffs.presenceObsedante--;
+        if (buffs.presenceObsedante <= 0) {
+            if (buffs.presenceDefenseBonus) {
+                gameState.player.defense -= buffs.presenceDefenseBonus;
+            }
+            if (buffs.presencePresenceBonus) {
+                gameState.player.presence -= buffs.presencePresenceBonus;
+            }
+            addCombatLog('👁️ Effet de Présence Obsédante terminé.', 'info');
+            delete buffs.presenceObsedante;
+            delete buffs.presenceDefenseBonus;
+            delete buffs.presencePresenceBonus;
+        }
+    }
 }
 
 // Apply shield buff to incoming damage
@@ -333,6 +423,14 @@ export function clearSkillBuffs() {
     // Remove stat bonuses from buffs
     if (gameState.skillBuffs.shieldBash) {
         gameState.player.defense -= 5;
+    }
+    
+    if (gameState.skillBuffs.presenceDefenseBonus) {
+        gameState.player.defense -= gameState.skillBuffs.presenceDefenseBonus;
+    }
+    
+    if (gameState.skillBuffs.presencePresenceBonus) {
+        gameState.player.presence -= gameState.skillBuffs.presencePresenceBonus;
     }
     
     gameState.skillBuffs = {};

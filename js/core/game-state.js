@@ -42,6 +42,7 @@ export const gameState = {
         currentShield: null,  // Currently equipped shield (warrior only)
         currentBook: null,    // Currently equipped book (mage only)
         currentQuiver: null,  // Currently equipped quiver (archer only)
+        currentAmulet: null,  // Currently equipped amulet (enchanteur only)
         mana: 100,           // Mana for mages
         maxMana: 100,        // Max mana for mages
         // Metal inventory (in ounces)

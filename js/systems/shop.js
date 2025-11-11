@@ -552,6 +552,14 @@ export function buyItem(index) {
                     description: item.description
                 };
             }
+            if (item.type === 'amulet' && item.bonus) {
+                p.currentAmulet = {
+                    name: item.name,
+                    icon: item.icon,
+                    bonus: item.bonus,
+                    description: item.description
+                };
+            }
             
             // Generate and apply random stats for rare+ items at purchase time
             const randomStats = hasRandomStats(item) ? generateRandomStats(item.rarity) : null;

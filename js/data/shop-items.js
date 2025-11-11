@@ -72,6 +72,18 @@ export const shopItems = [
     { name: 'Bâton Céleste', icon: '🔱', description: '18 de dégât\n✨ +1 Puissance', cost: 2223, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 18, rarity: 'legendaire', levelRequirement: 17, effect: null },
     { name: 'Bâton de l\'Univers', icon: '🔱', description: '22 de dégât\n✨ +1 Puissance', cost: 3088, category: 'equipment', type: 'weapon', classRestriction: 'magicien', bonus: 22, rarity: 'legendaire', levelRequirement: 20, effect: null },
     
+    // Weapons for Enchanteur - 10 tiers for level 1-20
+    { name: 'Orbe Terni', icon: '🔮', description: '1 de dégât\n✨ +1 Puissance', cost: 49, category: 'equipment', type: 'weapon', classRestriction: 'enchanteur', bonus: 1, rarity: 'commun', levelRequirement: 1, effect: null },
+    { name: 'Orbe de Cristal', icon: '🔮', description: '3 de dégât\n✨ +1 Puissance', cost: 99, category: 'equipment', type: 'weapon', classRestriction: 'enchanteur', bonus: 3, rarity: 'commun', levelRequirement: 3, effect: null },
+    { name: 'Orbe Mystique', icon: '🔮', description: '5 de dégât\n✨ +1 Puissance', cost: 160, category: 'equipment', type: 'weapon', classRestriction: 'enchanteur', bonus: 5, rarity: 'rare', levelRequirement: 5, effect: null },
+    { name: 'Orbe d\'Illusion', icon: '🔮', description: '7 de dégât\n✨ +1 Puissance', cost: 247, category: 'equipment', type: 'weapon', classRestriction: 'enchanteur', bonus: 7, rarity: 'rare', levelRequirement: 7, effect: null },
+    { name: 'Orbe de Manipulation', icon: '🔮', description: '9 de dégât\n✨ +1 Puissance', cost: 358, category: 'equipment', type: 'weapon', classRestriction: 'enchanteur', bonus: 9, rarity: 'epique', levelRequirement: 9, effect: null },
+    { name: 'Orbe Runique', icon: '🔮', description: '10 de dégât\n✨ +1 Puissance', cost: 679, category: 'equipment', type: 'weapon', classRestriction: 'enchanteur', bonus: 10, rarity: 'epique', levelRequirement: 11, effect: null },
+    { name: 'Orbe Légendaire', icon: '🔮', description: '12 de dégât\n✨ +1 Puissance', cost: 1049, category: 'equipment', type: 'weapon', classRestriction: 'enchanteur', bonus: 12, rarity: 'legendaire', levelRequirement: 13, effect: null },
+    { name: 'Orbe de l\'Enchanteur Divin', icon: '🔮', description: '15 de dégât\n✨ +1 Puissance', cost: 1543, category: 'equipment', type: 'weapon', classRestriction: 'enchanteur', bonus: 15, rarity: 'legendaire', levelRequirement: 15, effect: null },
+    { name: 'Orbe Céleste', icon: '🔮', description: '18 de dégât\n✨ +1 Puissance', cost: 2223, category: 'equipment', type: 'weapon', classRestriction: 'enchanteur', bonus: 18, rarity: 'legendaire', levelRequirement: 17, effect: null },
+    { name: 'Orbe de la Conscience Suprême', icon: '🔮', description: '22 de dégât\n✨ +1 Puissance', cost: 3088, category: 'equipment', type: 'weapon', classRestriction: 'enchanteur', bonus: 22, rarity: 'legendaire', levelRequirement: 20, effect: null },
+    
     // Shields for Guerrier (Warrior) - 10 tiers for level 1-20
     { name: 'Bouclier en Bois', icon: '🛡️', description: '+1 Défense', cost: 43, category: 'classes', type: 'shield', classRestriction: 'guerrier', bonus: 1, rarity: 'commun', levelRequirement: 1, effect: null },
     { name: 'Bouclier en Fer', icon: '🛡️', description: '+3 Défense', cost: 86, category: 'classes', type: 'shield', classRestriction: 'guerrier', bonus: 3, rarity: 'commun', levelRequirement: 3, effect: null },
@@ -107,6 +119,18 @@ export const shopItems = [
     { name: 'Carquois du Tireur d\'Élite', icon: '🏹', description: '+15 Adresse', cost: 1482, category: 'classes', type: 'quiver', classRestriction: 'archer', bonus: 15, rarity: 'legendaire', levelRequirement: 15, effect: null },
     { name: 'Carquois Céleste', icon: '🏹', description: '+18 Adresse', cost: 2100, category: 'classes', type: 'quiver', classRestriction: 'archer', bonus: 18, rarity: 'legendaire', levelRequirement: 17, effect: null },
     { name: 'Carquois de l\'Archer Suprême', icon: '🏹', description: '+22 Adresse', cost: 2964, category: 'classes', type: 'quiver', classRestriction: 'archer', bonus: 22, rarity: 'legendaire', levelRequirement: 20, effect: null },
+    
+    // Amulets for Enchanteur - 10 tiers for level 1-20
+    { name: 'Amulette Basique', icon: '📿', description: '+1 Esprit', cost: 43, category: 'classes', type: 'amulet', classRestriction: 'enchanteur', bonus: 1, rarity: 'commun', levelRequirement: 1, effect: null },
+    { name: 'Amulette en Pierre', icon: '📿', description: '+3 Esprit', cost: 86, category: 'classes', type: 'amulet', classRestriction: 'enchanteur', bonus: 3, rarity: 'commun', levelRequirement: 3, effect: null },
+    { name: 'Amulette Mystique', icon: '📿', description: '+5 Esprit', cost: 142, category: 'classes', type: 'amulet', classRestriction: 'enchanteur', bonus: 5, rarity: 'rare', levelRequirement: 5, effect: null },
+    { name: 'Talisman d\'Esprit', icon: '📿', description: '+7 Esprit', cost: 222, category: 'classes', type: 'amulet', classRestriction: 'enchanteur', bonus: 7, rarity: 'rare', levelRequirement: 7, effect: null },
+    { name: 'Médaillon Enchanté', icon: '📿', description: '+9 Esprit', cost: 326, category: 'classes', type: 'amulet', classRestriction: 'enchanteur', bonus: 9, rarity: 'epique', levelRequirement: 9, effect: null },
+    { name: 'Amulette Runique', icon: '📿', description: '+10 Esprit', cost: 629, category: 'classes', type: 'amulet', classRestriction: 'enchanteur', bonus: 10, rarity: 'epique', levelRequirement: 11, effect: null },
+    { name: 'Talisman Légendaire', icon: '📿', description: '+12 Esprit', cost: 988, category: 'classes', type: 'amulet', classRestriction: 'enchanteur', bonus: 12, rarity: 'legendaire', levelRequirement: 13, effect: null },
+    { name: 'Médaillon de l\'Esprit Divin', icon: '📿', description: '+15 Esprit', cost: 1482, category: 'classes', type: 'amulet', classRestriction: 'enchanteur', bonus: 15, rarity: 'legendaire', levelRequirement: 15, effect: null },
+    { name: 'Amulette Céleste', icon: '📿', description: '+18 Esprit', cost: 2100, category: 'classes', type: 'amulet', classRestriction: 'enchanteur', bonus: 18, rarity: 'legendaire', levelRequirement: 17, effect: null },
+    { name: 'Talisman de la Conscience Absolue', icon: '📿', description: '+22 Esprit', cost: 2964, category: 'classes', type: 'amulet', classRestriction: 'enchanteur', bonus: 22, rarity: 'legendaire', levelRequirement: 20, effect: null },
     
     // Armors (10 tiers for level 1-20)
     { name: 'Armure en Tissu', icon: '🛡️', description: '+1 Défense', cost: 43, category: 'equipment', type: 'armor', bonus: 1, rarity: 'commun', levelRequirement: 1, effect: null },

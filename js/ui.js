@@ -138,10 +138,10 @@ export function updateUI() {
         weaponIconEl.textContent = weaponIcon;
     }
     
-    // Show/hide mana bar for mages
+    // Show/hide mana bar for mages and enchanters
     const manaRow = document.getElementById('manaRow');
     if (manaRow) {
-        if (p.class === 'magicien') {
+        if (p.class === 'magicien' || p.class === 'enchanteur') {
             manaRow.style.display = 'flex';
             document.getElementById('playerMana').textContent = `${p.mana}/${p.maxMana}`;
             const manaPercent = (p.mana / p.maxMana) * 100;
@@ -308,6 +308,19 @@ export function updateUI() {
             } else {
                 quiverIconInlineEl.textContent = '🏹';
                 quiverNameInlineEl.textContent = 'Aucun';
+            }
+        }
+        
+        // Show amulet for enchanteur
+        const amuletIconInlineEl = document.getElementById('equippedAmuletIconInline');
+        const amuletNameInlineEl = document.getElementById('equippedAmuletNameInline');
+        if (amuletIconInlineEl && amuletNameInlineEl) {
+            if (p.currentAmulet) {
+                amuletIconInlineEl.textContent = p.currentAmulet.icon || '📿';
+                amuletNameInlineEl.textContent = p.currentAmulet.name;
+            } else {
+                amuletIconInlineEl.textContent = '📿';
+                amuletNameInlineEl.textContent = 'Aucun';
             }
         }
     }
@@ -765,11 +778,13 @@ export function updateEquipmentModal() {
     const shieldSlot = document.getElementById('equippedShieldSlot');
     const bookSlot = document.getElementById('equippedBookSlot');
     const quiverSlot = document.getElementById('equippedQuiverSlot');
+    const amuletSlot = document.getElementById('equippedAmuletSlot');
     
     // Hide all class-specific slots by default
     if (shieldSlot) shieldSlot.style.display = 'none';
     if (bookSlot) bookSlot.style.display = 'none';
     if (quiverSlot) quiverSlot.style.display = 'none';
+    if (amuletSlot) amuletSlot.style.display = 'none';
     
     // Show and update the appropriate slot based on class
     if (p.class === 'guerrier' && shieldSlot) {
@@ -807,6 +822,18 @@ export function updateEquipmentModal() {
         } else {
             if (quiverNameEl) quiverNameEl.textContent = 'Aucun carquois';
             if (quiverDescEl) quiverDescEl.textContent = 'Visitez le marchand pour acheter un carquois';
+        }
+    } else if (p.class === 'enchanteur' && amuletSlot) {
+        amuletSlot.style.display = 'block';
+        const amuletNameEl = document.getElementById('equippedAmuletName');
+        const amuletDescEl = document.getElementById('equippedAmuletDesc');
+        
+        if (p.currentAmulet) {
+            if (amuletNameEl) amuletNameEl.textContent = p.currentAmulet.name;
+            if (amuletDescEl) amuletDescEl.textContent = p.currentAmulet.description;
+        } else {
+            if (amuletNameEl) amuletNameEl.textContent = 'Aucune amulette';
+            if (amuletDescEl) amuletDescEl.textContent = 'Visitez le marchand pour acheter une amulette';
         }
     }
 }
