@@ -313,6 +313,99 @@ Contenu :
    - Exportez en GIF pour Twitter, Reddit
    - Exportez en MP4 pour Facebook, Instagram (meilleure qualité)
 
+### Workflows FFmpeg
+
+FFmpeg est un outil puissant pour créer et optimiser des GIFs de haute qualité.
+
+#### Workflow 1 : Vidéo vers GIF Optimisé (Haute Qualité)
+```bash
+# Étape 1 : Générer une palette de couleurs optimisée
+ffmpeg -i input.mp4 -vf "fps=15,scale=800:-1:flags=lanczos,palettegen" palette.png
+
+# Étape 2 : Créer le GIF avec la palette
+ffmpeg -i input.mp4 -i palette.png -filter_complex \
+  "fps=15,scale=800:-1:flags=lanczos[x];[x][1:v]paletteuse" output.gif
+```
+
+#### Workflow 2 : GIF Avec Découpage Temporel
+```bash
+# Extraire 5 secondes à partir de 10s, résolution 1280x720
+ffmpeg -ss 00:00:10 -t 00:00:05 -i input.mp4 -vf \
+  "fps=24,scale=1280:720:flags=lanczos,palettegen" palette.png
+
+ffmpeg -ss 00:00:10 -t 00:00:05 -i input.mp4 -i palette.png \
+  -filter_complex "fps=24,scale=1280:720:flags=lanczos[x];[x][1:v]paletteuse" \
+  combat-action.gif
+```
+
+#### Workflow 3 : GIF Optimisé pour Réseaux Sociaux
+```bash
+# GIF léger pour Twitter/Facebook (< 2 MB)
+ffmpeg -i input.mp4 -vf \
+  "fps=10,scale=640:-1:flags=lanczos,palettegen=stats_mode=diff" palette.png
+
+ffmpeg -i input.mp4 -i palette.png -filter_complex \
+  "fps=10,scale=640:-1:flags=lanczos[x];[x][1:v]paletteuse=dither=bayer:bayer_scale=5" \
+  social-media.gif
+```
+
+#### Workflow 4 : MP4 pour Instagram/Facebook (Meilleure Alternative)
+```bash
+# Convertir en MP4 optimisé (meilleur que GIF pour ces plateformes)
+ffmpeg -i input.mp4 -ss 00:00:10 -t 00:00:05 \
+  -vf "scale=1080:1080:force_original_aspect_ratio=decrease,pad=1080:1080:-1:-1:color=black,fps=30" \
+  -c:v libx264 -preset slow -crf 20 -pix_fmt yuv420p \
+  -movflags +faststart instagram-clip.mp4
+```
+
+#### Workflow 5 : GIF en Boucle Parfaite
+```bash
+# Créer un GIF qui boucle parfaitement
+ffmpeg -i input.mp4 -filter_complex \
+  "[0:v]trim=start=0:end=5,setpts=PTS-STARTPTS[v1]; \
+   [v1]reverse[v2]; \
+   [v1][v2]concat=n=2:v=1[vout]; \
+   [vout]fps=15,scale=800:-1:flags=lanczos,split[s0][s1]; \
+   [s0]palettegen[p]; \
+   [s1][p]paletteuse" \
+  -loop 0 perfect-loop.gif
+```
+
+#### Workflow 6 : Ajouter du Texte au GIF
+```bash
+# GIF avec texte superposé
+ffmpeg -i input.mp4 -i palette.png -filter_complex \
+  "fps=15,scale=800:-1:flags=lanczos, \
+   drawtext=text='BOSS BATTLE':fontfile=/path/to/font.ttf:fontsize=48: \
+   fontcolor=white:borderw=3:bordercolor=black:x=(w-text_w)/2:y=50[x]; \
+   [x][1:v]paletteuse" \
+  text-overlay.gif
+```
+
+#### Paramètres FFmpeg Expliqués
+
+| Paramètre | Description | Valeurs Recommandées |
+|-----------|-------------|---------------------|
+| `fps` | Images par seconde | 10-15 (léger), 24-30 (fluide) |
+| `scale` | Résolution | 640-800 (social), 1280 (HD) |
+| `flags=lanczos` | Algorithme redimensionnement | Meilleure qualité |
+| `palettegen` | Génère palette optimisée | Obligatoire pour qualité |
+| `paletteuse` | Applique la palette | Utilise dithering |
+| `bayer_scale` | Niveau de dithering | 1-5 (5 = moins de bruit) |
+| `-ss` | Temps de départ | Format: HH:MM:SS |
+| `-t` | Durée | Format: HH:MM:SS |
+| `-crf` | Qualité (pour MP4) | 18-23 (20 = bon compromis) |
+
+#### Compression GIF Existant
+```bash
+# Réduire la taille d'un GIF existant
+ffmpeg -i input.gif -vf "fps=12,scale=iw*0.8:-1:flags=lanczos" \
+  -loop 0 compressed.gif
+
+# Ou avec gifsicle (plus simple)
+gifsicle -O3 --lossy=80 -o compressed.gif input.gif
+```
+
 ### Bonnes Pratiques
 
 ✅ **À Faire:**
