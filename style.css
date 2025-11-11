@@ -78,6 +78,37 @@ body {
     opacity: 0.5;
 }
 
+.marketing-link {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: linear-gradient(135deg, #4169E1 0%, #1E90FF 100%);
+    border: 2px solid #5B9EFF;
+    border-radius: 8px;
+    padding: 8px 16px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 10;
+    box-shadow: 0 2px 10px rgba(65, 105, 225, 0.3);
+}
+
+.marketing-link:hover {
+    background: linear-gradient(135deg, #5B9EFF 0%, #4169E1 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(65, 105, 225, 0.5);
+}
+
+.marketing-link:active {
+    transform: translateY(0);
+}
+
 /* Event Banner Styles */
 .event-banner {
     background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);

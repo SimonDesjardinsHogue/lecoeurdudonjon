@@ -13,11 +13,46 @@
 
 **🎯 Un RPG complet avec 12-18 heures de gameplay | 24 niveaux | 4 Boss épiques | 3 Classes uniques**
 
-[🎮 Jouer Maintenant](https://simondesjardinshogue.github.io/lecoeurdudragon/) | [📖 Documentation](CONTRIBUTING.md) | [📝 Changelog](CHANGELOG.md) | [🐛 Reporter un Bug](https://github.com/SimonDesjardinsHogue/lecoeurdudragon/issues)
+### 🎮 Téléchargez Maintenant
+
+<table>
+<tr>
+<td align="center" width="33%">
+<a href="https://apps.apple.com/app/le-coeur-du-dragon">
+<img src="https://img.shields.io/badge/App_Store-$4.99_CAD-000000?style=for-the-badge&logo=apple&logoColor=white" alt="Télécharger sur App Store"/>
+</a>
+<br/>
+<sub>iOS • iPhone • iPad</sub>
+</td>
+<td align="center" width="33%">
+<a href="https://play.google.com/store/apps/details?id=com.simondesjardinshogue.lecoeurdudragon">
+<img src="https://img.shields.io/badge/Google_Play-$3.86_CAD-3DDC84?style=for-the-badge&logo=google-play&logoColor=white" alt="Obtenir sur Google Play"/>
+</a>
+<br/>
+<sub>Android • Tablettes</sub>
+</td>
+<td align="center" width="33%">
+<a href="https://simondesjardinshogue.github.io/lecoeurdudragon/">
+<img src="https://img.shields.io/badge/Jouer-GRATUIT-4169E1?style=for-the-badge&logo=web&logoColor=white" alt="Jouer Gratuitement"/>
+</a>
+<br/>
+<sub>Version Web • PWA</sub>
+</td>
+</tr>
+</table>
+
+### ✨ Pourquoi Le Coeur du Dragon ?
+
+🎯 **Gameplay Complet** • 12-18 heures d'aventure épique  
+⚔️ **Combat Tactique** • Stratégie, compétences spéciales et timing  
+🏆 **Boss Légendaires** • 4 combats épiques avec récompenses uniques  
+💎 **Sans Publicité** • Pas d'achats in-app, pas d'abonnement  
+🌐 **Mode Multijoueur** • Jouez en LAN avec votre famille  
+📱 **Multi-Plateformes** • Jouez où vous voulez, quand vous voulez
+
+[📖 Documentation](CONTRIBUTING.md) | [📝 Changelog](CHANGELOG.md) | [🐛 Reporter un Bug](https://github.com/SimonDesjardinsHogue/lecoeurdudragon/issues) | [🎬 Page Marketing](marketing.html)
 
 </div>
-
----
 
 ---
 
