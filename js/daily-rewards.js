@@ -6,6 +6,7 @@ import { updateUI } from './ui.js';
 import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 import { trackAchievementProgress, checkAchievements } from './achievements.js';
+import { popupQueue } from './popup-queue.js';
 
 // Daily login reward tiers (progressive rewards)
 const dailyLoginRewards = [
@@ -45,8 +46,8 @@ export function initializeDailyRewards() {
         };
     }
     
-    // Check for daily reset
-    checkDailyRewardReset();
+    // Don't automatically check for daily reset on initialization
+    // This will be called explicitly after character is loaded/created
 }
 
 // Get today's date string (YYYY-MM-DD)
@@ -132,7 +133,7 @@ function showDailyLoginReward() {
     // Play sound
     audioManager.playSound('levelup');
     
-    // Show popup
+    // Show popup using the queue to avoid blocking other popups
     const message = `
 🎉 CONNEXION QUOTIDIENNE ! 🎉
 
@@ -145,7 +146,7 @@ ${reward.item === 'legendary' ? '\n🌟 BONUS SPÉCIAL : Vous recevez un objet l
 Revenez demain pour continuer votre série !
     `.trim();
     
-    alert(message);
+    popupQueue.enqueue(message);
     
     saveGame();
     updateUI();
@@ -170,7 +171,7 @@ function giveLegendaryReward() {
             } else {
                 // Inventory full - give gold equivalent instead
                 gameState.player.gold += 1000;
-                alert('⚠️ Inventaire plein ! Vous recevez 1000 Or à la place de l\'objet légendaire.');
+                popupQueue.enqueue('⚠️ Inventaire plein ! Vous recevez 1000 Or à la place de l\'objet légendaire.');
             }
             
             saveGame();
@@ -216,8 +217,8 @@ Votre première victoire de chaque jour donne des récompenses doublées !
     // Play special sound
     audioManager.playSound('victory');
     
-    // Show notification
-    alert(message);
+    // Show notification using popup queue
+    popupQueue.enqueue(message);
 }
 
 // Start a time-based chest
@@ -230,7 +231,7 @@ export function startChest(chestTypeId) {
     
     // Check if player already has 3 chests (max)
     if (rewards.chests.length >= 3) {
-        alert('⚠️ Vous avez déjà 3 coffres en cours ! Ouvrez-en un avant d\'en commencer un nouveau.');
+        popupQueue.enqueue('⚠️ Vous avez déjà 3 coffres en cours ! Ouvrez-en un avant d\'en commencer un nouveau.');
         return false;
     }
     
@@ -250,7 +251,7 @@ export function startChest(chestTypeId) {
     rewards.chests.push(chest);
     saveGame();
     
-    alert(`📦 ${chestType.name} commencé !\n\nIl s'ouvrira dans ${formatDuration(chestType.duration)}.`);
+    popupQueue.enqueue(`📦 ${chestType.name} commencé !\n\nIl s'ouvrira dans ${formatDuration(chestType.duration)}.`);
     
     return true;
 }
@@ -283,7 +284,7 @@ export function openChest(chestId) {
     // Check if chest is ready
     if (!chest.ready && Date.now() < chest.endTime) {
         const timeLeft = chest.endTime - Date.now();
-        alert(`⏰ Ce coffre n'est pas encore prêt !\n\nTemps restant : ${formatDuration(timeLeft)}`);
+        popupQueue.enqueue(`⏰ Ce coffre n'est pas encore prêt !\n\nTemps restant : ${formatDuration(timeLeft)}`);
         return false;
     }
     
@@ -303,7 +304,7 @@ export function openChest(chestId) {
     // Play sound
     audioManager.playSound('victory');
     
-    // Show notification
+    // Show notification using popup queue
     let message = `
 🎁 COFFRE OUVERT ! 🎁
 
@@ -318,7 +319,7 @@ Récompenses :
         message += '\n\n🌟 + Objet Rare !';
     }
     
-    alert(message);
+    popupQueue.enqueue(message);
     
     // Remove chest from list
     rewards.chests.splice(chestIndex, 1);
@@ -344,7 +345,7 @@ function giveRareReward() {
                 console.log('Rare item added to inventory:', randomItem.name);
             } else {
                 gameState.player.gold += 500;
-                alert('⚠️ Inventaire plein ! Vous recevez 500 Or à la place de l\'objet rare.');
+                popupQueue.enqueue('⚠️ Inventaire plein ! Vous recevez 500 Or à la place de l\'objet rare.');
             }
             
             saveGame();

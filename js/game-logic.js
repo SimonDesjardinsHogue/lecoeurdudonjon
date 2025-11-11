@@ -18,6 +18,7 @@ import { meetNPC, meetJeweler, buyMetal, sellMetal } from './systems/npc.js';
 import { healPlayer, restoreEnergy, restoreMana, addExperience, checkLevelUp, spendStatPoint } from './systems/player.js';
 import { useInventoryItem, sellInventoryItem } from './systems/inventory.js';
 import { showLeaderboard } from './systems/leaderboard.js';
+import { checkDailyRewardReset } from './daily-rewards.js';
 
 // Helper function to get class display name
 function getClassDisplayName(classKey) {
@@ -69,6 +70,11 @@ export function init() {
     checkDailyReset();
     checkAchievements();
     updateUI();
+    
+    // Check for daily rewards only if a character exists (has a name and has played at least once)
+    if (gameState.player.name && gameState.player.gamesPlayed > 0) {
+        checkDailyRewardReset();
+    }
     
     // Show restore button if any saves exist
     const slots = getAllSaveSlots();
@@ -124,6 +130,9 @@ export function startGame() {
     saveGame();
     showScreen('mainScreen');
     updateUI();
+    
+    // Check for daily rewards after character is created
+    checkDailyRewardReset();
 }
 
 // Re-export system functions
@@ -496,6 +505,9 @@ function loadSaveFromModal(slotId) {
         closeSaveSelectionModal();
         showScreen('mainScreen');
         updateUI();
+        
+        // Check for daily rewards after character is loaded
+        checkDailyRewardReset();
     } else {
         alert('Erreur lors du chargement de la sauvegarde !');
     }
