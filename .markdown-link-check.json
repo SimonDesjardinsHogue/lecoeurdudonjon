@@ -1,0 +1,8 @@
+{
+  "ignorePatterns": [
+    {
+      "pattern": "^https://github.com/user-attachments/"
+    }
+  ],
+  "aliveStatusCodes": [200, 206]
+}

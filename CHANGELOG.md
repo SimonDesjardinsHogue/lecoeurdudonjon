@@ -1,6 +1,23 @@
 # 📝 Journal des Modifications
 
-## Version 1.1.0 - Novembre 2024
+Toutes les modifications notables de ce projet seront documentées dans ce fichier.
+
+Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
+et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Non publié]
+
+### Ajouté
+- Infrastructure de projet professionnelle (package.json, .editorconfig)
+- Politique de sécurité (SECURITY.md)
+- Code de conduite (CODE_OF_CONDUCT.md)
+- Guide des contributeurs (CONTRIBUTORS.md)
+- Feuille de route (ROADMAP.md)
+- Templates d'issues et PR
+- Badges professionnels dans README
+- Workflow GitHub Actions pour vérifications qualité
+
+## [1.1.0] - 2024-11
 
 ### ✨ Nouvelles fonctionnalités
 - Progressive Web App (PWA) complète avec installation hors ligne
@@ -61,7 +78,7 @@
 
 ---
 
-## Version 1.0.0 - Lancement Initial
+## [1.0.0] - 2024-10 - Lancement Initial
 
 ### 🎮 Fonctionnalités de base
 - Système de combat tour par tour
@@ -74,3 +91,18 @@
 - Sauvegarde locale dans le navigateur
 - Interface médiévale-fantastique
 - Système de son et musique
+
+---
+
+## Légende des Types de Changements
+
+- **Ajouté** : Nouvelles fonctionnalités
+- **Modifié** : Changements dans les fonctionnalités existantes
+- **Déprécié** : Fonctionnalités qui seront bientôt supprimées
+- **Supprimé** : Fonctionnalités supprimées
+- **Corrigé** : Corrections de bugs
+- **Sécurité** : Changements liés à la sécurité
+
+[Non publié]: https://github.com/SimonDesjardinsHogue/lecoeurdudragon/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/SimonDesjardinsHogue/lecoeurdudragon/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/SimonDesjardinsHogue/lecoeurdudragon/releases/tag/v1.0.0
