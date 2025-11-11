@@ -1,19 +1,37 @@
 # 🎨 Assets du Jeu - Le Coeur du Dragon
 
-Ce dossier contient tous les assets graphiques pour la PWA et la publication Google Play Store.
+Ce dossier contient tous les assets graphiques pour la PWA, la publication sur les stores et le marketing.
+
+## 📚 Documentation
+
+- **[SPECIFICATIONS.md](SPECIFICATIONS.md)** - Spécifications techniques complètes de tous les assets
+- **[templates/README.md](templates/README.md)** - Guides et templates pour créer les assets
+- **[../MARKETING_ASSETS_GUIDE.md](../MARKETING_ASSETS_GUIDE.md)** - Guide complet de création des assets marketing
 
 ## 📁 Structure
 
 ```
 assets/
-├── icons/              # Icônes d'application PWA
+├── icons/                   # Icônes d'application PWA
 │   ├── icon-72x72.png à icon-512x512.png     # Icônes standard
 │   ├── icon-*-maskable.png                    # Icônes adaptatives Android
 │   └── apple-touch-icon-*.png                 # Icônes iOS
-├── screenshots/        # Captures d'écran pour PWA et Google Play
-│   ├── mobile-*.png    # Screenshots mobiles (540x960)
-│   └── desktop-*.png   # Screenshots desktop (1280x720)
-└── feature-graphic.png # Feature graphic Google Play (1024x500)
+├── screenshots/             # Captures d'écran existantes (PWA/Google Play)
+│   ├── mobile-*.png         # Screenshots mobiles (540x960)
+│   ├── desktop-*.png        # Screenshots desktop (1280x720)
+│   ├── ios/                 # Screenshots iOS avec annotations
+│   └── android/             # Screenshots Android avec texte
+│       ├── phone/           # Téléphone (1080x1920)
+│       └── tablet/          # Tablette (optionnel)
+├── video/                   # Trailers et contenus vidéo
+├── gifs/                    # GIFs de gameplay
+├── social/                  # Graphiques réseaux sociaux
+│   ├── facebook/            # 1200x628px
+│   └── instagram/           # 1080x1080px et 1080x1920px
+├── banners/                 # Bannières publicitaires
+├── templates/               # Templates et guides de création
+├── feature-graphic.png      # Feature graphic Google Play (1024x500)
+└── SPECIFICATIONS.md        # Spécifications techniques
 ```
 
 ## 🎯 Icônes d'Application
@@ -50,23 +68,87 @@ Pour l'ajout à l'écran d'accueil iOS :
 
 ## 📱 Screenshots
 
-### Mobile (9:16 ratio)
+### Existants - PWA/Web (dans `/screenshots/`)
+
+#### Mobile (9:16 ratio)
 Format : 540×960 pixels
 - `mobile-1.png` - Menu principal
 - `mobile-2.png` - Combat épique
 - `mobile-3.png` - Statistiques du héros
 - `mobile-4.png` - Village et marchands
 
-### Desktop (16:9 ratio)
+#### Desktop (16:9 ratio)
 Format : 1280×720 pixels
 - `desktop-1.png` - Interface complète
 - `desktop-2.png` - Combat en plein écran
+
+### À Créer - App Stores
+
+#### Screenshots iOS (dans `/screenshots/ios/`)
+Format : 1290×2796 pixels (iPhone 6.7")
+- 3-5 screenshots minimum requis
+- Avec annotations textuelles
+- Voir [SPECIFICATIONS.md](SPECIFICATIONS.md) pour détails
+
+#### Screenshots Android (dans `/screenshots/android/phone/`)
+Format : 1080×1920 pixels
+- 4-8 screenshots recommandés
+- Avec texte descriptif
+- Voir [SPECIFICATIONS.md](SPECIFICATIONS.md) pour détails
 
 ## 🎮 Feature Graphic
 
 **Fichier** : `feature-graphic.png`
 **Taille** : 1024×500 pixels
 **Usage** : Bannière principale sur Google Play Store
+
+## 🎬 Assets Marketing (À Créer)
+
+### Trailer Vidéo (dans `/video/`)
+Format : MP4 (H.264)
+- Durée : 30-60 secondes
+- Résolution : 1920×1080 (1080p)
+- Versions : YouTube, Instagram (carré et story), Facebook, TikTok
+- Voir [SPECIFICATIONS.md](SPECIFICATIONS.md) et [MARKETING_ASSETS_GUIDE.md](../MARKETING_ASSETS_GUIDE.md)
+
+### GIFs de Gameplay (dans `/gifs/`)
+Format : GIF ou MP4
+- Durée : 3-10 secondes
+- Types à créer :
+  - Combat en action
+  - Boss battle
+  - Level up
+  - Loot légendaire
+  - Compétences spéciales (par classe)
+  - Progression du personnage
+
+### Graphiques Réseaux Sociaux (dans `/social/`)
+
+#### Facebook (dans `/social/facebook/`)
+Format : PNG/JPG, 1200×628 pixels
+- 4 designs recommandés :
+  - Hero/Introduction
+  - Features Highlight
+  - Boss Battle
+  - Social Proof/Testimonial
+
+#### Instagram (dans `/social/instagram/`)
+Format : PNG/JPG, 1080×1080 pixels (carré)
+- 5 designs recommandés :
+  - Logo/Branding
+  - Screenshot Focus
+  - Classes Showcase
+  - Stats/Numbers
+  - Value Proposition
+
+### Bannières Publicitaires (dans `/banners/`)
+Formats multiples pour différentes plateformes :
+- Leaderboard (728×90)
+- Medium Rectangle (300×250)
+- Mobile Banner (320×50)
+- Large Mobile Banner (320×100)
+- Skyscraper (160×600)
+- Half Page (300×600)
 
 ## 🎨 Design
 

@@ -200,31 +200,62 @@ Sans pub • Sans achats in-app
 
 ## 🎁 Ressources Additionnelles Suggérées
 
-### À Créer Ensuite
+### ✅ Guides Complets Créés
+
+Pour créer tous les assets marketing professionnels, consultez :
+
+1. **[MARKETING_ASSETS_GUIDE.md](MARKETING_ASSETS_GUIDE.md)** - Guide complet de création
+   - Trailer vidéo (30-60s) avec structure détaillée
+   - GIFs de gameplay (6 types différents)
+   - Graphiques réseaux sociaux (Facebook, Instagram, Twitter)
+   - Bannières publicitaires (tous formats)
+   - Screenshots iOS avec annotations
+   - Screenshots Android avec texte
+   - Outils recommandés et tutoriels
+
+2. **[assets/SPECIFICATIONS.md](assets/SPECIFICATIONS.md)** - Spécifications techniques exactes
+   - Dimensions précises pour chaque format
+   - Templates et layouts
+   - Guide de style unifié
+   - Quick reference de toutes les tailles
+
+3. **[assets/templates/README.md](assets/templates/README.md)** - Templates et scripts
+   - Scripts de capture
+   - Templates Figma/Canva
+   - Workflows recommandés
+   - Outils en ligne gratuits
+
+### À Créer Ensuite (Détails dans les guides)
 
 1. **Trailer Vidéo (30-60s)**
-   - Montrer le gameplay
-   - Mettre en avant les boss
-   - Inclure les témoignages
-   - Ajouter musique épique
+   - ✅ Guide complet disponible
+   - Structure minute par minute
+   - Liste des scènes à capturer
+   - Musique libre de droits suggérée
+   - Versions multiples (YouTube, Instagram, Facebook, TikTok)
 
-2. **GIFs Animés**
+2. **GIFs Animés (6 types)**
+   - ✅ Spécifications complètes
    - Combat en action
    - Progression de niveau
    - Boss battle
-   - Interface du jeu
+   - Loot légendaire
+   - Compétences spéciales
+   - Évolution du personnage
 
 3. **Graphiques Promotionnels**
-   - Format 1200x628px pour Facebook
-   - Format 1024x512px pour Twitter
-   - Format carré 1080x1080px pour Instagram
-   - Bannières pour sites web
+   - ✅ Templates et layouts fournis
+   - Facebook : 1200×628px (4 designs)
+   - Instagram : 1080×1080px (5 designs)
+   - Instagram Stories : 1080×1920px
+   - Bannières publicitaires (6 formats)
 
 4. **Screenshots Optimisés**
-   - 3-5 pour iOS
-   - 4-8 pour Android
-   - Annotations explicatives
-   - Mise en avant des fonctionnalités
+   - ✅ Guides détaillés créés
+   - iOS : 3-5 screenshots avec annotations (1290×2796px)
+   - Android : 4-8 screenshots avec texte (1080×1920px)
+   - Tablettes (optionnel)
+   - Annotations et placement de texte
 
 ---
 
