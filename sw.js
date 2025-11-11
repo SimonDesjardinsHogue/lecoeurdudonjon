@@ -59,6 +59,11 @@ const urlsToCache = [
   '/assets/icons/icon-512x512.png',
   '/assets/icons/icon-192x192-maskable.png',
   '/assets/icons/icon-512x512-maskable.png',
+  // Apple Touch Icons
+  '/assets/icons/apple-touch-icon-120x120.png',
+  '/assets/icons/apple-touch-icon-167x167.png',
+  '/assets/icons/apple-touch-icon-180x180.png',
+  '/assets/icons/apple-touch-icon-1024x1024.png',
   '/favicon.ico'
 ];
 
