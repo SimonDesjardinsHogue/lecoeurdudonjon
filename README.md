@@ -11,7 +11,7 @@
 
 **Une quête légendaire de courage et d'honneur inspirée par Legend of the Red Dragon**
 
-**🎯 Un RPG complet avec 12-18 heures de gameplay | 24 niveaux | 4 Boss épiques | 3 Classes uniques**
+**🎯 Un RPG complet avec 12-18 heures de gameplay | 24 niveaux | 4 Boss épiques | 4 Classes uniques**
 
 ### 🎮 Téléchargez Maintenant
 
@@ -113,7 +113,7 @@ De mystérieux explorateurs, des frères et sœurs connus sous le nom des M&M, p
 - 🎮 **Gameplay Riche** : 12-18 heures pour compléter la quête principale
 - ⚔️ **Combat Tactique** : Système de combat avec compétences spéciales et stratégie
 - 🏆 **4 Boss Épiques** : Chacun avec des capacités uniques et des récompenses légendaires
-- 👥 **3 Classes Jouables** : Guerrier, Magicien, Archer - chacune avec son propre style de jeu
+- 👥 **4 Classes Jouables** : Guerrier, Magicien, Archer - chacune avec son propre style de jeu
 - 🧝 **3 Races** : Humain, Elfe, Nain - chacune avec des modificateurs de stats uniques
 - 📈 **Progression Profonde** : 24 niveaux, 7 statistiques, système de points de stats
 - 🛍️ **Économie Complète** : Commerce, armes, armures, potions, objets légendaires
@@ -138,21 +138,33 @@ Le jeu utilise des modules JavaScript ES6 qui nécessitent un serveur HTTP pour 
 **Option 2 - Jouer en local:**
 
 ```bash
-# Avec Python 3 (préinstallé sur Mac/Linux)
-python3 -m http.server 8000
+\server>npm start
 
-# Avec Node.js
-npx http-server -p 8000
+> lecoeurdudragon-server@1.0.0 start
+> node server.js
 
-# Avec PHP
-php -S localhost:8000
+
+╔═══════════════════════════════════════════════════════╗
+║  ⚔️  Le Coeur du Dragon - Serveur Multijoueur LAN  ⚔️  ║
+╚═══════════════════════════════════════════════════════╝
+
+✓ Serveur HTTP démarré sur le port 3000
+✓ WebSocket (Socket.IO) actif
+
+Accès depuis le réseau local:
+  - http://localhost:3000
+  - http://[ADRESSE-IP-LAN]:3000
+
+Endpoints API disponibles:
+  GET  /api/health          - Vérification du serveur
+  GET  /api/leaderboard     - Classement des meilleurs joueurs
+  GET  /api/player/:id      - Scores personnels d'un joueur
+  POST /api/score           - Soumettre un nouveau score
+
+Pour arrêter le serveur: Ctrl+C
+
+✓ Joueur connecté:
 ```
-
-Puis ouvrez votre navigateur à: `http://localhost:8000/`
-
-**Option 3 - Extensions de navigateur:**
-- Visual Studio Code: Extension "Live Server"
-- Chrome: Extension "Web Server for Chrome"
 
 **Note:** ❌ N'ouvrez PAS `index.html` directement (file://) - cela ne fonctionnera pas à cause des restrictions de sécurité des modules ES6.
 
@@ -166,15 +178,15 @@ Puis ouvrez votre navigateur à: `http://localhost:8000/`
 ## 🎯 Objectifs et Portée du Jeu
 
 ### Objectif Principal
-**Atteindre le niveau 20 et vaincre les 5 Boss légendaires pour restaurer le Cœur du Dragon et sauver le royaume de Valéria !**
+**Atteindre le niveau 24 et vaincre les 4 Boss légendaires pour restaurer le Cœur du Dragon et sauver le royaume de Valéria !**
 
 ### Statistiques de Jeu
-- **Niveau Maximum** : 20
-- **Nombre d'Ennemis** : 30 types différents (+ 5 Boss uniques)
-- **Temps de Jeu Estimé** : ~10-15 heures pour atteindre le niveau maximum
-- **Classes de Personnages** : 3 classes uniques (Guerrier, Magicien, Archer)
+- **Niveau Maximum** : 24
+- **Nombre d'Ennemis** : 30 types différents (+ 4 Boss uniques)
+- **Temps de Jeu Estimé** : ~18 heures pour atteindre le niveau maximum
+- **Classes de Personnages** : 4 classes uniques (Guerrier, Magicien, Archer)
 - **Races de Personnages** : 3 races (Humain, Elfe, Nain)
-- **Boss à Vaincre** : 5 Boss légendaires avec capacités spéciales
+- **Boss à Vaincre** : 4 Boss légendaires avec capacités spéciales
 - **Objets Légendaires** : 8+ objets légendaires à débloquer
 - **Succès à Débloquer** : Système de succès pour récompenser vos exploits
 
@@ -198,12 +210,11 @@ Puis ouvrez votre navigateur à: `http://localhost:8000/`
   - Magicien : Boule de Feu, Bouclier de Mana, Éclair Foudroyant, Lance de Glace
   - Archer : Tir Multiple, Tir Visé
 - **Fuir** : Tentez d'échapper au combat (50% de chance)
-- **Boss Combats** : Affrontez 5 Boss épiques avec des capacités spéciales
+- **Boss Combats** : Affrontez 4 Boss épiques avec des capacités spéciales
   - Troll des Cavernes (Niv. 5) - Régénération
   - Seigneur Liche (Niv. 10) - Vol de vie
   - Hydre à Trois Têtes (Niv. 15) - Triple attaque
-  - Démon des Flammes (Niv. 20) - Explosion de feu
-  - Dragon Ancien (Niv. 20) - Souffle de dragon dévastateur
+  - Dragon Ancien (Niv. 24) - Souffle de dragon dévastateur
 
 #### 🏪 Le Marchand et l'Économie
 Achetez des améliorations et des potions avec votre or :
@@ -292,14 +303,13 @@ Débloquez des succès en accomplissant des exploits :
 16. **Dragon Mineur** 🐉 - Très Difficile (150 HP, 23 Force)
 17-30. **Et 14 ennemis avancés** pour les niveaux 11-20, incluant l'Esprit de la Forêt Corrompu et le Gardien Ancien de la Forêt !
 
-#### 5 Boss Légendaires
+#### 4 Boss Légendaires
 Chaque boss a des capacités spéciales uniques et récompense un objet légendaire !
 
 1. **Troll des Cavernes** 👹 (Niv. 5) - Régénération 4-7 HP/tour
 2. **Seigneur Liche** 💀 (Niv. 10) - Vol de vie (15 HP)
 3. **Hydre à Trois Têtes** 🐉 (Niv. 15) - Triple attaque dévastatrice
-4. **Démon des Flammes** 😈 (Niv. 20) - Explosion de feu (ignore 50% défense)
-5. **Dragon Ancien** 🐲 (Niv. 20) - Souffle légendaire du dragon
+4. **Dragon Ancien** 🐲 (Niv. 24) - Souffle légendaire du dragon
 
 ### Progression et Montée de Niveau
 
@@ -359,9 +369,9 @@ Chaque boss a des capacités spéciales uniques et récompense un objet légenda
    - Gardez toujours des potions de soin dans votre inventaire
    - Objectifs : Vaincre le Seigneur Liche (Niv. 10) et l'Hydre (Niv. 15)
 
-3. **Fin du Jeu (Niveaux 16-20)**
+3. **Fin du Jeu (Niveaux 16-24)**
    - Équipez-vous avec des armes et armures légendaires
-   - Préparez-vous pour les boss finaux : Démon des Flammes et Dragon Ancien
+   - Préparez-vous pour le boss final : Dragon Ancien
    - Maximisez vos statistiques principales
    - Utilisez vos compétences spéciales efficacement en combat
    - Objectif final : Vaincre le Dragon Ancien et restaurer le Cœur du Dragon !
@@ -379,7 +389,7 @@ Chaque boss a des capacités spéciales uniques et récompense un objet légenda
 - **Atteindre Niveau 5** : ~1-2 heures
 - **Atteindre Niveau 10** : ~3-5 heures
 - **Atteindre Niveau 15** : ~7-10 heures
-- **Atteindre Niveau 20 (Max)** : ~10-15 heures
+- **Atteindre Niveau 24 (Max)** : ~18 heures
 - **Vaincre tous les Boss** : Inclus dans le temps ci-dessus
 - **Débloquer tous les Succès** : ~15-20 heures (rejouabilité)
 
