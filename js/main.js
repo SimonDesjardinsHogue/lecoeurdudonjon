@@ -17,7 +17,7 @@ import * as scheduledEventsModule from './scheduled-events.js';
 import * as dailyRewardsModule from './daily-rewards.js';
 import { initI18n, setLanguage, getCurrentLanguage, getLanguageFlag } from './i18n/i18n.js';
 import { updateLanguageUI } from './i18n/language-ui.js';
-import { initializeFirebase } from './firebase-config.js';
+
 
 // Make scheduled events module available globally for UI updates
 window.scheduledEventsModule = scheduledEventsModule;
@@ -252,6 +252,9 @@ window.addEventListener('load', () => {
     
     // Initialize daily rewards
     dailyRewardsModule.initializeDailyRewards();
+    
+    // Start runtime integrity monitoring
+    startIntegrityMonitoring();
     
     // Update event banner initially
     updateEventBanner();

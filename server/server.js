@@ -6,6 +6,7 @@ import { readFileSync, writeFileSync, existsSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { networkInterfaces } from 'os';
+import { validateScoreData, checkRateLimit, detectAnomalousProgression } from './anti-cheat.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -120,70 +121,81 @@ app.get('/api/leaderboard', (req, res) => {
 
 // Submit score
 app.post('/api/score', (req, res) => {
-  const { playerId, playerName, level, kills, gold, xp, className, race, gender, strength, defense } = req.body;
+  const { playerId, playerName, level, kills, gold, xp, className, race, gender, puissance, defense } = req.body;
   
-  // Validation
-  if (!playerId || !playerName) {
-    return res.status(400).json({ 
-      success: false, 
-      error: 'playerId et playerName sont requis' 
-    });
-  }
-  
-  if (typeof level !== 'number' || typeof kills !== 'number' || typeof gold !== 'number') {
-    return res.status(400).json({ 
-      success: false, 
-      error: 'level, kills et gold doivent être des nombres' 
-    });
-  }
-  
-  // Calculate score for ranking
-  const calculatedScore = (level * 100) + (kills * 50) + ((strength || 10) * 10) + ((defense || 5) * 5);
-  
-  // Create score entry
-  const scoreEntry = {
-    playerId,
-    playerName,
-    level,
-    kills,
-    gold,
-    xp: xp || 0,
-    className: className || 'Guerrier',
-    race: race || 'Humain',
-    gender: gender || 'male',
-    strength: strength || 10,
-    defense: defense || 5,
-    score: calculatedScore,
-    timestamp: new Date().toISOString(),
-    date: new Date().toLocaleDateString('fr-CA')
-  };
-  
-  // Read current scores
-  const data = readScores();
-  
-  // Add new score
-  data.scores.push(scoreEntry);
-  
-  // Keep only last 1000 scores to prevent file from growing too large
-  if (data.scores.length > 1000) {
-    data.scores = data.scores.slice(-1000);
-  }
-  
-  // Save scores
-  if (writeScores(data)) {
-    // Broadcast updated leaderboard to all connected clients
-    const topScores = getTopScores(10);
-    io.emit('leaderboard-update', { scores: topScores });
+  try {
+    // Check rate limiting
+    checkRateLimit(playerId);
     
-    res.json({ 
-      success: true, 
-      message: 'Score enregistré avec succès',
-      score: scoreEntry
-    });
-  } else {
-    res.status(500).json({ 
+    // Validate score data with anti-cheat
+    validateScoreData(req.body);
+    
+    // Calculate score for ranking
+    const calculatedScore = (level * 100) + (kills * 50) + ((puissance || 10) * 10) + ((defense || 5) * 5);
+    
+    // Create score entry
+    const scoreEntry = {
+      playerId,
+      playerName,
+      level,
+      kills,
+      gold,
+      xp: xp || 0,
+      className: className || 'Guerrier',
+      race: race || 'Humain',
+      gender: gender || 'male',
+      puissance: puissance || 10,
+      defense: defense || 5,
+      score: calculatedScore,
+      timestamp: new Date().toISOString(),
+      date: new Date().toLocaleDateString('fr-CA')
+    };
+    
+    // Read current scores
+    const data = readScores();
+    
+    // Get previous scores for this player for anomaly detection
+    const previousScores = data.scores
+      .filter(score => score.playerId === playerId)
+      .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    // Detect anomalous progression
+    const anomalies = detectAnomalousProgression(playerId, scoreEntry, previousScores);
+    if (anomalies.length > 0) {
+      console.warn('[Anti-Cheat] Anomalies detected but score accepted:', anomalies);
+      // Log but don't reject - could be legitimate
+    }
+    
+    // Add new score
+    data.scores.push(scoreEntry);
+    
+    // Keep only last 1000 scores to prevent file from growing too large
+    if (data.scores.length > 1000) {
+      data.scores = data.scores.slice(-1000);
+    }
+    
+    // Save scores
+    if (writeScores(data)) {
+      // Broadcast updated leaderboard to all connected clients
+      const topScores = getTopScores(10);
+      io.emit('leaderboard-update', { scores: topScores });
+      
+      res.json({ 
+        success: true, 
+        message: 'Score enregistré avec succès',
+        score: scoreEntry
+      });
+    } else {
+      res.status(500).json({ 
+        success: false, 
+        error: 'Erreur lors de la sauvegarde du score' 
+      });
+    }
+  } catch (error) {
+    console.error('[Anti-Cheat] Score validation failed:', error.message);
+    res.status(400).json({ 
       success: false, 
-      error: 'Erreur lors de la sauvegarde du score' 
+      error: error.message
     });
   }
 });
