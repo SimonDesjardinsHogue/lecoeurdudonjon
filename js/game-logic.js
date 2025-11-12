@@ -18,7 +18,7 @@ import { meetNPC, meetJeweler, buyMetal, sellMetal } from './systems/npc.js';
 import { triggerRandomEvent } from './combat/events.js';
 import { healPlayer, restoreEnergy, restoreMana, addExperience, checkLevelUp, spendStatPoint } from './systems/player.js';
 import { useInventoryItem, sellInventoryItem } from './systems/inventory.js';
-import { showLeaderboard, submitToGlobalLeaderboard, switchLeaderboardMode } from './systems/leaderboard.js';
+import { showLeaderboard, submitToGlobalLeaderboard, submitPlayerToGlobalLeaderboard, switchLeaderboardMode } from './systems/leaderboard.js';
 import { checkDailyRewardReset } from './daily-rewards.js';
 
 // Helper function to get class display name
@@ -681,7 +681,7 @@ function closeManualSaveModal() {
 }
 
 // Re-export leaderboard system functions
-export { showLeaderboard, submitToGlobalLeaderboard, switchLeaderboardMode };
+export { showLeaderboard, submitToGlobalLeaderboard, submitPlayerToGlobalLeaderboard, switchLeaderboardMode };
 
 // Show achievements screen
 export function showAchievements() {

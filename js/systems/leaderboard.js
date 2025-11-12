@@ -22,6 +22,12 @@ export function showLeaderboard() {
     const networkState = getNetworkState();
     const firebaseReady = isFirebaseReady();
     
+    // Show/hide submit to global button
+    const submitBtn = document.getElementById('submitGlobalScoreBtn');
+    if (submitBtn) {
+        submitBtn.style.display = firebaseReady ? 'inline-block' : 'none';
+    }
+    
     // Default to the best available option
     if (firebaseReady && currentLeaderboardMode === 'global') {
         displayGlobalLeaderboard();
@@ -63,6 +69,51 @@ export async function submitToGlobalLeaderboard() {
     };
     
     return await submitGlobalScore(playerData);
+}
+
+// Submit player to global leaderboard (with UI feedback)
+export async function submitPlayerToGlobalLeaderboard() {
+    const submitBtn = document.getElementById('submitGlobalScoreBtn');
+    if (!submitBtn) return;
+    
+    // Disable button during submission
+    const originalText = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = '⏳ Envoi en cours...';
+    
+    const result = await submitToGlobalLeaderboard();
+    
+    if (result.success) {
+        submitBtn.textContent = '✅ Score envoyé !';
+        submitBtn.style.backgroundColor = '#51cf66';
+        
+        // Refresh the leaderboard if we're on global mode
+        if (currentLeaderboardMode === 'global') {
+            setTimeout(() => {
+                displayGlobalLeaderboard();
+            }, 1000);
+        }
+        
+        // Reset button after 3 seconds
+        setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.style.backgroundColor = '';
+            submitBtn.disabled = false;
+        }, 3000);
+    } else {
+        submitBtn.textContent = '❌ Erreur';
+        submitBtn.style.backgroundColor = '#ff6b6b';
+        
+        // Show error message
+        console.error('Failed to submit score:', result.error);
+        
+        // Reset button after 3 seconds
+        setTimeout(() => {
+            submitBtn.textContent = originalText;
+            submitBtn.style.backgroundColor = '';
+            submitBtn.disabled = false;
+        }, 3000);
+    }
 }
 
 // Display local (single device) leaderboard

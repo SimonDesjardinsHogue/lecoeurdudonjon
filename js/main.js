@@ -1,6 +1,6 @@
 // Main Entry Point Module
 
-import { init, startGame, rest, resetGame, showStats, showStatsAndLeaderboard, showProgressionMenu, showOptionsMenu, showSaveOptions, showMain, restoreSaveFromStart, showSaveSelectionModal, showManualSaveModal, showAchievements, showBalanceTest, runBalanceTest, showAdminLogin, showAdminPanel, showServerHosting, deleteAllSaves, spendStatPoint, showLeaderboard, submitToGlobalLeaderboard, switchLeaderboardMode, showDailyQuestsScreen, useInventoryItem, sellInventoryItem, visitVillage } from './game-logic.js';
+import { init, startGame, rest, resetGame, showStats, showStatsAndLeaderboard, showProgressionMenu, showOptionsMenu, showSaveOptions, showMain, restoreSaveFromStart, showSaveSelectionModal, showManualSaveModal, showAchievements, showBalanceTest, runBalanceTest, showAdminLogin, showAdminPanel, showServerHosting, deleteAllSaves, spendStatPoint, showLeaderboard, submitToGlobalLeaderboard, submitPlayerToGlobalLeaderboard, switchLeaderboardMode, showDailyQuestsScreen, useInventoryItem, sellInventoryItem, visitVillage } from './game-logic.js';
 import { showShop, buyItem, buyRareItem } from './systems/shop.js';
 import { meetNPC, meetJeweler, buyMetal, sellMetal } from './systems/npc.js';
 import { explore, attack, defend, flee, enemyAttack, useCombatPotion, skipDefendTurn } from './combat.js';
@@ -314,6 +314,7 @@ window.restoreSaveFromStart = restoreSaveFromStart;
 window.meetNPC = meetNPC;
 window.showLeaderboard = showLeaderboard;
 window.submitToGlobalLeaderboard = submitToGlobalLeaderboard;
+window.submitPlayerToGlobalLeaderboard = submitPlayerToGlobalLeaderboard;
 window.switchLeaderboardMode = switchLeaderboardMode;
 window.toggleAudio = toggleAudio;
 window.toggleLanguageMenu = toggleLanguageMenu;
