@@ -1,6 +1,7 @@
 // Save and Load Module
 import { gameState } from './game-state.js';
 import { updateUI, showSaveIndicator } from './ui.js';
+import { validateSaveData, addIntegrityMetadata, VALIDATION_RANGES } from './anti-cheat.js';
 
 // Constants for save slots
 const SAVE_SLOTS_KEY = 'lecoeurdudragon_saves';
@@ -8,8 +9,11 @@ const MAX_SAVE_SLOTS = 10;
 
 // Save game to localStorage (backwards compatible with single save)
 export function saveGame() {
+    // Add integrity metadata before saving
+    const saveDataWithIntegrity = addIntegrityMetadata({ ...gameState });
+    
     // Keep the old single save for backwards compatibility
-    localStorage.setItem('lecoeurdudragon_save', JSON.stringify(gameState));
+    localStorage.setItem('lecoeurdudragon_save', JSON.stringify(saveDataWithIntegrity));
     
     // Also save to the slot system
     saveToSlot(0); // Auto-save to slot 0
@@ -34,9 +38,12 @@ export function getAllSaveSlots() {
 export function saveToSlot(slotId) {
     const slots = getAllSaveSlots();
     
+    // Add integrity metadata
+    const saveDataWithIntegrity = addIntegrityMetadata({ ...gameState });
+    
     // Create save metadata
     const saveData = {
-        gameState: gameState,
+        gameState: saveDataWithIntegrity.player ? saveDataWithIntegrity : gameState,
         metadata: {
             playerName: gameState.player.name,
             level: gameState.player.level,
@@ -259,67 +266,6 @@ function fallbackCopy(text) {
     document.body.removeChild(textarea);
 }
 
-// Validation ranges for player properties (anti-cheat)
-const VALIDATION_RANGES = {
-    level: { min: 1, max: 20 },
-    health: { min: 1, max: 2000 },
-    maxHealth: { min: 1, max: 2000 },
-    puissance: { min: 1, max: 100 },
-    defense: { min: 1, max: 100 },
-    adresse: { min: 1, max: 100 },
-    esprit: { min: 1, max: 100 },
-    presence: { min: 1, max: 100 },
-    gold: { min: 0, max: 999999 },
-    xp: { min: 0, max: 999999 },
-    statPoints: { min: 0, max: 40 },
-    kills: { min: 0, max: 99999 },
-    deaths: { min: 0, max: 99999 },
-    bossesDefeated: { min: 0, max: 5 },
-    energy: { min: 0, max: 200 },
-    maxEnergy: { min: 0, max: 200 },
-    mana: { min: 0, max: 200 },
-    maxMana: { min: 0, max: 200 }
-};
-
-// Validate player data against acceptable ranges
-function validatePlayerData(player) {
-    for (const [prop, range] of Object.entries(VALIDATION_RANGES)) {
-        if (player[prop] !== undefined) {
-            const value = player[prop];
-            if (typeof value !== 'number' || value < range.min || value > range.max) {
-                throw new Error(`Invalid ${prop}: ${value} (must be ${range.min}-${range.max})`);
-            }
-        }
-    }
-    
-    // Logical validations
-    if (player.health > player.maxHealth) {
-        throw new Error('Health cannot exceed maxHealth');
-    }
-    
-    if (player.energy > player.maxEnergy) {
-        throw new Error('Energy cannot exceed maxEnergy');
-    }
-    
-    if (player.mana > player.maxMana) {
-        throw new Error('Mana cannot exceed maxMana');
-    }
-    
-    // Level should roughly correlate with stats
-    const totalStats = (player.puissance || 10) + (player.defense || 10) + 
-                       (player.adresse || 10) + (player.esprit || 10) +
-                       (player.presence || 10);
-    const minExpectedStats = 50 + (player.level - 1) * 1; // Base 50 + 1 per level minimum (adjusted for 4 stats)
-    const maxExpectedStats = 50 + (player.level - 1) * 5 + 40; // Allow for items and bonuses
-    
-    if (totalStats < minExpectedStats || totalStats > maxExpectedStats) {
-        console.warn(`Suspicious stats total: ${totalStats} for level ${player.level}`);
-        // Don't throw, just warn - player might have special items
-    }
-    
-    return true;
-}
-
 // Import save from code
 export function importSave() {
     const code = document.getElementById('importCode').value.trim();
@@ -383,8 +329,8 @@ export function importSave() {
             }
         }
         
-        // Validate player data ranges (anti-cheat)
-        validatePlayerData(loadedState.player);
+        // Use comprehensive save validation from anti-cheat module
+        validateSaveData(loadedState);
         
         // Add energy properties if they don't exist (for backwards compatibility)
         if (!('energy' in loadedState.player)) {
