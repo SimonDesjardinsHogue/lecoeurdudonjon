@@ -144,7 +144,9 @@ function detectAnomalousProgression(playerId, newScore, previousScores) {
     }
     
     if (warnings.length > 0) {
-        console.warn(`[Anti-Cheat] Player ${playerId} anomalies:`, warnings);
+        // Sanitize playerId for logging - only use first 20 chars and remove special characters
+        const sanitizedId = playerId.toString().substring(0, 20).replace(/[^\w-]/g, '_');
+        console.warn('[Anti-Cheat] Player anomalies detected:', sanitizedId, warnings);
     }
     
     return warnings;
