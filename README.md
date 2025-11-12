@@ -93,9 +93,10 @@
 - 🎮 Partagez le plaisir sans frais additionnels
 - 🏆 Classements et compétition amicale en temps réel
 
-Pour plus d'informations sur la publication mobile, consultez :
+Pour plus d'informations sur la publication mobile et la monétisation, consultez :
 - [Guide Apple App Store](APPLE_STORE_GUIDE.md)
 - [Guide Google Play Store](GOOGLE_PLAY_PUBLICATION.md)
+- [💰 Monétisation des Jeux Open Source](MONETISATION_OPEN_SOURCE.md) - **Comment un jeu open source peut générer des revenus**
 
 ---
 
@@ -644,6 +645,18 @@ Avec les conditions suivantes :
 - 📋 Si vous exécutez une version modifiée sur un serveur, vous devez rendre le code source disponible
 
 Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+
+### 💡 Open Source ET Monétisation
+
+**Question fréquente :** "Comment un jeu open source peut-il générer des revenus?"
+
+**Réponse :** Le code source est libre, mais vous payez pour la commodité, le support et l'optimisation mobile!
+
+- 🌐 **Version Web** : Gratuite pour tous sur GitHub Pages
+- 📱 **Versions Mobile** : Prix modeste pour installation en un clic, mises à jour automatiques et support professionnel
+- 💰 **Revenus** : Permettent de continuer le développement, corriger les bugs et ajouter des fonctionnalités
+
+📖 Pour en savoir plus : [Guide de Monétisation des Jeux Open Source](MONETISATION_OPEN_SOURCE.md)
 
 ## 🙏 Remerciements et Inspirations
 
