@@ -109,6 +109,82 @@ body {
     transform: translateY(0);
 }
 
+/* Language Toggle Styles */
+.language-toggle {
+    position: absolute;
+    top: 10px;
+    left: 150px;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid #DAA520;
+    border-radius: 8px;
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    z-index: 11;
+}
+
+.language-toggle:hover {
+    background: rgba(218, 165, 32, 0.3);
+    transform: scale(1.1);
+}
+
+.language-toggle:active {
+    transform: scale(0.95);
+}
+
+.language-menu {
+    position: absolute;
+    top: 60px;
+    left: 150px;
+    background: rgba(0, 0, 0, 0.95);
+    border: 2px solid #DAA520;
+    border-radius: 8px;
+    padding: 8px;
+    z-index: 12;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    min-width: 140px;
+}
+
+.language-menu button {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #f0f0f0;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-family: 'Courier New', monospace;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 5px;
+    transition: all 0.2s ease;
+    margin-bottom: 4px;
+}
+
+.language-menu button:last-child {
+    margin-bottom: 0;
+}
+
+.language-menu button:hover {
+    background: rgba(218, 165, 32, 0.3);
+    transform: translateX(5px);
+}
+
+.language-menu button:active {
+    background: rgba(218, 165, 32, 0.5);
+}
+
+.language-menu button.active {
+    background: rgba(218, 165, 32, 0.4);
+    border-left: 3px solid #DAA520;
+}
+
 /* Event Banner Styles */
 .event-banner {
     background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
@@ -889,6 +965,32 @@ input[type="text"]:focus {
         right: 8px;
     }
 
+    .language-toggle {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+        top: 8px;
+        left: 8px;
+    }
+
+    .language-menu {
+        top: 52px;
+        left: 8px;
+        min-width: 120px;
+    }
+
+    .language-menu button {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+
+    .marketing-link {
+        top: 56px;
+        left: 8px;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
     .game-stats {
         grid-template-columns: 1fr;
         padding: 10px;
@@ -1007,6 +1109,19 @@ input[type="text"]:focus {
 
     .game-header h1 {
         font-size: 1.6em;
+    }
+
+    .language-toggle {
+        width: 42px;
+        height: 42px;
+        font-size: 19px;
+        top: 9px;
+        left: 120px;
+    }
+
+    .language-menu {
+        top: 56px;
+        left: 120px;
     }
 
     /* Removed grid-template-columns override to let auto-fit work naturally */
