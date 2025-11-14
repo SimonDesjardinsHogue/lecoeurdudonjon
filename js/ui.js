@@ -159,14 +159,27 @@ export function updateUI() {
     document.getElementById('playerXP').textContent = `${p.xp}/${p.xpToLevel}`;
     document.getElementById('playerEnergy').textContent = `${p.energy}/${p.maxEnergy}`;
     
-    // Update character info
-    const classDisplay = p.classIcon ? `${p.classIcon} ${p.className || p.class}` : (p.className || p.class);
+    // Update character info - translate class and race names
+    let translatedClassName = p.class;
+    switch(p.class) {
+        case 'guerrier': translatedClassName = t('warrior'); break;
+        case 'magicien': translatedClassName = t('mage'); break;
+        case 'archer': translatedClassName = t('archer'); break;
+        case 'enchanteur': translatedClassName = t('enchanter'); break;
+    }
+    const classDisplay = p.classIcon ? `${p.classIcon} ${translatedClassName}` : translatedClassName;
     document.getElementById('playerClass').textContent = classDisplay;
     
-    const raceDisplay = p.raceIcon ? `${p.raceIcon} ${p.raceName || p.race}` : (p.raceName || p.race);
+    let translatedRaceName = p.race;
+    switch(p.race) {
+        case 'humain': translatedRaceName = t('human'); break;
+        case 'elfe': translatedRaceName = t('elf'); break;
+        case 'nain': translatedRaceName = t('dwarf'); break;
+    }
+    const raceDisplay = p.raceIcon ? `${p.raceIcon} ${translatedRaceName}` : translatedRaceName;
     document.getElementById('playerRace').textContent = raceDisplay;
     
-    const genderDisplay = p.gender === 'female' ? '♀️ Féminin' : '♂️ Masculin';
+    const genderDisplay = p.gender === 'female' ? `♀️ ${t('female')}` : `♂️ ${t('male')}`;
     document.getElementById('playerGender').textContent = genderDisplay;
     
     // Update health bar

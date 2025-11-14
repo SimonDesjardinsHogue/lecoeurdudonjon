@@ -82,10 +82,12 @@ function updateStartScreen() {
     }
     
     // Update gender section
-    const genderLabel = document.querySelector('#startScreen label[style*="Genre"]');
-    if (genderLabel) {
-        genderLabel.textContent = t('gender') + ' :';
-    }
+    const genderLabels = document.querySelectorAll('#startScreen label');
+    genderLabels.forEach(label => {
+        if (label.textContent.includes('Genre') || label.textContent.includes('Gender') || label.textContent.includes('Género')) {
+            label.textContent = t('gender') + ' :';
+        }
+    });
     
     // Update gender options
     const maleLabel = document.querySelector('input[value="male"] + .class-label strong');
@@ -99,10 +101,11 @@ function updateStartScreen() {
     }
     
     // Update race section
-    const raceLabel = document.querySelectorAll('#startScreen label[style*="Race"]')[0];
-    if (raceLabel) {
-        raceLabel.textContent = t('race') + ' :';
-    }
+    genderLabels.forEach(label => {
+        if (label.textContent.includes('Race') || label.textContent.includes('Raza')) {
+            label.textContent = t('race') + ' :';
+        }
+    });
     
     // Update race options
     updateRaceOption('humain', t('human'), t('balanced'));
@@ -110,15 +113,17 @@ function updateStartScreen() {
     updateRaceOption('nain', t('dwarf'));
     
     // Update class section
-    const classLabel = document.querySelector('#startScreen label[style*="Choisissez"]');
-    if (classLabel) {
-        classLabel.textContent = t('chooseClass');
-    }
+    genderLabels.forEach(label => {
+        if (label.textContent.includes('Choisissez') || label.textContent.includes('Choose') || label.textContent.includes('Elige')) {
+            label.textContent = t('chooseClass');
+        }
+    });
     
     // Update class options
     updateClassOption('guerrier', t('warrior'), t('warriorDesc'));
     updateClassOption('magicien', t('mage'), t('mageDesc'));
     updateClassOption('archer', t('archer'), t('archerDesc'));
+    updateClassOption('enchanteur', t('enchanter'), t('enchanterDesc'));
     
     // Update buttons
     const startBtn = document.querySelector('#startScreen button[onclick="startGame()"]');
@@ -373,6 +378,35 @@ function updateStaticTexts() {
     if (inventoryPanelLabel) {
         inventoryPanelLabel.innerHTML = `🎒 ${t('bag')}`;
     }
+    
+    // Update combat stat labels
+    const weaponLabelEl = document.querySelector('.combat-stat-inline .stat-label-inline');
+    if (weaponLabelEl && (weaponLabelEl.textContent === 'Arme:' || weaponLabelEl.textContent === 'Weapon:' || weaponLabelEl.textContent === 'Arma:')) {
+        weaponLabelEl.textContent = t('weaponLabel');
+    }
+    
+    const armorClassLabels = document.querySelectorAll('.combat-stat-inline .stat-label-inline');
+    if (armorClassLabels.length > 1) {
+        const acLabel = armorClassLabels[1];
+        if (acLabel && (acLabel.textContent === 'CA:' || acLabel.textContent === 'AC:')) {
+            acLabel.textContent = t('armorClass');
+        }
+    }
+    
+    // Update attribute labels
+    const charLabels = document.querySelectorAll('.char-label-small');
+    charLabels.forEach(label => {
+        const text = label.textContent.trim();
+        if (text === 'Puissance' || text === 'Power' || text === 'Poder') {
+            label.textContent = t('power');
+        } else if (text === 'Adresse' || text === 'Dexterity' || text === 'Destreza') {
+            label.textContent = t('dexterity');
+        } else if (text === 'Esprit' || text === 'Spirit' || text === 'Espíritu') {
+            label.textContent = t('spirit');
+        } else if (text === 'Présence' || text === 'Presence' || text === 'Presencia') {
+            label.textContent = t('presence');
+        }
+    });
     
     // Update equipment modal labels
     updateEquipmentModalLabels();

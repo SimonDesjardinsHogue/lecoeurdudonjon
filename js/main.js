@@ -11,6 +11,7 @@ import { initTouchGestures, showTouchHint } from './touch-gestures.js';
 import { addMobileHelpButton, showFirstTimeMobileHelp } from './mobile-help.js';
 import { useSkill as useSkillFn } from './skills.js';
 import { updateUI, updateEnemyUI, updateSkillsUI, updateCombatInventoryUI, updateShopInventoryUI, toggleInventoryPanel, updateInventoryPanel, toggleEquipmentModal, updateEquipmentModal, updateEventBanner, getCurrentDisplayedEvent } from './ui.js';
+import { gameState } from './game-state.js';
 import { initNetwork, configureServer, getNetworkState, submitScore, fetchLeaderboard, checkServerHealth, requestLeaderboardUpdate, retryDefaultServerConnection } from './network.js';
 import { showMultiplayerSettings, saveServerConfig, testServerConnection, disableMultiplayer, showConnectionNotification, dismissConnectionNotification } from './multiplayer-ui.js';
 import * as scheduledEventsModule from './scheduled-events.js';
@@ -79,6 +80,11 @@ function changeLanguage(lang) {
     if (setLanguage(lang)) {
         // Update all UI text
         updateLanguageUI();
+        
+        // Update game UI if player exists (in-game)
+        if (gameState && gameState.player) {
+            updateUI();
+        }
         
         // Update language toggle button with flag
         const languageToggle = document.getElementById('languageToggle');

@@ -48,9 +48,11 @@ export const es = {
     warrior: "Guerrero",
     mage: "Mago",
     archer: "Arquero",
+    enchanter: "Encantador",
     warriorDesc: "Robusto y resistente",
     mageDesc: "Poderoso pero frágil",
     archerDesc: "Equilibrado y preciso",
+    enchanterDesc: "Manipulador de mentes",
     
     // Stats
     character: "Personaje",
@@ -92,6 +94,10 @@ export const es = {
     dexterity: "Destreza",
     spirit: "Espíritu",
     presence: "Presencia",
+    
+    // Combat stats labels
+    weaponLabel: "Arma:",
+    armorClass: "CA:",
     
     // Game actions
     actions: "Acciones del Juego",
