@@ -161,7 +161,6 @@
                 <div class="combat-stats-compact">
                     <div class="combat-stat-row">
                         <span class="combat-icon-small">❤️</span>
-                        <span class="stat-value-small" id="playerHealth">100/100</span>
                         <div class="health-bar-small">
                             <div class="health-fill" id="healthFill" style="width: 100%;"></div>
                             <div class="xp-markers">
@@ -169,18 +168,23 @@
                                 <div class="xp-marker" style="left: 50%;"></div>
                                 <div class="xp-marker" style="left: 75%;"></div>
                             </div>
+                            <span class="xp-text" id="playerHealth">100/100</span>
                         </div>
                     </div>
                     <div class="combat-stat-row" id="manaRow" style="display: none;">
                         <span class="combat-icon-small">🔮</span>
-                        <span class="stat-value-small" id="playerMana">100/100</span>
                         <div class="health-bar-small">
                             <div class="health-fill" id="manaFill" style="width: 100%; background: linear-gradient(90deg, #4169E1 0%, #1E90FF 100%);"></div>
+                            <div class="xp-markers">
+                                <div class="xp-marker" style="left: 25%;"></div>
+                                <div class="xp-marker" style="left: 50%;"></div>
+                                <div class="xp-marker" style="left: 75%;"></div>
+                            </div>
+                            <span class="xp-text" id="playerMana">100/100</span>
                         </div>
                     </div>
                     <div class="combat-stat-row">
                         <span class="combat-icon-small">⚡</span>
-                        <span class="stat-value-small" id="playerEnergy">100/100</span>
                         <div class="health-bar-small">
                             <div class="health-fill" id="energyFill" style="width: 100%; background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);"></div>
                             <div class="xp-markers">
@@ -188,6 +192,7 @@
                                 <div class="xp-marker" style="left: 50%;"></div>
                                 <div class="xp-marker" style="left: 75%;"></div>
                             </div>
+                            <span class="xp-text" id="playerEnergy">100/100</span>
                         </div>
                     </div>
                     <div class="combat-stat-inline">

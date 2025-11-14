@@ -1604,6 +1604,7 @@ input[type="text"]:focus {
     overflow: hidden;
     border: 1px solid #8B4513;
     flex: 2;
+    position: relative;
 }
 
 .combat-stat-inline {
