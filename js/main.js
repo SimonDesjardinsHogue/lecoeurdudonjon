@@ -1,9 +1,9 @@
 // Main Entry Point Module
 
-import { init, startGame, rest, resetGame, showStats, showStatsAndLeaderboard, showProgressionMenu, showOptionsMenu, showSaveOptions, showMain, restoreSaveFromStart, showSaveSelectionModal, showManualSaveModal, showAchievements, showBalanceTest, runBalanceTest, showAdminLogin, showAdminPanel, showServerHosting, deleteAllSaves, spendStatPoint, showLeaderboard, submitToGlobalLeaderboard, submitPlayerToGlobalLeaderboard, switchLeaderboardMode, showDailyQuestsScreen, useInventoryItem, sellInventoryItem, visitVillage } from './game-logic.js';
+import { init, startGame as startGameLogic, rest as restLogic, resetGame as resetGameLogic, showStats, showStatsAndLeaderboard, showProgressionMenu, showOptionsMenu, showSaveOptions, showMain, restoreSaveFromStart, showSaveSelectionModal, showManualSaveModal, showAchievements, showBalanceTest, runBalanceTest, showAdminLogin, showAdminPanel, showServerHosting, deleteAllSaves, spendStatPoint, showLeaderboard, submitToGlobalLeaderboard, submitPlayerToGlobalLeaderboard, switchLeaderboardMode, showDailyQuestsScreen, useInventoryItem, sellInventoryItem, visitVillage as visitVillageLogic } from './game-logic.js';
 import { showShop, buyItem, buyRareItem } from './systems/shop.js';
 import { meetNPC, meetJeweler, buyMetal, sellMetal } from './systems/npc.js';
-import { explore, attack, defend, flee, enemyAttack, useCombatPotion, skipDefendTurn } from './combat.js';
+import { explore as exploreLogic, attack as attackLogic, defend as defendLogic, flee as fleeLogic, enemyAttack, useCombatPotion, skipDefendTurn } from './combat.js';
 import { exportSave, importSave } from './save-load.js';
 import { audioManager } from './audio.js';
 import { initKeyboardHandler } from './keyboard-handler.js';
@@ -17,6 +17,7 @@ import * as scheduledEventsModule from './scheduled-events.js';
 import * as dailyRewardsModule from './daily-rewards.js';
 import { initI18n, setLanguage, getCurrentLanguage, getLanguageFlag } from './i18n/i18n.js';
 import { updateLanguageUI } from './i18n/language-ui.js';
+import { initializeFirebase } from './firebase-config.js';
 
 
 // Make scheduled events module available globally for UI updates
@@ -281,26 +282,26 @@ window.addEventListener('load', () => {
 // Expose functions to global scope for onclick handlers
 window.startGame = function() {
     initAudio();
-    startGame();
+    startGameLogic();
 };
 window.explore = function() {
     initAudio();
-    explore();
+    exploreLogic();
 };
 window.attack = function() {
     initAudio();
-    attack();
+    attackLogic();
 };
 window.defend = function() {
     initAudio();
-    defend();
+    defendLogic();
 };
 window.flee = function() {
     initAudio();
-    flee();
+    fleeLogic();
 };
-window.rest = rest;
-window.visitVillage = visitVillage;
+window.rest = restLogic;
+window.visitVillage = visitVillageLogic;
 window.showShop = showShop;
 window.buyItem = buyItem;
 window.buyRareItem = buyRareItem;
@@ -312,7 +313,7 @@ window.showSaveOptions = showSaveOptions;
 window.exportSave = exportSave;
 window.importSave = importSave;
 window.showMain = showMain;
-window.resetGame = resetGame;
+window.resetGame = resetGameLogic;
 window.restoreSaveFromStart = restoreSaveFromStart;
 window.meetNPC = meetNPC;
 window.showLeaderboard = showLeaderboard;

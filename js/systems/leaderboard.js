@@ -165,7 +165,6 @@ async function displayLocalLeaderboard() {
     players.sort((a, b) => b.score - a.score);
     
     // Display leaderboard
-    const leaderboardList = document.getElementById('leaderboardList');
     const contentContainer = document.createElement('div');
     contentContainer.id = 'leaderboard-content';
     

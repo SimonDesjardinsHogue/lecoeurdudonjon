@@ -682,7 +682,7 @@ input[type="text"]:focus {
 /* Class Selection Grid */
 .class-selection-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
 }
 
@@ -1141,7 +1141,7 @@ input[type="text"]:focus {
 
     /* Class selection grid for tablets */
     .class-selection-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -1155,7 +1155,7 @@ input[type="text"]:focus {
 
     /* Class selection grid for larger tablets */
     .class-selection-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -1165,7 +1165,7 @@ input[type="text"]:focus {
 
     /* Class selection grid for desktops */
     .class-selection-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -1276,7 +1276,7 @@ input[type="text"]:focus {
 
     /* Class selection grid for large desktops */
     .class-selection-grid {
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
