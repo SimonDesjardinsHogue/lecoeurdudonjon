@@ -400,8 +400,8 @@ body {
     top: 0;
     width: 2px;
     height: 100%;
-    background: rgba(255, 255, 255, 0.4);
-    box-shadow: 0 0 3px rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.9);
 }
 
 .xp-text {
@@ -409,14 +409,15 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 0.75em;
+    font-size: 0.8em;
     font-weight: bold;
     color: #fff;
     text-shadow: 
-        -1px -1px 2px rgba(0, 0, 0, 0.8),
-        1px -1px 2px rgba(0, 0, 0, 0.8),
-        -1px 1px 2px rgba(0, 0, 0, 0.8),
-        1px 1px 2px rgba(0, 0, 0, 0.8);
+        -1px -1px 3px rgba(0, 0, 0, 1),
+        1px -1px 3px rgba(0, 0, 0, 1),
+        -1px 1px 3px rgba(0, 0, 0, 1),
+        1px 1px 3px rgba(0, 0, 0, 1),
+        0 0 5px rgba(0, 0, 0, 0.8);
     z-index: 3;
     pointer-events: none;
 }
