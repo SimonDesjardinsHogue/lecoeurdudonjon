@@ -27,12 +27,41 @@ function validateScoreData(scoreData) {
         throw new Error('playerId and playerName are required');
     }
     
-    // Sanitize playerName - remove HTML tags and limit length
+    // Sanitize playerName - remove HTML tags and script content, limit length
     if (typeof playerName !== 'string') {
         throw new Error('playerName must be a string');
     }
     
-    const sanitizedName = playerName.replace(/<[^>]*>/g, '').trim();
+    // Multi-layer defense against XSS:
+    // 1. Remove script/style tags iteratively to handle nested/malformed tags
+    // 2. Remove all other HTML tags
+    // 3. Remove remaining dangerous characters
+    // This approach, while not perfect for all edge cases, provides defense in depth
+    // The final character filtering ensures no HTML/script injection is possible
+    
+    let sanitizedName = playerName;
+    let previousLength;
+    
+    // Remove script and style content iteratively until no more changes
+    do {
+        previousLength = sanitizedName.length;
+        sanitizedName = sanitizedName.replace(/<script[\s\S]*?<\/script\s*>/gi, '');
+        sanitizedName = sanitizedName.replace(/<style[\s\S]*?<\/style\s*>/gi, '');
+    } while (sanitizedName.length !== previousLength);
+    
+    // Remove all HTML tags iteratively until no more tags exist
+    do {
+        previousLength = sanitizedName.length;
+        sanitizedName = sanitizedName.replace(/<\/?[^>]+(>|$)/g, '');
+    } while (sanitizedName.length !== previousLength);
+    
+    // Final defense: remove ANY remaining characters that could be used in HTML/JS injection
+    // This ensures that even if regex misses a tag, the dangerous characters are gone
+    sanitizedName = sanitizedName.replace(/[<>'"&]/g, '');
+    
+    // Trim whitespace
+    sanitizedName = sanitizedName.trim();
+    
     if (sanitizedName.length === 0) {
         throw new Error('playerName cannot be empty');
     }

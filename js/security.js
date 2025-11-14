@@ -18,6 +18,13 @@ export function escapeHtml(unsafe) {
 
 /**
  * Sanitizes a player name by removing dangerous characters and limiting length
+ * Multi-layer defense against XSS:
+ * 1. Remove script/style tags iteratively to handle nested/malformed tags
+ * 2. Remove all other HTML tags
+ * 3. Remove remaining dangerous characters
+ * This approach provides defense in depth - even if regex misses edge cases,
+ * the final character filtering ensures no HTML/script injection is possible
+ * 
  * @param {string} name - The player name to sanitize
  * @param {number} maxLength - Maximum allowed length (default: 20)
  * @returns {string} - The sanitized name
@@ -27,8 +34,28 @@ export function sanitizePlayerName(name, maxLength = 20) {
         return 'Héros';
     }
     
-    // Remove HTML tags and trim whitespace
-    let sanitized = name.replace(/<[^>]*>/g, '').trim();
+    let sanitized = name;
+    let previousLength;
+    
+    // Remove script and style content iteratively until no more changes
+    do {
+        previousLength = sanitized.length;
+        sanitized = sanitized.replace(/<script[\s\S]*?<\/script\s*>/gi, '');
+        sanitized = sanitized.replace(/<style[\s\S]*?<\/style\s*>/gi, '');
+    } while (sanitized.length !== previousLength);
+    
+    // Remove all HTML tags iteratively until no more tags exist
+    do {
+        previousLength = sanitized.length;
+        sanitized = sanitized.replace(/<\/?[^>]+(>|$)/g, '');
+    } while (sanitized.length !== previousLength);
+    
+    // Final defense: remove ANY remaining characters that could be used in HTML/JS injection
+    // This ensures that even if regex misses a tag, the dangerous characters are gone
+    sanitized = sanitized.replace(/[<>'"&]/g, '');
+    
+    // Trim whitespace
+    sanitized = sanitized.trim();
     
     // Limit length
     if (sanitized.length > maxLength) {
@@ -63,8 +90,24 @@ export function validateInput(input, options = {}) {
         return { valid: false, sanitized: '', error: 'Input must be a string' };
     }
     
-    // Remove HTML tags
-    let sanitized = input.replace(/<[^>]*>/g, '').trim();
+    // Use comprehensive HTML tag removal
+    let sanitized = input;
+    let previousLength;
+    
+    // Remove script and style content iteratively
+    do {
+        previousLength = sanitized.length;
+        sanitized = sanitized.replace(/<script[\s\S]*?<\/script\s*>/gi, '');
+        sanitized = sanitized.replace(/<style[\s\S]*?<\/style\s*>/gi, '');
+    } while (sanitized.length !== previousLength);
+    
+    // Remove all HTML tags iteratively
+    do {
+        previousLength = sanitized.length;
+        sanitized = sanitized.replace(/<\/?[^>]+(>|$)/g, '');
+    } while (sanitized.length !== previousLength);
+    
+    sanitized = sanitized.trim();
     
     // Check length
     if (sanitized.length > maxLength) {
