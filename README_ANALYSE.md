@@ -8,7 +8,7 @@ Votre jeu **"Le Coeur du Dragon"** a été analysé en profondeur et plusieurs a
 
 1. **Analyse complète du code** (8,790 lignes de JavaScript)
 2. **Identification de 25 améliorations** organisées par priorité
-3. **Correction de 3 exploits critiques** qui permettaient de tricher
+3. **Correction de 4 exploits critiques** qui permettaient de tricher
 4. **Tests de sécurité complets** (CodeQL: 0 vulnérabilités trouvées)
 
 ---
@@ -28,7 +28,7 @@ Votre jeu **"Le Coeur du Dragon"** a été analysé en profondeur et plusieurs a
 - Bug #7: Race conditions multijoueur
 
 #### 🎯 Partie 2: Exploits de Gameplay (8 exploits identifiés)
-- Exploit #1: Spam de compétences sans cooldown
+- Exploit #1: Spam de compétences sans cooldown ✅ **CORRIGÉ**
 - Exploit #2: Fuite infinie sans pénalité ✅ **CORRIGÉ**
 - Exploit #3: Farming de PNJ
 - Exploit #4: Achat d'armes sans restriction
@@ -145,7 +145,7 @@ Boss vaincus: 0-5
 
 ### Priorité Haute (à faire prochainement)
 1. **Bug #3** - Stats points illimités via reload
-2. **Exploit #1** - Spam de compétences
+2. **Bug #2** - Régénération d'énergie exploitable
 3. **Amélioration #1** - Système de quêtes narratives
 4. **Amélioration #6** - Système de prestige (NewGame+)
 

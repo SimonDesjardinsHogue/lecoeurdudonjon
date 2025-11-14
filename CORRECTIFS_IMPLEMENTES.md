@@ -8,11 +8,11 @@
 
 ## 📋 Résumé Exécutif
 
-Cette mise à jour corrige **3 exploits critiques** qui permettaient aux joueurs de contourner les mécaniques de jeu et de progresser de manière non prévue. Tous les correctifs ont été testés et validés avec CodeQL.
+Cette mise à jour corrige **4 exploits critiques** qui permettaient aux joueurs de contourner les mécaniques de jeu et de progresser de manière non prévue. Tous les correctifs ont été testés et validés avec CodeQL.
 
 ### Statistiques
-- **Fichiers modifiés:** 2 (`js/combat.js`, `js/save-load.js`)
-- **Lignes ajoutées:** 139
+- **Fichiers modifiés:** 3 (`js/combat.js`, `js/save-load.js`, `js/skills.js`)
+- **Lignes ajoutées:** 180+
 - **Lignes supprimées:** 4
 - **Tests de sécurité:** ✅ Passés (0 alertes CodeQL)
 - **Tests syntaxiques:** ✅ Passés
@@ -266,6 +266,83 @@ Analysis Result for 'javascript': Found 0 alerts
 - ✅ Fuites répétées → Pénalités appliquées
 - ✅ Import sauvegarde avec stats invalides → Rejeté
 - ✅ Import sauvegarde valide → Accepté
+- ✅ Utilisation compétence puis réutilisation immédiate → Bloquée par cooldown
+- ✅ Utilisation compétence après cooldown → Fonctionne
+
+---
+
+## 🔴 CORRECTIF #4: Spam de Compétences sans Cooldown
+
+### Problème Identifié
+Les joueurs pouvaient potentiellement:
+1. Utiliser la même compétence puissante répétitivement
+2. Spammer des capacités spéciales sans limite
+3. Déséquilibrer les combats en utilisant trop de compétences
+4. Vider rapidement des boss avec des attaques spéciales
+
+**Impact:** Sans cooldowns, les compétences deviennent trop puissantes et déséquilibrent le jeu.
+
+### Solution Implémentée
+
+#### Dans `js/skills.js` - Système de cooldown
+```javascript
+// Tracker de cooldowns
+const skillCooldowns = {};
+
+// Vérifier si une compétence est en recharge
+export function isSkillOnCooldown(skillId) {
+    const currentTurn = gameState.combatTurn || 0;
+    const cooldownEnd = skillCooldowns[skillId] || 0;
+    return currentTurn < cooldownEnd;
+}
+
+// Lors de l'utilisation d'une compétence
+export function useSkill(skillId) {
+    // Vérifier le cooldown
+    if (isSkillOnCooldown(skillId)) {
+        const remaining = getSkillCooldown(skillId);
+        addCombatLog(`❌ Compétence en recharge (${remaining} tours)`, 'error');
+        return false;
+    }
+    
+    // Utiliser la compétence
+    const result = skill.effect(player, enemy);
+    
+    // Définir le cooldown (3-5 tours selon la compétence)
+    const currentTurn = gameState.combatTurn || 0;
+    skillCooldowns[skillId] = currentTurn + skill.cooldown;
+}
+```
+
+#### Cooldowns par compétence
+- **Charge Puissante** (Guerrier): 3 tours
+- **Coup de Bouclier** (Guerrier): 4 tours
+- **Boule de Feu** (Magicien): 3 tours
+- **Bouclier de Mana** (Magicien): 5 tours
+- **Tir Multiple** (Archer): 2 tours
+- **Tir Visé** (Archer): 3 tours
+
+### Tests Effectués
+
+#### Test 1: Utilisation normale
+```
+✅ Compétence utilisée avec succès
+✅ Cooldown de 3 tours appliqué
+✅ Message "Compétence en recharge (2 tours)" affiché
+```
+
+#### Test 2: Tentative de spam
+```
+✅ Première utilisation: Succès
+✅ Deuxième utilisation immédiate: Bloquée
+✅ Utilisation après cooldown: Succès
+```
+
+### Résultat
+- ✅ Chaque compétence a un cooldown défini
+- ✅ Impossible de spammer la même compétence
+- ✅ Équilibre du combat restauré
+- ✅ Stratégie requise pour utiliser les compétences efficacement
 
 ---
 
@@ -275,12 +352,14 @@ Analysis Result for 'javascript': Found 0 alerts
 - ❌ Boss faciles à battre avec save-scumming
 - ❌ Aucun risque en combat (fuite facile)
 - ❌ Triche possible via modification de sauvegarde
+- ❌ Spam de compétences déséquilibre les combats
 - ❌ Progression trop rapide et sans challenge
 
 ### Après les Correctifs
 - ✅ Boss sont un vrai défi
 - ✅ La fuite a un coût (or, XP, pénalités)
 - ✅ Sauvegardes sécurisées contre la triche
+- ✅ Compétences équilibrées avec cooldowns
 - ✅ Progression équilibrée et challengeante
 
 ---
@@ -312,7 +391,7 @@ Voir `ANALYSE_COMPLETE.md` pour la liste complète, mais voici les priorités:
 
 ### Haute Priorité (Prochaine version)
 1. **Bug #3**: Stats points illimités via reload
-2. **Exploit #1**: Spam de compétences sans cooldown
+2. **Bug #2**: Régénération d'énergie exploitable
 3. **Exploit #3**: Farming de PNJ pour ressources infinies
 4. **Exploit #4**: Achat d'armes sans restriction de classe
 
@@ -337,6 +416,7 @@ Voir `ANALYSE_COMPLETE.md` pour la liste complète, mais voici les priorités:
 ### Fichiers Modifiés
 - ✅ `js/combat.js` - Système de boss combat et fuite
 - ✅ `js/save-load.js` - Validation des sauvegardes
+- ✅ `js/skills.js` - Système de cooldowns pour compétences
 
 ---
 
