@@ -9,6 +9,50 @@ import { characterSexes } from '../character-sexes.js';
 export function formatReportAsHTML(report) {
     let html = '<div class="balance-report">';
     
+    // Balance Status Overview
+    html += '<div class="report-section">';
+    html += '<h3>🎯 État de l\'Équilibre</h3>';
+    html += '<div class="shop-item" style="display: block;">';
+    
+    // Determine overall balance status
+    const avgWinRate = parseFloat(report.summary.avgWinRate);
+    const avgLevel = parseFloat(report.summary.avgLevel);
+    const percentLevel20 = parseFloat(report.summary.percentReachedLevel20);
+    
+    let balanceStatus = '';
+    let statusColor = '';
+    
+    if (avgWinRate >= 70 && avgWinRate <= 80 && percentLevel20 >= 60) {
+        balanceStatus = '✓ Excellent - Le jeu est bien équilibré';
+        statusColor = '#51cf66';
+    } else if (avgWinRate >= 60 && avgWinRate <= 85) {
+        balanceStatus = '⚠️ Acceptable - Quelques ajustements mineurs recommandés';
+        statusColor = '#DAA520';
+    } else if (avgWinRate < 50) {
+        balanceStatus = '❌ Trop Difficile - Ajustements majeurs requis';
+        statusColor = '#ff6b6b';
+    } else {
+        balanceStatus = '⚠️ Trop Facile - Réduction de difficulté recommandée';
+        statusColor = '#ffd93d';
+    }
+    
+    html += `<p style="font-size: 1.2em; color: ${statusColor}; font-weight: bold;">${balanceStatus}</p>`;
+    html += `<p><strong>Nombre de problèmes détectés:</strong> ${report.suggestions.length}</p>`;
+    
+    if (report.suggestions.length > 0) {
+        const criticalIssues = report.suggestions.filter(s => s.severity === 3).length;
+        const majorIssues = report.suggestions.filter(s => s.severity === 2).length;
+        const minorIssues = report.suggestions.filter(s => s.severity === 1 || !s.severity).length;
+        
+        html += `<div style="margin-top: 10px;">`;
+        if (criticalIssues > 0) html += `<span style="color: #ff6b6b;">⚠️ Critiques: ${criticalIssues}</span> `;
+        if (majorIssues > 0) html += `<span style="color: #ffd93d;">⚠️ Majeurs: ${majorIssues}</span> `;
+        if (minorIssues > 0) html += `<span style="color: #DAA520;">⚠️ Mineurs: ${minorIssues}</span>`;
+        html += `</div>`;
+    }
+    
+    html += '</div></div>';
+    
     // Summary
     html += '<div class="report-section">';
     html += '<h3>📊 Résumé Global</h3>';
@@ -17,6 +61,7 @@ export function formatReportAsHTML(report) {
     html += `<p><strong>Niveau moyen atteint:</strong> ${report.summary.avgLevel}</p>`;
     html += `<p><strong>Taux de victoire moyen:</strong> ${report.summary.avgWinRate}</p>`;
     html += `<p><strong>Ennemis vaincus (moyenne):</strong> ${report.summary.avgKills}</p>`;
+    html += `<p><strong>Boss vaincus (moyenne):</strong> ${report.summary.avgBossesDefeated}</p>`;
     html += `<p><strong>% atteignant niveau 20:</strong> ${report.summary.percentReachedLevel20}</p>`;
     html += '</div></div>';
     
@@ -136,7 +181,7 @@ export function formatReportAsHTML(report) {
         html += `<div>Niveau min atteint: ${stats.minLevel}</div>`;
         html += `<div>Kills max: ${stats.maxKills}</div>`;
         html += `<div>Kills min: ${stats.minKills}</div>`;
-        html += `<div>Force moyenne: ${stats.avgStrength.toFixed(1)}</div>`;
+        html += `<div>Puissance moyenne: ${stats.avgPuissance.toFixed(1)}</div>`;
         html += `<div>Défense moyenne: ${stats.avgDefense.toFixed(1)}</div>`;
         html += `<div>Dextérité moyenne: ${stats.avgDexterity.toFixed(1)}</div>`;
         html += `<div>Constitution moyenne: ${stats.avgConstitution.toFixed(1)}</div>`;
@@ -151,7 +196,42 @@ export function formatReportAsHTML(report) {
         html += `<div>Équipement: ${stats.avgItemsByCategory.equipment.toFixed(1)}</div>`;
         html += `<div>Potions énergie: ${stats.avgItemsByCategory.energy.toFixed(1)}</div>`;
         html += `<div>Potions XP: ${stats.avgItemsByCategory.exp.toFixed(1)}</div>`;
-        html += `</div></div>`;
+        html += `</div>`;
+        
+        // Add milestone progression table
+        html += `<div style="margin-top: 15px;">`;
+        html += `<h5 style="color: #DAA520; margin-bottom: 10px;">📊 Progression par Paliers</h5>`;
+        html += `<table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">`;
+        html += `<thead><tr style="background: rgba(218, 165, 32, 0.2);">`;
+        html += `<th style="padding: 5px; border: 1px solid #8B4513;">Niveau</th>`;
+        html += `<th style="padding: 5px; border: 1px solid #8B4513;">% Atteint</th>`;
+        html += `<th style="padding: 5px; border: 1px solid #8B4513;">Kills Moy.</th>`;
+        html += `<th style="padding: 5px; border: 1px solid #8B4513;">Morts Moy.</th>`;
+        html += `<th style="padding: 5px; border: 1px solid #8B4513;">Or Moy.</th>`;
+        html += `</tr></thead><tbody>`;
+        
+        [5, 10, 15, 20].forEach(level => {
+            const milestone = stats.milestones[level];
+            if (milestone && milestone.percentReached > 0) {
+                const progressColor = milestone.percentReached >= 80 ? '#51cf66' : 
+                                     milestone.percentReached >= 50 ? '#DAA520' : '#ff6b6b';
+                html += `<tr>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513;">Niveau ${level}</td>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513; color: ${progressColor}; font-weight: bold;">${milestone.percentReached.toFixed(1)}%</td>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513;">${milestone.avgKills.toFixed(1)}</td>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513;">${milestone.avgDeaths.toFixed(1)}</td>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513;">${milestone.avgGold.toFixed(0)} 💰</td>`;
+                html += `</tr>`;
+            } else {
+                html += `<tr>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513;">Niveau ${level}</td>`;
+                html += `<td colspan="4" style="padding: 5px; border: 1px solid #8B4513; color: #888; text-align: center;">Non atteint</td>`;
+                html += `</tr>`;
+            }
+        });
+        
+        html += `</tbody></table></div>`;
+        html += `</div>`;
     }
     html += '</div>';
     
@@ -166,7 +246,7 @@ export function formatReportAsHTML(report) {
         html += `<div>Niveau min atteint: ${stats.minLevel}</div>`;
         html += `<div>Kills max: ${stats.maxKills}</div>`;
         html += `<div>Kills min: ${stats.minKills}</div>`;
-        html += `<div>Force moyenne: ${stats.avgStrength.toFixed(1)}</div>`;
+        html += `<div>Puissance moyenne: ${stats.avgPuissance.toFixed(1)}</div>`;
         html += `<div>Défense moyenne: ${stats.avgDefense.toFixed(1)}</div>`;
         html += `<div>Dextérité moyenne: ${stats.avgDexterity.toFixed(1)}</div>`;
         html += `<div>Constitution moyenne: ${stats.avgConstitution.toFixed(1)}</div>`;
@@ -181,7 +261,42 @@ export function formatReportAsHTML(report) {
         html += `<div>Équipement: ${stats.avgItemsByCategory.equipment.toFixed(1)}</div>`;
         html += `<div>Potions énergie: ${stats.avgItemsByCategory.energy.toFixed(1)}</div>`;
         html += `<div>Potions XP: ${stats.avgItemsByCategory.exp.toFixed(1)}</div>`;
-        html += `</div></div>`;
+        html += `</div>`;
+        
+        // Add milestone progression table
+        html += `<div style="margin-top: 15px;">`;
+        html += `<h5 style="color: #DAA520; margin-bottom: 10px;">📊 Progression par Paliers</h5>`;
+        html += `<table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">`;
+        html += `<thead><tr style="background: rgba(218, 165, 32, 0.2);">`;
+        html += `<th style="padding: 5px; border: 1px solid #8B4513;">Niveau</th>`;
+        html += `<th style="padding: 5px; border: 1px solid #8B4513;">% Atteint</th>`;
+        html += `<th style="padding: 5px; border: 1px solid #8B4513;">Kills Moy.</th>`;
+        html += `<th style="padding: 5px; border: 1px solid #8B4513;">Morts Moy.</th>`;
+        html += `<th style="padding: 5px; border: 1px solid #8B4513;">Or Moy.</th>`;
+        html += `</tr></thead><tbody>`;
+        
+        [5, 10, 15, 20].forEach(level => {
+            const milestone = stats.milestones[level];
+            if (milestone && milestone.percentReached > 0) {
+                const progressColor = milestone.percentReached >= 80 ? '#51cf66' : 
+                                     milestone.percentReached >= 50 ? '#DAA520' : '#ff6b6b';
+                html += `<tr>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513;">Niveau ${level}</td>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513; color: ${progressColor}; font-weight: bold;">${milestone.percentReached.toFixed(1)}%</td>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513;">${milestone.avgKills.toFixed(1)}</td>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513;">${milestone.avgDeaths.toFixed(1)}</td>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513;">${milestone.avgGold.toFixed(0)} 💰</td>`;
+                html += `</tr>`;
+            } else {
+                html += `<tr>`;
+                html += `<td style="padding: 5px; border: 1px solid #8B4513;">Niveau ${level}</td>`;
+                html += `<td colspan="4" style="padding: 5px; border: 1px solid #8B4513; color: #888; text-align: center;">Non atteint</td>`;
+                html += `</tr>`;
+            }
+        });
+        
+        html += `</tbody></table></div>`;
+        html += `</div>`;
     }
     html += '</div>';
     
