@@ -293,7 +293,7 @@ body {
 
 .game-stats {
     display: grid;
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 10px;
     padding: 15px;
     background: rgba(139, 69, 19, 0.2);

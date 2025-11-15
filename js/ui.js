@@ -131,13 +131,23 @@ export function updateUI() {
     const espritMod = getStatModifier(p.esprit);
     const presenceMod = getStatModifier(p.presence);
     
-    document.getElementById('playerPuissance').textContent = `${p.puissance} (${puissanceMod >= 0 ? '+' : ''}${puissanceMod})`;
-    document.getElementById('playerDefense').textContent = `${p.defense} (${defenseMod >= 0 ? '+' : ''}${defenseMod})`;
+    const playerPuissanceEl = document.getElementById('playerPuissance');
+    if (playerPuissanceEl) {
+        playerPuissanceEl.textContent = `${p.puissance} (${puissanceMod >= 0 ? '+' : ''}${puissanceMod})`;
+    }
+    
+    const playerDefenseEl = document.getElementById('playerDefense');
+    if (playerDefenseEl) {
+        playerDefenseEl.textContent = `${p.defense} (${defenseMod >= 0 ? '+' : ''}${defenseMod})`;
+    }
     
     // Update weapon damage display and icon
     const weaponDamage = p.weaponDamage || 0;
     const totalDamage = weaponDamage + puissanceMod;
-    document.getElementById('playerWeaponDamage').textContent = `${weaponDamage} (+${puissanceMod >= 0 ? puissanceMod : 0})`;
+    const playerWeaponDamageEl = document.getElementById('playerWeaponDamage');
+    if (playerWeaponDamageEl) {
+        playerWeaponDamageEl.textContent = `${weaponDamage} (+${puissanceMod >= 0 ? puissanceMod : 0})`;
+    }
     
     // Update weapon icon based on class or equipped weapon
     const weaponIconEl = document.getElementById('weaponIcon');
@@ -161,20 +171,44 @@ export function updateUI() {
     if (manaRow) {
         if (p.class === 'magicien' || p.class === 'enchanteur') {
             manaRow.style.display = 'flex';
-            document.getElementById('playerMana').textContent = `${p.mana}/${p.maxMana}`;
-            const manaPercent = (p.mana / p.maxMana) * 100;
-            document.getElementById('manaFill').style.width = manaPercent + '%';
+            const playerManaEl = document.getElementById('playerMana');
+            const manaFillEl = document.getElementById('manaFill');
+            if (playerManaEl) {
+                playerManaEl.textContent = `${p.mana}/${p.maxMana}`;
+            }
+            if (manaFillEl) {
+                const manaPercent = (p.mana / p.maxMana) * 100;
+                manaFillEl.style.width = manaPercent + '%';
+            }
         } else {
             manaRow.style.display = 'none';
         }
     }
     
-    document.getElementById('playerAdresse').textContent = `${p.adresse} (${adresseMod >= 0 ? '+' : ''}${adresseMod})`;
-    document.getElementById('playerEsprit').textContent = `${p.esprit} (${espritMod >= 0 ? '+' : ''}${espritMod})`;
-    document.getElementById('playerPresence').textContent = `${p.presence} (${presenceMod >= 0 ? '+' : ''}${presenceMod})`;
+    const playerAdresseEl = document.getElementById('playerAdresse');
+    if (playerAdresseEl) {
+        playerAdresseEl.textContent = `${p.adresse} (${adresseMod >= 0 ? '+' : ''}${adresseMod})`;
+    }
     
-    document.getElementById('playerXP').textContent = `${p.xp}/${p.xpToLevel}`;
-    document.getElementById('playerEnergy').textContent = `${p.energy}/${p.maxEnergy}`;
+    const playerEspritEl = document.getElementById('playerEsprit');
+    if (playerEspritEl) {
+        playerEspritEl.textContent = `${p.esprit} (${espritMod >= 0 ? '+' : ''}${espritMod})`;
+    }
+    
+    const playerPresenceEl = document.getElementById('playerPresence');
+    if (playerPresenceEl) {
+        playerPresenceEl.textContent = `${p.presence} (${presenceMod >= 0 ? '+' : ''}${presenceMod})`;
+    }
+    
+    const playerXPEl = document.getElementById('playerXP');
+    if (playerXPEl) {
+        playerXPEl.textContent = `${p.xp}/${p.xpToLevel}`;
+    }
+    
+    const playerEnergyEl = document.getElementById('playerEnergy');
+    if (playerEnergyEl) {
+        playerEnergyEl.textContent = `${p.energy}/${p.maxEnergy}`;
+    }
     
     // Update character info - translate class and race names
     let translatedClassName = p.class;
@@ -267,15 +301,24 @@ export function updateUI() {
     
     // Update health bar
     const healthPercent = (p.health / p.maxHealth) * 100;
-    document.getElementById('healthFill').style.width = healthPercent + '%';
+    const healthFillEl = document.getElementById('healthFill');
+    if (healthFillEl) {
+        healthFillEl.style.width = healthPercent + '%';
+    }
     
     // Update XP bar
     const xpPercent = (p.xp / p.xpToLevel) * 100;
-    document.getElementById('xpFill').style.width = xpPercent + '%';
+    const xpFillEl = document.getElementById('xpFill');
+    if (xpFillEl) {
+        xpFillEl.style.width = xpPercent + '%';
+    }
     
     // Update energy bar
     const energyPercent = (p.energy / p.maxEnergy) * 100;
-    document.getElementById('energyFill').style.width = energyPercent + '%';
+    const energyFillEl = document.getElementById('energyFill');
+    if (energyFillEl) {
+        energyFillEl.style.width = energyPercent + '%';
+    }
     
     // Update stat points display
     const statPointsAvailable = document.getElementById('statPointsAvailable');
