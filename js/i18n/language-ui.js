@@ -81,6 +81,12 @@ function updateStartScreen() {
         nameInput.placeholder = t('heroName');
     }
     
+    // Update random name button (icon only)
+    const randomNameBtn = document.querySelector('#startScreen button[onclick="randomizeName()"]');
+    if (randomNameBtn) {
+        randomNameBtn.innerHTML = '🎲';
+    }
+    
     // Update gender section
     const genderLabels = document.querySelectorAll('#startScreen label');
     genderLabels.forEach(label => {

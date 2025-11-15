@@ -448,3 +448,27 @@ window.showEventInfoPopup = function() {
         window.scheduledEventsModule.showEventInfo(currentEvent);
     }
 };
+
+// List of medieval character names
+const medievalNames = [
+    'Aldric',
+    'Bérengère',
+    'Céleste',
+    'Drogon',
+    'Éléonore',
+    'Fendrel',
+    'Gisèle',
+    'Héraclès',
+    'Isadora',
+    'Joffrey'
+];
+
+// Randomize character name
+window.randomizeName = function() {
+    initAudio();
+    const nameInput = document.getElementById('nameInput');
+    if (nameInput) {
+        const randomIndex = Math.floor(Math.random() * medievalNames.length);
+        nameInput.value = medievalNames[randomIndex];
+    }
+};

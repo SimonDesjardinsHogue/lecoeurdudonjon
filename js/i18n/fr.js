@@ -26,8 +26,9 @@ export const fr = {
     
     // Main menu
     welcomeBrave: "Bienvenue, brave aventurier !",
-    enterName: "Entrez votre nom :",
+    enterName: "Nom de votre caractère :",
     heroName: "Nom du héros",
+    randomName: "Aléatoire",
     chooseClass: "Choisissez votre classe :",
     startAdventure: "Commencer l'Aventure",
     restoreSave: "Restaurer une Partie",
