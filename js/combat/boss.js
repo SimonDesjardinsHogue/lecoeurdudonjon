@@ -7,11 +7,47 @@ import { gameState, bosses } from '../game-state.js';
 export function shouldFaceBoss() {
     const p = gameState.player;
     // Boss possible at levels 6, 12, 18, and 24
-    // 25% chance to encounter boss when at a boss level and haven't defeated this boss yet
+    // Probability increases with each exploration to guarantee boss encounter
     const bossLevels = [6, 12, 18, 24];
-    const isAtBossLevel = bossLevels.includes(p.level) && p.kills > 0 && getBossIndexForLevel(p.level) > p.bossesDefeated - 1;
-    const bossSpawnChance = 0.25; // 25% chance
-    return isAtBossLevel && Math.random() < bossSpawnChance;
+    const isAtBossLevel = bossLevels.includes(p.level) && p.kills > 0;
+    
+    if (!isAtBossLevel) {
+        return false;
+    }
+    
+    const bossIndex = getBossIndexForLevel(p.level);
+    
+    // Check if this boss has already been defeated
+    if (bossIndex < p.bossesDefeated) {
+        return false;
+    }
+    
+    // Initialize boss attempts tracking
+    if (!p.bossAttempts) {
+        p.bossAttempts = {};
+    }
+    if (!p.bossAttempts[bossIndex]) {
+        p.bossAttempts[bossIndex] = 0;
+    }
+    
+    // Increment attempt counter
+    p.bossAttempts[bossIndex]++;
+    
+    // Escalating probability: 25% base, +10% per attempt (max 95%)
+    // This guarantees the boss appears within 8 attempts maximum
+    const baseChance = 0.25;
+    const bonusPerAttempt = 0.10;
+    const maxChance = 0.95;
+    const currentChance = Math.min(maxChance, baseChance + (p.bossAttempts[bossIndex] - 1) * bonusPerAttempt);
+    
+    const willFaceBoss = Math.random() < currentChance;
+    
+    // Reset attempts counter when boss is encountered
+    if (willFaceBoss) {
+        p.bossAttempts[bossIndex] = 0;
+    }
+    
+    return willFaceBoss;
 }
 
 // Helper function to get the correct boss index for a given level

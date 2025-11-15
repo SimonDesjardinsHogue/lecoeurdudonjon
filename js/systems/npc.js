@@ -35,15 +35,62 @@ export function meetNPC(location = null) {
     
     const npc = availableNPCs[Math.floor(Math.random() * availableNPCs.length)];
     
+    // Anti-cheat: Check NPC cooldown to prevent farming
+    if (!gameState.player.npcCooldowns) {
+        gameState.player.npcCooldowns = {};
+    }
+    
+    const now = Date.now();
+    const cooldownKey = npc.name.replace(/\s+/g, '_');
+    const cooldownTime = 1800000; // 30 minutes (reduced from 1 hour for better UX)
+    
+    if (gameState.player.npcCooldowns[cooldownKey]) {
+        const timeSince = now - gameState.player.npcCooldowns[cooldownKey];
+        
+        if (timeSince < cooldownTime) {
+            const minutesLeft = Math.ceil((cooldownTime - timeSince) / 60000);
+            // Skip this NPC and try to find another one
+            // Filter out NPCs on cooldown
+            const availableNPCsNoCooldown = availableNPCs.filter(n => {
+                const key = n.name.replace(/\s+/g, '_');
+                const lastMet = gameState.player.npcCooldowns[key];
+                if (!lastMet) return true;
+                const elapsed = now - lastMet;
+                return elapsed >= cooldownTime;
+            });
+            
+            // If all NPCs are on cooldown, show message
+            if (availableNPCsNoCooldown.length === 0) {
+                alert(`⏳ Vous avez déjà rencontré tous les PNJ disponibles récemment. Revenez dans ${minutesLeft} minutes.`);
+                // Refund energy
+                gameState.player.energy = Math.min(gameState.player.maxEnergy, gameState.player.energy + 2);
+                updateUI();
+                return;
+            }
+            
+            // Select a random NPC from those not on cooldown
+            const randomIndex = Math.floor(Math.random() * availableNPCsNoCooldown.length);
+            const selectedNPC = availableNPCsNoCooldown[randomIndex];
+            // Update npc variable for the rest of the function
+            Object.assign(npc, selectedNPC);
+        }
+    }
+    
     // Check if it's the wandering merchant
     if (npc.special === 'wandering_merchant') {
         meetWanderingMerchant();
+        // Record cooldown
+        gameState.player.npcCooldowns[cooldownKey] = now;
+        saveGame();
         return;
     }
     
     // Check if it's the jeweler
     if (npc.special === 'jeweler') {
         meetJeweler();
+        // Record cooldown
+        gameState.player.npcCooldowns[cooldownKey] = now;
+        saveGame();
         return;
     }
     
@@ -108,12 +155,12 @@ export function meetNPC(location = null) {
         rewardPara.style.color = '#51cf66';
         rewardPara.style.fontWeight = 'bold';
         eventDescription.appendChild(rewardPara);
-        
-        saveGame();
-        updateUI();
     }
     
-    // Save and update UI to reflect energy consumption
+    // Record NPC cooldown
+    gameState.player.npcCooldowns[cooldownKey] = now;
+    
+    // Save and update UI to reflect energy consumption and cooldown
     saveGame();
     updateUI();
 }

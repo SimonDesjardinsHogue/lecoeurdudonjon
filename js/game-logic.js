@@ -38,8 +38,20 @@ export function checkEnergyRegeneration() {
     
     // Get current time in Toronto timezone (EST/EDT - UTC-5 or UTC-4)
     const now = new Date();
+    const currentTime = now.getTime();
     const torontoTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/Toronto' }));
     const lastSleep = new Date(p.lastSleepTime);
+    
+    // Anti-cheat: Verify that time hasn't moved backward (clock manipulation)
+    // Allow 60 seconds of tolerance for small clock adjustments
+    if (p.lastGameTime && currentTime < p.lastGameTime - 60000) {
+        console.warn('⚠️ Time anomaly detected - possible clock manipulation');
+        // Don't regenerate energy if time moved backward
+        return;
+    }
+    
+    // Update last game time
+    p.lastGameTime = currentTime;
     
     // Calculate the next 6 AM after last sleep
     const nextRegeneration = new Date(lastSleep);

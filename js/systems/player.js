@@ -9,6 +9,15 @@ import { audioManager } from '../audio.js';
 import { particleSystem } from '../particles.js';
 import { checkAchievements } from '../achievements.js';
 
+// Anti-cheat: Ensure gold never goes negative
+export function ensureValidGold() {
+    const p = gameState.player;
+    if (p.gold < 0) {
+        console.error('Negative gold detected! Resetting to 0.');
+        p.gold = 0;
+    }
+}
+
 // Heal player by a specific amount
 export function healPlayer(amount) {
     const p = gameState.player;
@@ -163,7 +172,13 @@ export function spendStatPoint(statName) {
         return;
     }
     
-    // Spend the point
+    // Anti-cheat: Save current state for rollback if needed
+    const previousPoints = p.statPoints;
+    const previousStat = p[statName];
+    const previousMaxHealth = p.maxHealth;
+    const previousHealth = p.health;
+    
+    // Spend the point (atomic transaction)
     p[statName]++;
     p.statPoints--;
     
@@ -171,11 +186,34 @@ export function spendStatPoint(statName) {
     if (statName === 'puissance') {
         p.maxHealth += 2;
         p.health += 2; // Also heal by 2
-        addCombatLog(`✨ +1 ${statDisplayNames[statName]} ! (+2 PV max)`, 'info');
-    } else {
-        addCombatLog(`✨ +1 ${statDisplayNames[statName]} !`, 'info');
     }
     
-    saveGame();
-    updateUI();
+    // Save immediately to prevent rollback exploits
+    try {
+        saveGame();
+        
+        // Verify save was successful
+        const savedData = localStorage.getItem('lecoeurdudragon_save');
+        if (!savedData) {
+            throw new Error('Save verification failed');
+        }
+        
+        // Display success message after successful save
+        if (statName === 'puissance') {
+            addCombatLog(`✨ +1 ${statDisplayNames[statName]} ! (+2 PV max)`, 'info');
+        } else {
+            addCombatLog(`✨ +1 ${statDisplayNames[statName]} !`, 'info');
+        }
+        
+        updateUI();
+    } catch (error) {
+        // Rollback on save failure
+        console.error('Save failed, rolling back stat point:', error);
+        p.statPoints = previousPoints;
+        p[statName] = previousStat;
+        p.maxHealth = previousMaxHealth;
+        p.health = previousHealth;
+        alert('❌ Erreur lors de la sauvegarde. Changement annulé.');
+        updateUI();
+    }
 }

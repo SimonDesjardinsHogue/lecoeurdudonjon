@@ -3,6 +3,7 @@ import { gameState } from './game-state.js';
 import { updateUI, showSaveIndicator } from './ui.js';
 import { validateSaveData, addIntegrityMetadata, VALIDATION_RANGES } from './anti-cheat.js';
 import { sanitizePlayerName } from './security.js';
+import { ensureValidGold } from './systems/player.js';
 
 // Constants for save slots
 const SAVE_SLOTS_KEY = 'lecoeurdudragon_saves';
@@ -10,6 +11,9 @@ const MAX_SAVE_SLOTS = 10;
 
 // Save game to localStorage (backwards compatible with single save)
 export function saveGame() {
+    // Anti-cheat: Ensure gold is never negative before saving
+    ensureValidGold();
+    
     // Add integrity metadata before saving
     const saveDataWithIntegrity = addIntegrityMetadata({ ...gameState });
     
