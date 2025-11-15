@@ -328,8 +328,11 @@
                     <p>Êtes-vous prêt à devenir cette légende ?</p>
                 </div>
                 <div>
-                    <label for="nameInput" style="display: block; margin-bottom: 10px;">Entrez votre nom :</label>
-                    <input type="text" id="nameInput" placeholder="Nom du héros" maxlength="20">
+                    <label for="nameInput" style="display: block; margin-bottom: 10px;">Nom de votre caractère :</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <input type="text" id="nameInput" placeholder="Nom du héros" maxlength="20" style="flex: 1;">
+                        <button onclick="randomizeName()" style="padding: 10px 15px; white-space: nowrap;" title="Générer un nom médiéval aléatoire">🎲 Aléatoire</button>
+                    </div>
                 </div>
                 <div style="margin: 20px 0;">
                     <label style="display: block; margin-bottom: 10px; font-weight: bold;">Genre :</label>

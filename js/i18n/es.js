@@ -26,8 +26,9 @@ export const es = {
     
     // Main menu
     welcomeBrave: "¡Bienvenido, valiente aventurero!",
-    enterName: "Ingresa tu nombre:",
+    enterName: "Nombre de tu personaje:",
     heroName: "Nombre del héroe",
+    randomName: "Aleatorio",
     chooseClass: "Elige tu clase:",
     startAdventure: "Comenzar la Aventura",
     restoreSave: "Restaurar una Partida",
