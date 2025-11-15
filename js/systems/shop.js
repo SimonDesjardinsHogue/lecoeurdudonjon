@@ -12,6 +12,9 @@ import { getEventMultiplier } from '../scheduled-events.js';
 import { healPlayer, restoreEnergy, addExperience, checkLevelUp, meetNPC } from '../game-logic.js';
 import { triggerRandomEvent } from '../combat.js';
 
+// Anti-cheat: Purchase lock to prevent rapid-click item duplication
+let purchaseLock = false;
+
 // Helper function to get class display name
 function getClassDisplayName(classKey) {
     return characterClasses[classKey]?.name || classKey;
@@ -446,41 +449,50 @@ export function showShop(filterCategory = 'all', filterByClass = true) {
 
 // Buy item
 export function buyItem(index) {
-    const item = shopItems[index];
-    const p = gameState.player;
-    
-    // Check if item is currently unavailable
-    if (isItemUnavailable(index)) {
-        const restockTime = getRestockTimeRemaining();
-        alert(`Cet article est temporairement indisponible. Le marchand attend de nouveaux articles dans ${restockTime}.`);
+    // Anti-cheat: Check purchase lock to prevent rapid-click duplication
+    if (purchaseLock) {
         return;
     }
     
-    // Check class restriction for weapons
-    if (item.classRestriction && item.classRestriction !== p.class) {
-        const className = getClassDisplayName(item.classRestriction);
-        alert(`Cet objet est réservé à la classe ${className} !`);
-        return;
-    }
+    // Set lock
+    purchaseLock = true;
     
-    // Check level requirement
-    if (item.levelRequirement && p.level < item.levelRequirement) {
-        alert(`Vous n'avez pas le niveau requis pour acheter cet objet !\n\nNiveau requis : ${item.levelRequirement}\nVotre niveau : ${p.level}\n\nRevenez quand vous serez plus fort !`);
-        return;
-    }
-    
-    // Charisma reduces shop prices: -2% per charisma modifier point (max 20% discount)
-    const presenceMod = getStatModifier(p.presence);
-    const charismaDiscount = Math.min(0.20, Math.max(0, presenceMod * 0.02));
-    
-    // Apply event shop discount
-    const eventDiscount = getEventMultiplier('shopDiscount', 0);
-    const totalDiscount = Math.min(0.50, charismaDiscount + eventDiscount); // Max 50% discount
-    
-    const finalCost = Math.floor(item.cost * (1 - totalDiscount));
-    
-    if (p.gold >= finalCost) {
-        p.gold -= finalCost;
+    try {
+        const item = shopItems[index];
+        const p = gameState.player;
+        
+        // Check if item is currently unavailable
+        if (isItemUnavailable(index)) {
+            const restockTime = getRestockTimeRemaining();
+            alert(`Cet article est temporairement indisponible. Le marchand attend de nouveaux articles dans ${restockTime}.`);
+            return;
+        }
+        
+        // Check class restriction for weapons
+        if (item.classRestriction && item.classRestriction !== p.class) {
+            const className = getClassDisplayName(item.classRestriction);
+            alert(`Cet objet est réservé à la classe ${className} !`);
+            return;
+        }
+        
+        // Check level requirement
+        if (item.levelRequirement && p.level < item.levelRequirement) {
+            alert(`Vous n'avez pas le niveau requis pour acheter cet objet !\n\nNiveau requis : ${item.levelRequirement}\nVotre niveau : ${p.level}\n\nRevenez quand vous serez plus fort !`);
+            return;
+        }
+        
+        // Charisma reduces shop prices: -2% per charisma modifier point (max 20% discount)
+        const presenceMod = getStatModifier(p.presence);
+        const charismaDiscount = Math.min(0.20, Math.max(0, presenceMod * 0.02));
+        
+        // Apply event shop discount
+        const eventDiscount = getEventMultiplier('shopDiscount', 0);
+        const totalDiscount = Math.min(0.50, charismaDiscount + eventDiscount); // Max 50% discount
+        
+        const finalCost = Math.floor(item.cost * (1 - totalDiscount));
+        
+        if (p.gold >= finalCost) {
+            p.gold -= finalCost;
         
         // Check if item is a potion that should go to inventory
         const isPotionForInventory = item.type === 'potion' && (item.category === 'heal' || item.category === 'energy');
@@ -614,6 +626,12 @@ export function buyItem(index) {
     } else {
         alert(`Vous n'avez pas assez d'or ! (Coût: ${finalCost} or)`);
     }
+    } finally {
+        // Release lock after a short delay
+        setTimeout(() => {
+            purchaseLock = false;
+        }, 100);
+    }
 }
 
 // Show wandering merchant with rare items
@@ -662,31 +680,46 @@ export function meetWanderingMerchant() {
 
 // Buy rare item from wandering merchant
 export function buyRareItem(index) {
-    const item = rareItems[index];
-    const p = gameState.player;
+    // Anti-cheat: Check purchase lock to prevent rapid-click duplication
+    if (purchaseLock) {
+        return;
+    }
     
-    if (p.gold >= item.cost) {
-        p.gold -= item.cost;
-        item.effect();
+    // Set lock
+    purchaseLock = true;
+    
+    try {
+        const item = rareItems[index];
+        const p = gameState.player;
         
-        // Mark item as purchased for this encounter
-        if (!p.merchantPurchasedItems) {
-            p.merchantPurchasedItems = [];
+        if (p.gold >= item.cost) {
+            p.gold -= item.cost;
+            item.effect();
+            
+            // Mark item as purchased for this encounter
+            if (!p.merchantPurchasedItems) {
+                p.merchantPurchasedItems = [];
+            }
+            p.merchantPurchasedItems.push(index);
+            
+            // Play purchase sound
+            audioManager.playSound('purchase');
+            
+            // Update quest progress for shop purchases
+            updateQuestProgress('shop', 1);
+            
+            checkLevelUp();
+            saveGame();
+            updateUI();
+            alert(`Vous avez acheté ${item.name} !`);
+            meetWanderingMerchant(); // Refresh merchant shop
+        } else {
+            alert(`Vous n'avez pas assez d'or ! (Coût: ${item.cost} or)`);
         }
-        p.merchantPurchasedItems.push(index);
-        
-        // Play purchase sound
-        audioManager.playSound('purchase');
-        
-        // Update quest progress for shop purchases
-        updateQuestProgress('shop', 1);
-        
-        checkLevelUp();
-        saveGame();
-        updateUI();
-        alert(`Vous avez acheté ${item.name} !`);
-        meetWanderingMerchant(); // Refresh merchant shop
-    } else {
-        alert(`Vous n'avez pas assez d'or ! (Coût: ${item.cost} or)`);
+    } finally {
+        // Release lock after a short delay
+        setTimeout(() => {
+            purchaseLock = false;
+        }, 100);
     }
 }
