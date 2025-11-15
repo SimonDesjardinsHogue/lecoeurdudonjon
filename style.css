@@ -672,6 +672,19 @@ input[type="text"]:focus {
     border-color: #DAA520;
 }
 
+/* Randomize name dice button - compact square button matching input height */
+.randomize-name-btn {
+    padding: 10px 12px;
+    font-size: 1.5em;
+    min-width: auto;
+    width: auto;
+    flex: 0 0 auto;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .game-footer {
     background: rgba(139, 69, 19, 0.2);
     padding: 15px;
