@@ -50,21 +50,31 @@ body {
 .header-button {
     position: absolute;
     top: 10px;
-    background: none;
-    border: none;
+    background: none !important;
+    border: none !important;
     font-size: 20px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
+    transition: transform 0.2s ease;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0;
+    padding: 0 !important;
+    margin: 0;
+    width: 20px;
+    height: 20px;
+    min-width: 20px !important;
+    min-height: 20px;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    flex: none !important;
+    line-height: 1;
     z-index: 10;
 }
 
 .header-button:hover {
-    background: none;
+    background: none !important;
     transform: scale(1.1);
+    box-shadow: none !important;
 }
 
 .header-button:active {
@@ -73,14 +83,14 @@ body {
 
 /* Info Button - Left side */
 .info-button {
-    left: 10px;
+    left: 5px;
 }
 
 /* Right side container for language and audio - grouped together */
 .header-right-buttons {
     position: absolute;
     top: 10px;
-    right: 10px;
+    right: 5px;
     display: flex;
     gap: 8px;
     z-index: 10;
@@ -96,8 +106,8 @@ body {
 
 .language-menu {
     position: absolute;
-    top: 50px;
-    right: 50px;
+    top: 35px;
+    right: 5px;
     background: rgba(0, 0, 0, 0.95);
     border: 2px solid #DAA520;
     border-radius: 8px;
@@ -1034,22 +1044,26 @@ input[type="text"]:focus {
 
     .header-button {
         font-size: 18px;
+        width: 18px;
+        height: 18px;
+        min-width: 18px !important;
+        min-height: 18px;
         top: 8px;
     }
 
     .info-button {
-        left: 8px;
+        left: 5px;
     }
 
     .header-right-buttons {
         top: 8px;
-        right: 8px;
+        right: 5px;
         gap: 5px;
     }
 
     .language-menu {
-        top: 47px;
-        right: 45px;
+        top: 33px;
+        right: 5px;
         min-width: 120px;
     }
 
@@ -1197,18 +1211,22 @@ input[type="text"]:focus {
 
     .header-button {
         font-size: 20px;
+        width: 20px;
+        height: 20px;
+        min-width: 20px !important;
+        min-height: 20px;
         top: 9px;
     }
 
     .header-right-buttons {
         top: 9px;
-        right: 9px;
+        right: 5px;
         gap: 6px;
     }
 
     .language-menu {
-        top: 49px;
-        right: 48px;
+        top: 34px;
+        right: 5px;
     }
 
     /* Removed grid-template-columns override to let auto-fit work naturally */
@@ -1280,22 +1298,26 @@ input[type="text"]:focus {
 
     .header-button {
         font-size: 22px;
+        width: 22px;
+        height: 22px;
+        min-width: 22px !important;
+        min-height: 22px;
         top: 15px;
     }
 
     .info-button {
-        left: 15px;
+        left: 5px;
     }
 
     .header-right-buttons {
         top: 15px;
-        right: 15px;
+        right: 5px;
         gap: 8px;
     }
 
     .language-menu {
-        top: 55px;
-        right: 52px;
+        top: 42px;
+        right: 5px;
     }
 
     .game-stats {
