@@ -5,7 +5,7 @@ This directory contains custom agent definitions for GitHub Copilot to assist wi
 ## Available Agents
 
 ### 🎮 Le Coeur du Dragon Game Developer
-**File**: `dragon-heart-agent.yml`  
+**File**: `dragon-heart-agent.md`  
 **Alias**: `@dragon-heart-agent`
 
 Expert general du jeu "Le Coeur du Dragon" - Coordinateur principal pour le développement, l'architecture et l'intégration des systèmes de jeu.
@@ -15,7 +15,7 @@ Expert general du jeu "Le Coeur du Dragon" - Coordinateur principal pour le dév
 ---
 
 ### 💻 JavaScript ES6 Module Expert
-**File**: `javascript-expert.yml`  
+**File**: `javascript-expert.md`  
 **Alias**: `@javascript-expert`
 
 Spécialiste en développement JavaScript moderne avec modules ES6 - Architecture modulaire, bonnes pratiques, performance et compatibilité navigateur.
@@ -25,7 +25,7 @@ Spécialiste en développement JavaScript moderne avec modules ES6 - Architectur
 ---
 
 ### 🇫🇷 French Localization Expert
-**File**: `french-localization-expert.yml`  
+**File**: `french-localization-expert.md`  
 **Alias**: `@french-localization-expert`
 
 Expert en localisation française et contenu de jeu - Français natif, terminologie médiévale-fantastique, traduction et adaptation culturelle.
@@ -35,7 +35,7 @@ Expert en localisation française et contenu de jeu - Français natif, terminolo
 ---
 
 ### ⚖️ Game Balance Expert
-**File**: `game-balance-expert.yml`  
+**File**: `game-balance-expert.md`  
 **Alias**: `@game-balance-expert`
 
 Spécialiste de l'équilibre de jeu et des mécaniques RPG - Systèmes de combat, progression, économie du jeu, difficulté et design de boss.
@@ -45,7 +45,7 @@ Spécialiste de l'équilibre de jeu et des mécaniques RPG - Systèmes de combat
 ---
 
 ### 📚 Documentation Writer
-**File**: `documentation-writer.yml`  
+**File**: `documentation-writer.md`  
 **Alias**: `@documentation-writer`
 
 Expert en documentation technique et guides utilisateur - Rédaction technique, documentation API, guides utilisateur, markdown.
@@ -55,7 +55,7 @@ Expert en documentation technique et guides utilisateur - Rédaction technique, 
 ---
 
 ### 🔍 Code Review Expert
-**File**: `code-review-expert.yml`  
+**File**: `code-review-expert.md`  
 **Alias**: `@code-review-expert`
 
 Spécialiste de la qualité de code et des revues - Revue approfondie, bonnes pratiques, sécurité, performance et maintenabilité.
@@ -94,19 +94,19 @@ GitHub Copilot will automatically use these agents to provide better context-awa
 
 ## Agent File Format
 
-Each agent YAML file contains:
+Each agent Markdown file contains:
 
-```yaml
-name: Agent Name
-description: Brief description of the agent's expertise
+```markdown
+# Agent Name
 
-instructions: |
-  Detailed instructions for the agent including:
-  - Expertise areas
-  - Responsibilities
-  - Guidelines
-  - Best practices
-  - Examples
+Brief description of the agent's expertise
+
+Detailed instructions for the agent including:
+- Expertise areas
+- Responsibilities
+- Guidelines
+- Best practices
+- Examples
 ```
 
 ---
@@ -115,8 +115,8 @@ instructions: |
 
 To add a new custom agent:
 
-1. Create a new `.yml` file in this directory
-2. Follow the format shown above with `name`, `description`, and `instructions`
+1. Create a new `.md` (Markdown) file in this directory
+2. Follow the format shown above with a title, description, and detailed instructions
 3. Add documentation to this README
 4. Update `CUSTOM_AGENTS.md` in the root directory
 5. Submit a Pull Request

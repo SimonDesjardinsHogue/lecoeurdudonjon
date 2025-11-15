@@ -7,7 +7,7 @@ Les **Custom Agents** sont des assistants IA spécialisés configurés pour aide
 ## 🤖 Agents Disponibles
 
 ### 1. 🎮 Le Coeur du Dragon Game Developer
-**Fichier**: `.github/agents/dragon-heart-agent.yml`
+**Fichier**: `.github/agents/dragon-heart-agent.md`
 
 Expert général du jeu "Le Coeur du Dragon" avec une connaissance approfondie de:
 - Architecture modulaire ES6
@@ -30,7 +30,7 @@ Expert général du jeu "Le Coeur du Dragon" avec une connaissance approfondie d
 ---
 
 ### 2. 💻 JavaScript ES6 Module Expert
-**Fichier**: `.github/agents/javascript-expert.yml`
+**Fichier**: `.github/agents/javascript-expert.md`
 
 Spécialiste en développement JavaScript moderne avec modules ES6:
 - Architecture et organisation modulaire
@@ -54,7 +54,7 @@ Spécialiste en développement JavaScript moderne avec modules ES6:
 ---
 
 ### 3. 🇫🇷 French Localization Expert
-**Fichier**: `.github/agents/french-localization-expert.yml`
+**Fichier**: `.github/agents/french-localization-expert.md`
 
 Expert en localisation française et contenu de jeu:
 - Français natif et grammaire
@@ -78,7 +78,7 @@ Expert en localisation française et contenu de jeu:
 ---
 
 ### 4. ⚖️ Game Balance Expert
-**Fichier**: `.github/agents/game-balance-expert.yml`
+**Fichier**: `.github/agents/game-balance-expert.md`
 
 Spécialiste de l'équilibre de jeu et des mécaniques RPG:
 - Systèmes de combat et équilibre
@@ -102,7 +102,7 @@ Spécialiste de l'équilibre de jeu et des mécaniques RPG:
 ---
 
 ### 5. 📚 Documentation Writer
-**Fichier**: `.github/agents/documentation-writer.yml`
+**Fichier**: `.github/agents/documentation-writer.md`
 
 Expert en documentation technique et guides utilisateur:
 - Rédaction technique
@@ -126,7 +126,7 @@ Expert en documentation technique et guides utilisateur:
 ---
 
 ### 6. 🔍 Code Review Expert
-**Fichier**: `.github/agents/code-review-expert.yml`
+**Fichier**: `.github/agents/code-review-expert.md`
 
 Spécialiste de la qualité de code et des revues:
 - Revue de code approfondie
@@ -264,34 +264,33 @@ aux débutants.
 
 Les agents sont configurés dans `.github/agents/`. Pour créer ou modifier un agent:
 
-1. Créer/éditer un fichier `.yml` dans `.github/agents/`
-2. Définir le `name`, `description` et `instructions`
+1. Créer/éditer un fichier `.md` (Markdown) dans `.github/agents/`
+2. Suivre le format: titre avec `#`, description, puis instructions
 3. Merger dans la branche principale
 4. L'agent devient disponible
 
 ## 📖 Documentation des Agents
 
-Chaque fichier d'agent contient:
+Chaque fichier d'agent est en format Markdown et contient:
 
-- **name**: Nom de l'agent
-- **description**: Courte description de l'expertise
-- **instructions**: Instructions détaillées pour l'agent
+- **Titre (# Nom de l'agent)**: Nom de l'agent
+- **Description**: Courte description de l'expertise (premier paragraphe)
+- **Instructions**: Instructions détaillées pour l'agent (reste du document)
 
 Exemple de structure:
 
-```yaml
-name: Mon Agent
-description: Expert en quelque chose
-instructions: |
-  Vous êtes un expert en...
-  
-  ## Responsabilités
-  - Tâche 1
-  - Tâche 2
-  
-  ## Quand l'utiliser
-  - Situation 1
-  - Situation 2
+```markdown
+# Mon Agent
+
+Expert en quelque chose - description courte de l'expertise de l'agent
+
+## Responsabilités
+- Tâche 1
+- Tâche 2
+
+## Quand l'utiliser
+- Situation 1
+- Situation 2
 ```
 
 
