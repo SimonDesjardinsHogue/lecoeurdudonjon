@@ -59,8 +59,6 @@ export function applyCharacterClass(player, classKey) {
         return;
     }
     
-    console.log(`Applying ${classKey} class: puissance=${charClass.puissance}, presence=${charClass.presence}`);
-    
     player.class = classKey;
     player.className = charClass.name;
     player.classIcon = charClass.icon;
@@ -73,6 +71,4 @@ export function applyCharacterClass(player, classKey) {
     player.presence = charClass.presence;
     player.maxEnergy = charClass.maxEnergy;
     player.energy = charClass.maxEnergy;
-    
-    console.log(`Player stats after class: puissance=${player.puissance}, presence=${player.presence}`);
 }

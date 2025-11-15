@@ -564,5 +564,163 @@ function generateBalanceReport(analysis) {
         });
     }
     
+    // ADDITIONAL BALANCE CHECKS
+    
+    // 7. Check boss defeat rate consistency
+    const avgBossesOverall = average(allClasses.map(c => c.avgBossesDefeated));
+    for (const [classKey, stats] of Object.entries(analysis.byClass)) {
+        const bossDeficit = (avgBossesOverall - stats.avgBossesDefeated) / avgBossesOverall;
+        if (bossDeficit > 0.30) { // 30% fewer bosses defeated
+            report.suggestions.push({
+                category: 'class',
+                class: classKey,
+                type: 'boss_difficulty',
+                metric: 'bosses',
+                severity: 2,
+                suggestion: `${stats.className} a du mal à vaincre les boss (${stats.avgBossesDefeated.toFixed(1)} vs ${avgBossesOverall.toFixed(1)} en moyenne, -${(bossDeficit * 100).toFixed(0)}%). Suggestion: Augmenter les PV ou la défense pour améliorer la survie contre les boss.`
+            });
+        }
+    }
+    
+    // 8. Check level progression consistency - ensure all classes can progress similarly
+    for (const [classKey, stats] of Object.entries(analysis.byClass)) {
+        const levelDeficit = (avgLevelOverall - stats.avgLevel) / avgLevelOverall;
+        if (levelDeficit > 0.15) { // 15% lower level
+            report.suggestions.push({
+                category: 'class',
+                class: classKey,
+                type: 'progression',
+                metric: 'level',
+                severity: 2,
+                suggestion: `${stats.className} progresse trop lentement (niveau ${stats.avgLevel.toFixed(1)} vs ${avgLevelOverall.toFixed(1)} en moyenne, -${(levelDeficit * 100).toFixed(0)}%). Suggestion: Augmenter les gains d'XP de +${Math.round(levelDeficit * 100)}% ou améliorer la survie.`
+            });
+        }
+    }
+    
+    // 9. Check item purchasing patterns - ensure classes buy appropriate items
+    for (const [classKey, stats] of Object.entries(analysis.byClass)) {
+        const equipmentRatio = stats.avgItemsByCategory.equipment / stats.avgItemsPurchased;
+        if (equipmentRatio < 0.15) { // Less than 15% equipment purchases
+            report.suggestions.push({
+                category: 'class',
+                class: classKey,
+                type: 'economy',
+                metric: 'items',
+                severity: 1,
+                suggestion: `${stats.className} achète peu d'équipement (${(equipmentRatio * 100).toFixed(0)}% des achats). Cela peut indiquer que l'équipement est trop cher ou que la classe meurt trop souvent pour économiser.`
+            });
+        }
+    }
+    
+    // 10. Check data consistency - ensure no class has NaN or invalid values
+    for (const [classKey, stats] of Object.entries(analysis.byClass)) {
+        if (isNaN(stats.avgLevel) || isNaN(stats.avgWinRate) || isNaN(stats.avgKills)) {
+            report.suggestions.push({
+                category: 'error',
+                class: classKey,
+                type: 'data_integrity',
+                metric: 'overall',
+                severity: 3,
+                suggestion: `ERREUR: ${stats.className} a des données invalides (NaN détecté). Vérifier la simulation pour cette classe.`
+            });
+        }
+    }
+    
+    // 11. Check milestone progression - ensure consistent progression through levels
+    for (const [classKey, stats] of Object.entries(analysis.byClass)) {
+        const level5Reached = stats.milestones[5].percentReached;
+        const level10Reached = stats.milestones[10].percentReached;
+        const level15Reached = stats.milestones[15].percentReached;
+        const level20Reached = stats.milestones[20].percentReached;
+        
+        // Check if there's a significant drop-off at any milestone
+        if (level5Reached < 80) {
+            report.suggestions.push({
+                category: 'class',
+                class: classKey,
+                type: 'early_game',
+                metric: 'level5',
+                severity: 3,
+                suggestion: `${stats.className} a du mal à atteindre le niveau 5 (seulement ${level5Reached.toFixed(0)}% des parties). Suggestion: Augmenter les PV de départ de +20 ou réduire la difficulté des premiers ennemis.`
+            });
+        }
+        
+        if (level10Reached < 50 && level5Reached >= 80) {
+            report.suggestions.push({
+                category: 'class',
+                class: classKey,
+                type: 'mid_game',
+                metric: 'level10',
+                severity: 2,
+                suggestion: `${stats.className} a du mal à progresser de niveau 5 à 10 (${level10Reached.toFixed(0)}% atteignent niveau 10 vs ${level5Reached.toFixed(0)}% atteignent niveau 5). Suggestion: Réduire les requis d'XP entre niveaux 5-10 de -15%.`
+            });
+        }
+        
+        if (level20Reached < avgLevel20Percent * 0.70) {
+            report.suggestions.push({
+                category: 'class',
+                class: classKey,
+                type: 'late_game',
+                metric: 'level20',
+                severity: 2,
+                suggestion: `${stats.className} a du mal à atteindre le niveau maximum (${level20Reached.toFixed(0)}% vs ${avgLevel20Percent.toFixed(0)}% en moyenne). Suggestion: Ajuster la courbe d'XP ou améliorer les stats de fin de partie.`
+            });
+        }
+    }
+    
+    // 12. Check race balance across all metrics
+    for (const [raceKey, stats] of Object.entries(analysis.byRace)) {
+        const levelDeficit = (avgLevelOverallRace - stats.avgLevel) / avgLevelOverallRace;
+        if (levelDeficit > 0.20) { // 20% lower level
+            report.suggestions.push({
+                category: 'race',
+                race: raceKey,
+                type: 'progression',
+                metric: 'level',
+                severity: 2,
+                suggestion: `${stats.raceName} progresse beaucoup plus lentement (niveau ${stats.avgLevel.toFixed(1)} vs ${avgLevelOverallRace.toFixed(1)} en moyenne, -${(levelDeficit * 100).toFixed(0)}%). Suggestion: Améliorer les modificateurs raciaux (+1 constitution, +1 force).`
+            });
+        }
+        
+        const winRateDeficit = (avgWinRateOverallRace - stats.avgWinRate) / avgWinRateOverallRace;
+        if (winRateDeficit > 0.20) { // 20% worse win rate
+            report.suggestions.push({
+                category: 'race',
+                race: raceKey,
+                type: 'combat',
+                metric: 'winRate',
+                severity: 3,
+                suggestion: `${stats.raceName} a un taux de victoire très inférieur (${(stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverallRace * 100).toFixed(1)}% en moyenne, -${(winRateDeficit * 100).toFixed(0)}%). Suggestion: Augmenter les modificateurs de combat (+2 force ou +2 défense).`
+            });
+        }
+    }
+    
+    // 13. Check sex balance - ensure no significant disparity
+    for (const [sexKey, stats] of Object.entries(analysis.bySex)) {
+        const levelDeficit = (avgLevelOverallSex - stats.avgLevel) / avgLevelOverallSex;
+        if (levelDeficit > 0.10) { // 10% lower level
+            report.suggestions.push({
+                category: 'sex',
+                sex: sexKey,
+                type: 'progression',
+                metric: 'level',
+                severity: 2,
+                suggestion: `${stats.sexName} progresse plus lentement (niveau ${stats.avgLevel.toFixed(1)} vs ${avgLevelOverallSex.toFixed(1)} en moyenne, -${(levelDeficit * 100).toFixed(0)}%). Suggestion: Vérifier les modificateurs de sexe pour l'équilibrage.`
+            });
+        }
+        
+        const winRateDeficit = (avgWinRateOverallSex - stats.avgWinRate) / avgWinRateOverallSex;
+        if (winRateDeficit > 0.15) { // 15% worse win rate
+            report.suggestions.push({
+                category: 'sex',
+                sex: sexKey,
+                type: 'combat',
+                metric: 'winRate',
+                severity: 2,
+                suggestion: `${stats.sexName} a un taux de victoire inférieur (${(stats.avgWinRate * 100).toFixed(1)}% vs ${(avgWinRateOverallSex * 100).toFixed(1)}% en moyenne, -${(winRateDeficit * 100).toFixed(0)}%). Suggestion: Ajuster les modificateurs de combat.`
+            });
+        }
+    }
+    
     return report;
 }
