@@ -5,7 +5,7 @@
 }
 
 body {
-    font-family: Georgia, 'Book Antiqua', Palatino, 'Palatino Linotype', 'Times New Roman', serif;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, 'Hoefler Text', 'Garamond', 'Baskerville', 'Goudy Old Style', Georgia, 'Times New Roman', serif;
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
     color: #f0f0f0;
     min-height: 100vh;
@@ -159,7 +159,7 @@ body {
     color: #f0f0f0;
     padding: 10px 15px;
     font-size: 14px;
-    font-family: Georgia, 'Book Antiqua', Palatino, 'Palatino Linotype', 'Times New Roman', serif;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, 'Hoefler Text', 'Garamond', 'Baskerville', 'Goudy Old Style', Georgia, 'Times New Roman', serif;
     cursor: pointer;
     text-align: left;
     border-radius: 5px;
@@ -453,7 +453,7 @@ button {
     color: #DAA520;
     border: 2px solid #DAA520;
     padding: 12px 24px;
-    font-family: Georgia, 'Book Antiqua', Palatino, 'Palatino Linotype', 'Times New Roman', serif;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, 'Hoefler Text', 'Garamond', 'Baskerville', 'Goudy Old Style', Georgia, 'Times New Roman', serif;
     font-size: 1em;
     cursor: pointer;
     border-radius: 5px;
@@ -683,7 +683,7 @@ input[type="text"] {
     color: #f0f0f0;
     border: 2px solid #8B4513;
     padding: 10px;
-    font-family: Georgia, 'Book Antiqua', Palatino, 'Palatino Linotype', 'Times New Roman', serif;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, 'Hoefler Text', 'Garamond', 'Baskerville', 'Goudy Old Style', Georgia, 'Times New Roman', serif;
     font-size: 1em;
     border-radius: 5px;
     width: 100%;
@@ -932,7 +932,7 @@ input[type="text"]:focus {
     border: 3px solid #8B4513;
     max-width: 600px;
     z-index: 10000;
-    font-family: Georgia, 'Book Antiqua', Palatino, 'Palatino Linotype', 'Times New Roman', serif;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, 'Hoefler Text', 'Garamond', 'Baskerville', 'Goudy Old Style', Georgia, 'Times New Roman', serif;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 
@@ -966,7 +966,7 @@ input[type="text"]:focus {
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    font-family: Georgia, 'Book Antiqua', Palatino, 'Palatino Linotype', 'Times New Roman', serif;
+    font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, 'Hoefler Text', 'Garamond', 'Baskerville', 'Goudy Old Style', Georgia, 'Times New Roman', serif;
     font-size: 16px;
 }
 
