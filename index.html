@@ -182,72 +182,15 @@
                             <span class="char-value-small" id="equippedAmuletNameInline">Aucun</span>
                         </div>
                     </div>
-                    <div style="margin-top: 5px; display: flex; align-items: center; gap: 5px;">
-                        <div class="char-compact" onclick="toggleInventoryPanel()" style="cursor: pointer; display: inline-flex; align-items: center; gap: 3px; padding: 3px 6px; background: rgba(0,0,0,0.3); border-radius: 3px;" title="Ouvrir/Fermer le sac">
-                            <span class="char-label-small">🎒</span>
-                            <span class="char-value-small" id="inventoryCount">0/4</span>
-                        </div>
-                    </div>
-                </div>
-                <div id="inventoryPanel" style="display: none; margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 5px;">
-                    <div style="color: #DAA520; font-weight: bold; margin-bottom: 6px; font-size: 0.9em;">🎒 Sac d'Objets</div>
-                    <div id="inventoryPanelContent"></div>
                 </div>
             </div>
 
             <!-- Groupe 2: Statistiques de combat (PV, Mana for mages, CA, Énergie) -->
             <div class="stat-box stat-group-combat">
-                <div class="stat-label">Combat</div>
                 <div class="combat-stats-compact">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                         <span style="font-size: 0.85em;">Niv. <strong id="playerLevel">1</strong></span>
                         <span style="font-size: 0.85em;" id="playerGold">0 💰</span>
-                    </div>
-                    <div class="combat-stat-row">
-                        <span class="combat-icon-small">❤️</span>
-                        <div class="health-bar-small">
-                            <div class="health-fill" id="healthFill" style="width: 100%;"></div>
-                            <div class="xp-markers">
-                                <div class="xp-marker" style="left: 25%;"></div>
-                                <div class="xp-marker" style="left: 50%;"></div>
-                                <div class="xp-marker" style="left: 75%;"></div>
-                            </div>
-                            <span class="xp-text" id="playerHealth">100/100</span>
-                        </div>
-                    </div>
-                    <div class="combat-stat-row" id="manaRow" style="display: none;">
-                        <span class="combat-icon-small">🔮</span>
-                        <div class="health-bar-small">
-                            <div class="health-fill" id="manaFill" style="width: 100%; background: linear-gradient(90deg, #4169E1 0%, #1E90FF 100%);"></div>
-                            <div class="xp-markers">
-                                <div class="xp-marker" style="left: 25%;"></div>
-                                <div class="xp-marker" style="left: 50%;"></div>
-                                <div class="xp-marker" style="left: 75%;"></div>
-                            </div>
-                            <span class="xp-text" id="playerMana">100/100</span>
-                        </div>
-                    </div>
-                    <div class="combat-stat-row">
-                        <span class="combat-icon-small">⚡</span>
-                        <div class="health-bar-small">
-                            <div class="health-fill" id="energyFill" style="width: 100%; background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);"></div>
-                            <div class="xp-markers">
-                                <div class="xp-marker" style="left: 25%;"></div>
-                                <div class="xp-marker" style="left: 50%;"></div>
-                                <div class="xp-marker" style="left: 75%;"></div>
-                            </div>
-                            <span class="xp-text" id="playerEnergy">100/100</span>
-                        </div>
-                    </div>
-                    <div class="combat-stat-inline">
-                        <span class="combat-icon-small" id="weaponIcon">⚔️</span>
-                        <span class="stat-label-inline">Arme:</span>
-                        <span class="stat-value-small" id="playerWeaponDamage">0</span>
-                    </div>
-                    <div class="combat-stat-inline">
-                        <span class="combat-icon-small">🛡️</span>
-                        <span class="stat-label-inline">CA:</span>
-                        <span class="stat-value-small" id="playerDefense">5</span>
                     </div>
                     <div id="statPointsAvailable" style="display: none; text-align: center; margin: 5px 0; font-size: 0.85em; color: #DAA520; font-weight: bold;">
                         ✨ Points disponibles: <span id="statPointsCount">0</span>
@@ -270,6 +213,16 @@
                             <span class="char-value-small" id="playerPresence">10</span>
                         </div>
                     </div>
+                    <div style="margin-top: 5px; display: flex; align-items: center; gap: 5px;">
+                        <div class="char-compact" onclick="toggleInventoryPanel()" style="cursor: pointer; display: inline-flex; align-items: center; gap: 3px; padding: 3px 6px; background: rgba(0,0,0,0.3); border-radius: 3px;" title="Ouvrir/Fermer le sac">
+                            <span class="char-label-small">🎒</span>
+                            <span class="char-value-small" id="inventoryCount">0/4</span>
+                        </div>
+                    </div>
+                </div>
+                <div id="inventoryPanel" style="display: none; margin-top: 8px; padding: 8px; background: rgba(0,0,0,0.3); border-radius: 5px;">
+                    <div style="color: #DAA520; font-weight: bold; margin-bottom: 6px; font-size: 0.9em;">🎒 Sac d'Objets</div>
+                    <div id="inventoryPanelContent"></div>
                 </div>
             </div>
 
