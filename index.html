@@ -212,20 +212,11 @@
 
             <!-- Groupe 3: Progression et Caractéristiques combinées -->
             <div class="stat-box stat-group-progression-combined">
-                <div class="stat-label">Progression & Stats</div>
+                <div class="stat-label">Progression</div>
                 <div class="progression-compact">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
                         <span style="font-size: 0.85em;">Niv. <strong id="playerLevel">1</strong></span>
                         <span style="font-size: 0.85em;" id="playerGold">0 💰</span>
-                    </div>
-                    <div class="xp-bar">
-                        <div class="xp-fill" id="xpFill" style="width: 0%;"></div>
-                        <div class="xp-markers">
-                            <div class="xp-marker" style="left: 25%;"></div>
-                            <div class="xp-marker" style="left: 50%;"></div>
-                            <div class="xp-marker" style="left: 75%;"></div>
-                        </div>
-                        <span class="xp-text" id="playerXP">0/100</span>
                     </div>
                     <div id="statPointsAvailable" style="display: none; text-align: center; margin: 5px 0; font-size: 0.85em; color: #DAA520; font-weight: bold;">
                         ✨ Points disponibles: <span id="statPointsCount">0</span>
@@ -248,6 +239,19 @@
                             <span class="char-value-small" id="playerPresence">10</span>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Experience Bar - Full Width Below -->
+            <div class="stat-box stat-group-xp">
+                <div class="xp-bar">
+                    <div class="xp-fill" id="xpFill" style="width: 0%;"></div>
+                    <div class="xp-markers">
+                        <div class="xp-marker" style="left: 25%;"></div>
+                        <div class="xp-marker" style="left: 50%;"></div>
+                        <div class="xp-marker" style="left: 75%;"></div>
+                    </div>
+                    <span class="xp-text" id="playerXP">0/100</span>
                 </div>
             </div>
         </div>

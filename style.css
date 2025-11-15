@@ -307,6 +307,12 @@ body {
     border: 1px solid #8B4513;
 }
 
+/* Experience bar should span full width */
+.stat-group-xp {
+    grid-column: 1 / -1;
+    padding: 8px 10px;
+}
+
 .stat-label {
     color: #DAA520;
     font-size: 0.8em;
@@ -319,11 +325,22 @@ body {
     font-weight: bold;
 }
 
-.health-bar, .xp-bar {
+.health-bar {
     width: 100%;
     height: 20px;
     background: rgba(0, 0, 0, 0.7);
     border-radius: 10px;
+    overflow: hidden;
+    margin-top: 5px;
+    border: 1px solid #8B4513;
+    position: relative;
+}
+
+.xp-bar {
+    width: 100%;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 8px;
     overflow: hidden;
     margin-top: 5px;
     border: 1px solid #8B4513;
@@ -1623,9 +1640,9 @@ input[type="text"]:focus {
 
 .health-bar-small {
     width: 100%;
-    height: 12px;
+    height: 18px;
     background: rgba(0, 0, 0, 0.7);
-    border-radius: 6px;
+    border-radius: 9px;
     overflow: hidden;
     border: 1px solid #8B4513;
     flex: 2;
