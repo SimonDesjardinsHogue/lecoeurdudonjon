@@ -97,6 +97,12 @@ export function init() {
     if (hasSaves && restoreBtn) {
         restoreBtn.style.display = 'inline-block';
     }
+    
+    // Automatically generate a random name if on start screen and no name exists
+    const nameInput = document.getElementById('nameInput');
+    if (nameInput && !nameInput.value.trim() && !gameState.player.name && window.randomizeName) {
+        window.randomizeName();
+    }
 }
 
 // Start new game
