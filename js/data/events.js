@@ -1,5 +1,8 @@
 // Game Events Data Module
 // Random events
+
+import { rollGold, rollXP, rollRange, rollHealing } from '../dice.js';
+
 export const randomEvents = [
     {
         type: 'treasure',
@@ -7,7 +10,7 @@ export const randomEvents = [
         icon: '💰',
         description: 'Vous découvrez un coffre rempli de pièces d\'or !',
         effect: (p) => {
-            const gold = 30 + Math.floor(Math.random() * 150);
+            const gold = rollGold(30, 150); // 5d6 gold, scaled to 30-180 range
             p.gold += gold;
             return `Vous gagnez ${gold} pièces d\'or !`;
         },
@@ -19,7 +22,7 @@ export const randomEvents = [
         icon: '💎',
         description: 'Une gemme magique brille dans l\'obscurité...',
         effect: (p) => {
-            const xp = 30 + Math.floor(Math.random() * 90);
+            const xp = rollXP(30, 90); // 3d6 XP scaled to 30-120 range
             p.xp += xp;
             return `Vous absorbez son énergie et gagnez ${xp} XP !`;
         },
@@ -31,7 +34,7 @@ export const randomEvents = [
         icon: '🗡️',
         description: 'Vous déclenchez un piège caché dans les fourrés !',
         effect: (p) => {
-            const baseDamage = 15 + Math.floor(Math.random() * 20);
+            const baseDamage = rollRange(15, 35); // ~3d6+5 damage
             const damage = Math.max(1, baseDamage - p.defense);
             p.health = Math.max(1, p.health - damage);
             return `Vous perdez ${damage} HP !`;
@@ -44,7 +47,7 @@ export const randomEvents = [
         icon: '☠️',
         description: 'Une brume toxique émane des plantes de la forêt !',
         effect: (p) => {
-            const baseDamage = 10 + Math.floor(Math.random() * 15);
+            const baseDamage = rollRange(10, 25); // ~2d6+5 damage
             const damage = Math.max(1, baseDamage - Math.floor(p.puissance / 2));
             p.health = Math.max(1, p.health - damage);
             return `Vous perdez ${damage} HP à cause du poison !`;
@@ -57,7 +60,7 @@ export const randomEvents = [
         icon: '🪤',
         description: 'Vous êtes pris dans un collet de chasseur !',
         effect: (p) => {
-            const baseDamage = 12 + Math.floor(Math.random() * 18);
+            const baseDamage = rollRange(12, 30); // ~3d6 damage
             const damage = Math.max(1, baseDamage - p.defense);
             p.health = Math.max(1, p.health - damage);
             return `Vous vous débattez et perdez ${damage} HP avant de vous libérer !`;
@@ -70,7 +73,7 @@ export const randomEvents = [
         icon: '🌿',
         description: 'Vous trébuchez sur des racines enchevêtrées !',
         effect: (p) => {
-            const baseDamage = 8 + Math.floor(Math.random() * 12);
+            const baseDamage = rollRange(8, 20); // ~2d6 damage
             const damage = Math.max(1, baseDamage - p.defense);
             p.health = Math.max(1, p.health - damage);
             return `Vous tombez lourdement et perdez ${damage} HP !`;
@@ -83,8 +86,7 @@ export const randomEvents = [
         icon: '⛲',
         description: 'Vous trouvez une fontaine aux eaux cristallines...',
         effect: (p) => {
-            const healingPercent = 0.40 + Math.random() * 0.30; // 40% to 70%
-            const healing = Math.floor(p.maxHealth * healingPercent);
+            const healing = rollHealing(p.maxHealth, 0.40, 0.70); // 40-70% healing using dice
             p.health = Math.min(p.maxHealth, p.health + healing);
             return `Vous buvez l\'eau et récupérez ${healing} HP !`;
         },
@@ -108,8 +110,8 @@ export const randomEvents = [
         icon: '📜',
         description: 'Vous découvrez une inscription ancienne sur un arbre. Elle ressemble aux symboles que les M&M ont mentionnés...',
         effect: (p) => {
-            const xp = 40 + Math.floor(Math.random() * 60);
-            const gold = 20 + Math.floor(Math.random() * 40);
+            const xp = rollXP(40, 60); // ~3d6 XP
+            const gold = rollGold(20, 40); // ~2d6 gold
             p.xp += xp;
             p.gold += gold;
             return `En déchiffrant l\'inscription, vous gagnez ${xp} XP et trouvez ${gold} pièces d\'or cachées !`;
@@ -122,8 +124,8 @@ export const randomEvents = [
         icon: '🚪',
         description: 'Vous trouvez un passage secret marqué du symbole des M&M ! Il mène à une grotte oubliée...',
         effect: (p) => {
-            const gold = 80 + Math.floor(Math.random() * 120);
-            const xp = 50 + Math.floor(Math.random() * 50);
+            const gold = rollGold(80, 120); // ~5d6 gold  
+            const xp = rollXP(50, 50); // ~3d6 XP
             p.gold += gold;
             p.xp += xp;
             return `Dans la grotte secrète, vous découvrez ${gold} pièces d\'or et des artefacts anciens qui vous donnent ${xp} XP !`;
@@ -136,7 +138,7 @@ export const randomEvents = [
         icon: '🔮',
         description: 'Vous trouvez un parchemin laissé par les M&M. Il contient des connaissances sur les anciens gardiens de Valéria...',
         effect: (p) => {
-            const espritBonus = 2 + Math.floor(Math.random() * 3); // 2-4 total esprit bonus
+            const espritBonus = rollRange(2, 4); // 1d6, clamped to 2-4 range
             p.esprit += espritBonus;
             return `Vous étudiez le parchemin avec attention. Votre esprit augmente de ${espritBonus} !`;
         },
@@ -149,7 +151,7 @@ export const randomEvents = [
         icon: '👤',
         description: 'Un pickpocket vous bouscule dans la foule du village !',
         effect: (p) => {
-            const stolenGold = Math.floor(20 + Math.random() * 30); // 20-50 gold
+            const stolenGold = rollGold(20, 30); // ~2d6 gold theft
             const actualLoss = Math.min(stolenGold, p.gold);
             p.gold = Math.max(0, p.gold - actualLoss);
             return actualLoss > 0 ? `Le voleur s\'enfuit avec ${actualLoss} pièces d\'or !` : 'Heureusement, vous n\'aviez pas d\'or sur vous !';
@@ -162,7 +164,7 @@ export const randomEvents = [
         icon: '🥷',
         description: 'Un voleur essaie de vous dérober vos biens dans une ruelle sombre !',
         effect: (p) => {
-            const stolenGold = Math.floor(30 + Math.random() * 50); // 30-80 gold
+            const stolenGold = rollGold(30, 50); // ~3d6 gold theft
             const actualLoss = Math.min(stolenGold, p.gold);
             p.gold = Math.max(0, p.gold - actualLoss);
             return actualLoss > 0 ? `Le voleur s\'échappe avec ${actualLoss} pièces d\'or avant que vous ne puissiez réagir !` : 'Le voleur part bredouille, vous n\'aviez pas d\'or !';
@@ -175,7 +177,7 @@ export const randomEvents = [
         icon: '🎭',
         description: 'Un marchand malhonnête essaie de vous arnaquer avec de fausses potions !',
         effect: (p) => {
-            const stolenGold = Math.floor(15 + Math.random() * 25); // 15-40 gold
+            const stolenGold = rollGold(15, 25); // ~2d6 gold loss
             const actualLoss = Math.min(stolenGold, p.gold);
             p.gold = Math.max(0, p.gold - actualLoss);
             return actualLoss > 0 ? `Vous réalisez trop tard l\'arnaque et perdez ${actualLoss} pièces d\'or !` : 'Heureusement, vous n\'avez pas d\'argent pour acheter ses fausses potions !';
@@ -188,7 +190,7 @@ export const randomEvents = [
         icon: '🎁',
         description: 'Le maire du village vous remercie pour votre présence et vous offre une récompense !',
         effect: (p) => {
-            const gold = 40 + Math.floor(Math.random() * 60);
+            const gold = rollGold(40, 60); // ~3d6 gold
             p.gold += gold;
             return `Vous recevez ${gold} pièces d\'or !`;
         },
@@ -216,7 +218,7 @@ export const randomEvents = [
         effect: (p) => {
             const healing = Math.floor(p.maxHealth * 0.25);
             p.health = Math.min(p.maxHealth, p.health + healing);
-            const gold = 15 + Math.floor(Math.random() * 25);
+            const gold = rollGold(15, 25); // ~2d6 gold
             p.gold += gold;
             return `Vous récupérez ${healing} HP et trouvez ${gold} pièces d\'or cachées près de la ruche !`;
         },
@@ -228,7 +230,7 @@ export const randomEvents = [
         icon: '🌳',
         description: 'Un arbre millénaire vous murmure des secrets oubliés...',
         effect: (p) => {
-            const xp = 50 + Math.floor(Math.random() * 70);
+            const xp = rollXP(50, 70); // ~4d6 XP
             p.xp += xp;
             p.esprit += 1;
             return `La sagesse de l\'arbre vous accorde ${xp} XP et augmente votre esprit de 1 !`;
@@ -241,7 +243,7 @@ export const randomEvents = [
         icon: '🌊',
         description: 'Vous vous enfoncez dans un marécage boueux !',
         effect: (p) => {
-            const baseDamage = 18 + Math.floor(Math.random() * 22);
+            const baseDamage = rollRange(18, 40); // ~4d6 damage
             const damage = Math.max(1, baseDamage - p.defense);
             p.health = Math.max(1, p.health - damage);
             return `Vous perdez ${damage} HP en vous extirpant de la boue !`;
@@ -256,7 +258,7 @@ export const randomEvents = [
         effect: (p) => {
             const healing = Math.floor(p.maxHealth * 0.20);
             p.health = Math.min(p.maxHealth, p.health + healing);
-            const xp = 25 + Math.floor(Math.random() * 35);
+            const xp = rollXP(25, 35); // ~3d6 XP
             p.xp += xp;
             return `Leur aura magique vous restaure ${healing} HP et vous octroie ${xp} XP !`;
         },
@@ -268,7 +270,7 @@ export const randomEvents = [
         icon: '🪺',
         description: 'Vous trouvez un nid d\'oiseau rare avec des œufs précieux...',
         effect: (p) => {
-            const gold = 60 + Math.floor(Math.random() * 80);
+            const gold = rollGold(60, 80); // ~4d6 gold
             p.gold += gold;
             return `Vous vendez délicatement les œufs et gagnez ${gold} pièces d\'or !`;
         },
@@ -280,7 +282,7 @@ export const randomEvents = [
         icon: '🌵',
         description: 'Vous êtes blessé par des plantes épineuses envahissantes !',
         effect: (p) => {
-            const baseDamage = 10 + Math.floor(Math.random() * 15);
+            const baseDamage = rollRange(10, 25); // ~2d6 damage
             const damage = Math.max(1, baseDamage - p.defense);
             p.health = Math.max(1, p.health - damage);
             return `Les épines vous infligent ${damage} HP de dégâts !`;
@@ -305,7 +307,7 @@ export const randomEvents = [
         icon: '💠',
         description: 'Un cristal bleu palpite d\'énergie magique pure...',
         effect: (p) => {
-            const xp = 60 + Math.floor(Math.random() * 80);
+            const xp = rollXP(60, 80); // ~4d6 XP
             p.xp += xp;
             if (p.maxEnergy !== undefined) {
                 p.energy = Math.min(p.maxEnergy, p.energy + 25);
@@ -321,7 +323,7 @@ export const randomEvents = [
         icon: '🐝',
         description: 'Vous dérangez un nid de guêpes agressives !',
         effect: (p) => {
-            const baseDamage = 20 + Math.floor(Math.random() * 25);
+            const baseDamage = rollRange(20, 45); // ~4d6 damage
             const damage = Math.max(1, baseDamage - p.defense);
             p.health = Math.max(1, p.health - damage);
             return `Les piqûres vous causent ${damage} HP de dégâts !`;
@@ -334,7 +336,7 @@ export const randomEvents = [
         icon: '🦌',
         description: 'Un cerf blanc majestueux croise votre chemin et vous bénit de son regard...',
         effect: (p) => {
-            const xp = 40 + Math.floor(Math.random() * 50);
+            const xp = rollXP(40, 50); // ~3d6 XP
             p.xp += xp;
             p.presence += 1;
             return `Cette rencontre rare vous accorde ${xp} XP et augmente votre présence de 1 !`;
@@ -347,7 +349,7 @@ export const randomEvents = [
         icon: '⛏️',
         description: 'Vous découvrez une petite grotte remplie de pierres précieuses !',
         effect: (p) => {
-            const gold = 100 + Math.floor(Math.random() * 150);
+            const gold = rollGold(100, 150); // ~6d6 gold
             p.gold += gold;
             return `Vous récoltez des gemmes et gagnez ${gold} pièces d\'or !`;
         },
@@ -359,7 +361,7 @@ export const randomEvents = [
         icon: '🌫️',
         description: 'Un brouillard épais vous fait perdre votre chemin pendant des heures...',
         effect: (p) => {
-            const baseDamage = 5 + Math.floor(Math.random() * 10);
+            const baseDamage = rollRange(5, 15);
             const damage = Math.max(1, baseDamage);
             p.health = Math.max(1, p.health - damage);
             if (p.energy !== undefined) {
@@ -376,7 +378,7 @@ export const randomEvents = [
         icon: '🧙',
         description: 'Un ermite sage partage ses connaissances avec vous...',
         effect: (p) => {
-            const xp = 70 + Math.floor(Math.random() * 60);
+            const xp = rollXP(70, 60);
             p.xp += xp;
             p.esprit += 2;
             return `Vous apprenez beaucoup et gagnez ${xp} XP ! Votre esprit augmente de 2 !`;
@@ -390,7 +392,7 @@ export const randomEvents = [
         icon: '🎫',
         description: 'Vous gagnez à la loterie du village !',
         effect: (p) => {
-            const gold = 70 + Math.floor(Math.random() * 100);
+            const gold = rollGold(70, 100);
             p.gold += gold;
             return `Félicitations ! Vous remportez ${gold} pièces d\'or !`;
         },
@@ -414,7 +416,7 @@ export const randomEvents = [
         icon: '🃏',
         description: 'Un escroc vous défie à un jeu de bonneteau...',
         effect: (p) => {
-            const stolenGold = Math.floor(40 + Math.random() * 60);
+            const stolenGold = rollGold(40, 60);
             const actualLoss = Math.min(stolenGold, p.gold);
             p.gold = Math.max(0, p.gold - actualLoss);
             return actualLoss > 0 ? `Vous perdez la partie et ${actualLoss} pièces d\'or !` : 'Sans or, vous ne pouvez pas jouer !';
@@ -427,8 +429,8 @@ export const randomEvents = [
         icon: '🎯',
         description: 'Vous participez à un tournoi de tir à l\'arc du village...',
         effect: (p) => {
-            const gold = 50 + Math.floor(Math.random() * 70);
-            const xp = 45 + Math.floor(Math.random() * 55);
+            const gold = rollGold(50, 70);
+            const xp = rollXP(45, 55);
             p.gold += gold;
             p.xp += xp;
             p.dexterite = (p.dexterite || 0) + 1;
@@ -442,7 +444,7 @@ export const randomEvents = [
         icon: '👛',
         description: 'Vous trouvez une bourse abandonnée dans la rue...',
         effect: (p) => {
-            const gold = 35 + Math.floor(Math.random() * 45);
+            const gold = rollGold(35, 45);
             p.gold += gold;
             return `La bourse contient ${gold} pièces d\'or !`;
         },
@@ -454,7 +456,7 @@ export const randomEvents = [
         icon: '📚',
         description: 'Vous passez du temps dans la bibliothèque du village à étudier d\'anciens grimoires...',
         effect: (p) => {
-            const xp = 55 + Math.floor(Math.random() * 65);
+            const xp = rollXP(55, 65);
             p.xp += xp;
             p.esprit += 2;
             return `Vos études vous rapportent ${xp} XP et augmentent votre esprit de 2 !`;
@@ -467,7 +469,7 @@ export const randomEvents = [
         icon: '📜',
         description: 'Le collecteur d\'impôts exige une taxe supplémentaire inattendue !',
         effect: (p) => {
-            const stolenGold = Math.floor(25 + Math.random() * 35);
+            const stolenGold = rollGold(25, 35);
             const actualLoss = Math.min(stolenGold, p.gold);
             p.gold = Math.max(0, p.gold - actualLoss);
             return actualLoss > 0 ? `Vous payez ${actualLoss} pièces d\'or en taxes !` : 'Vous êtes exempté car vous n\'avez pas d\'or !';
@@ -496,7 +498,7 @@ export const randomEvents = [
         icon: '💝',
         description: 'Un noble riche admire votre courage et vous fait une donation !',
         effect: (p) => {
-            const gold = 80 + Math.floor(Math.random() * 120);
+            const gold = rollGold(80, 120);
             p.gold += gold;
             return `Le noble vous offre généreusement ${gold} pièces d\'or !`;
         },
@@ -508,7 +510,7 @@ export const randomEvents = [
         icon: '⚒️',
         description: 'Le forgeron maître vous enseigne quelques techniques...',
         effect: (p) => {
-            const xp = 50 + Math.floor(Math.random() * 50);
+            const xp = rollXP(50, 50);
             p.xp += xp;
             p.puissance = (p.puissance || 0) + 1;
             return `Vous apprenez de nouvelles techniques ! Vous gagnez ${xp} XP et +1 puissance !`;
@@ -521,7 +523,7 @@ export const randomEvents = [
         icon: '🎲',
         description: 'Vous êtes piégé dans un jeu de dés truqué à la taverne...',
         effect: (p) => {
-            const stolenGold = Math.floor(35 + Math.random() * 55);
+            const stolenGold = rollGold(35, 55);
             const actualLoss = Math.min(stolenGold, p.gold);
             p.gold = Math.max(0, p.gold - actualLoss);
             return actualLoss > 0 ? `Les dés étaient pipés ! Vous perdez ${actualLoss} pièces d\'or !` : 'Sans argent, vous ne pouvez pas jouer !';
@@ -536,7 +538,7 @@ export const randomEvents = [
         effect: (p) => {
             const healing = Math.floor(p.maxHealth * 0.20);
             p.health = Math.min(p.maxHealth, p.health + healing);
-            const xp = 30 + Math.floor(Math.random() * 40);
+            const xp = rollXP(30, 40);
             p.xp += xp;
             return `Les épices revigorent votre corps ! Vous récupérez ${healing} HP et gagnez ${xp} XP !`;
         },
@@ -548,7 +550,7 @@ export const randomEvents = [
         icon: '📨',
         description: 'Vous recevez un message concernant un petit héritage d\'un parent éloigné...',
         effect: (p) => {
-            const gold = 90 + Math.floor(Math.random() * 110);
+            const gold = rollGold(90, 110);
             p.gold += gold;
             return `Vous héritez de ${gold} pièces d\'or !`;
         },
@@ -573,7 +575,7 @@ export const randomEvents = [
         icon: '🗺️',
         description: 'Un escroc vous vend une fausse carte au trésor...',
         effect: (p) => {
-            const stolenGold = Math.floor(20 + Math.random() * 30);
+            const stolenGold = rollGold(20, 30);
             const actualLoss = Math.min(stolenGold, p.gold);
             p.gold = Math.max(0, p.gold - actualLoss);
             return actualLoss > 0 ? `Vous réalisez l\'arnaque trop tard et perdez ${actualLoss} pièces d\'or !` : 'Vous n\'avez pas d\'argent pour acheter la carte !';
@@ -586,7 +588,7 @@ export const randomEvents = [
         icon: '🐴',
         description: 'Un chevalier vous donne une leçon d\'équitation gratuite...',
         effect: (p) => {
-            const xp = 40 + Math.floor(Math.random() * 50);
+            const xp = rollXP(40, 50);
             p.xp += xp;
             p.dexterite = (p.dexterite || 0) + 1;
             return `Vous apprenez à mieux contrôler une monture ! Vous gagnez ${xp} XP et +1 dextérité !`;
@@ -599,7 +601,7 @@ export const randomEvents = [
         icon: '🔨',
         description: 'Vous trouvez une affaire incroyable lors d\'une vente aux enchères !',
         effect: (p) => {
-            const gold = 55 + Math.floor(Math.random() * 75);
+            const gold = rollGold(55, 75);
             p.gold += gold;
             return `Vous revendez l\'objet avec profit et gagnez ${gold} pièces d\'or !`;
         },
@@ -611,7 +613,7 @@ export const randomEvents = [
         icon: '🥋',
         description: 'Le maître du dojo vous invite à une session d\'entraînement...',
         effect: (p) => {
-            const xp = 60 + Math.floor(Math.random() * 70);
+            const xp = rollXP(60, 70);
             p.xp += xp;
             p.defense = (p.defense || 0) + 1;
             return `L\'entraînement intensif vous rapporte ${xp} XP et augmente votre défense de 1 !`;
@@ -624,7 +626,7 @@ export const randomEvents = [
         icon: '🎭',
         description: 'Vous impressionnez la foule avec vos talents et recevez des pourboires...',
         effect: (p) => {
-            const gold = 30 + Math.floor(Math.random() * 50);
+            const gold = rollGold(30, 50);
             p.gold += gold;
             p.presence += 1;
             return `Vos talents sont applaudis ! Vous gagnez ${gold} pièces d\'or et +1 présence !`;
@@ -638,17 +640,17 @@ export const riddles = [
     {
         question: 'Je parle sans bouche et j\'entends sans oreilles. Je n\'ai pas de corps, mais je prends vie avec le vent. Qui suis-je ?',
         answers: ['écho', 'echo', 'l\'écho', "l'écho"],
-        getReward: () => ({ gold: 80 + Math.floor(Math.random() * 40), xp: 60 + Math.floor(Math.random() * 30) })
+        getReward: () => ({ gold: rollGold(80, 40), xp: rollXP(60, 30) })
     },
     {
         question: 'Plus on m\'enlève, plus je deviens grand. Que suis-je ?',
         answers: ['trou', 'un trou', 'le trou'],
-        getReward: () => ({ gold: 65 + Math.floor(Math.random() * 30), xp: 50 + Math.floor(Math.random() * 20) })
+        getReward: () => ({ gold: rollGold(65, 30), xp: rollXP(50, 20) })
     },
     {
         question: 'Je suis toujours devant toi mais tu ne peux jamais me voir. Qui suis-je ?',
         answers: ['futur', 'avenir', 'le futur', 'l\'avenir', "l'avenir"],
-        getReward: () => ({ gold: 75 + Math.floor(Math.random() * 30), xp: 60 + Math.floor(Math.random() * 20) })
+        getReward: () => ({ gold: rollGold(75, 30), xp: rollXP(60, 20) })
     }
 ];
 
@@ -662,7 +664,7 @@ export const moralChoices = [
                 effect: (p) => {
                     if (p.gold >= 50) {
                         p.gold -= 50;
-                        const presenceBonus = 1 + Math.floor(Math.random() * 3); // 1-3 presence
+                        const presenceBonus = rollRange(1, 3);
                         p.presence += presenceBonus;
                         return `Vous aidez le mendiant. Votre présence augmente de ${presenceBonus} ! (-50 or)`;
                     } else {
@@ -685,7 +687,7 @@ export const moralChoices = [
             {
                 text: 'Prendre l\'or',
                 effect: (p) => {
-                    const goldFound = 60 + Math.floor(Math.random() * 40); // 60-100 gold
+                    const goldFound = rollGold(60, 40);
                     p.gold += goldFound;
                     p.esprit -= 1;
                     return `Vous prenez l\'or. Vous gagnez ${goldFound} pièces d\'or mais votre esprit diminue de 1.`;
@@ -694,8 +696,8 @@ export const moralChoices = [
             {
                 text: 'Laisser l\'or et prier pour le défunt',
                 effect: (p) => {
-                    const espritBonus = 1 + Math.floor(Math.random() * 2); // 1-2 esprit
-                    const xpBonus = 40 + Math.floor(Math.random() * 30); // 40-70 XP
+                    const espritBonus = rollRange(1, 2);
+                    const xpBonus = rollXP(40, 30);
                     p.esprit += espritBonus;
                     p.xp += xpBonus;
                     return `Vous respectez les morts. Votre esprit augmente de ${espritBonus} et vous gagnez ${xpBonus} XP.`;

@@ -21,6 +21,7 @@ import { useInventoryItem, sellInventoryItem } from './systems/inventory.js';
 import { showLeaderboard, submitToGlobalLeaderboard, submitPlayerToGlobalLeaderboard, switchLeaderboardMode } from './systems/leaderboard.js';
 import { checkDailyRewardReset } from './daily-rewards.js';
 import { sanitizePlayerName } from './security.js';
+import { rollSelect, rollChance } from './dice.js';
 
 // Helper function to get class display name
 function getClassDisplayName(classKey) {
@@ -112,10 +113,10 @@ export function randomizeCharacter() {
     const races = ['humain', 'elfe', 'nain'];
     const classes = ['guerrier', 'archer', 'magicien', 'enchanteur'];
     
-    // Select random options
-    const randomGender = genders[Math.floor(Math.random() * genders.length)];
-    const randomRace = races[Math.floor(Math.random() * races.length)];
-    const randomClass = classes[Math.floor(Math.random() * classes.length)];
+    // Select random options using dice-based selection
+    const randomGender = rollSelect(genders);
+    const randomRace = rollSelect(races);
+    const randomClass = rollSelect(classes);
     
     // Update gender radio buttons
     const genderRadio = document.querySelector(`input[name="characterGender"][value="${randomGender}"]`);
@@ -273,7 +274,7 @@ export function visitVillage() {
     gameState.player.energy = Math.max(0, gameState.player.energy - 5);
     
     // Random encounter - 20% random event, 30% NPC, 50% go directly to shop
-    const encounterRoll = Math.random();
+    const encounterRoll = rollChance(20) ? 0.1 : (rollChance(30) ? 0.35 : 0.6); // Dice-based encounter type
     
     if (encounterRoll < 0.2) {
         // Random event (village-specific)

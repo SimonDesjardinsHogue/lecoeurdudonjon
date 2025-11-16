@@ -6,6 +6,7 @@ import { updateUI, showScreen } from '../ui.js';
 import { saveGame } from '../save-load.js';
 import { audioManager } from '../audio.js';
 import { meetWanderingMerchant } from './shop.js';
+import { rollSelect } from '../dice.js';
 
 // Meet a random NPC
 // location parameter can be 'forest', 'village', or undefined (for backward compatibility)
@@ -33,7 +34,7 @@ export function meetNPC(location = null) {
         availableNPCs = npcs;
     }
     
-    const npc = availableNPCs[Math.floor(Math.random() * availableNPCs.length)];
+    const npc = rollSelect(availableNPCs);
     
     // Anti-cheat: Check NPC cooldown to prevent farming
     if (!gameState.player.npcCooldowns) {
@@ -68,9 +69,8 @@ export function meetNPC(location = null) {
                 return;
             }
             
-            // Select a random NPC from those not on cooldown
-            const randomIndex = Math.floor(Math.random() * availableNPCsNoCooldown.length);
-            const selectedNPC = availableNPCsNoCooldown[randomIndex];
+            // Select a random NPC from those not on cooldown using dice
+            const selectedNPC = rollSelect(availableNPCsNoCooldown);
             // Update npc variable for the rest of the function
             Object.assign(npc, selectedNPC);
         }

@@ -5,15 +5,14 @@ import { gameState, randomEvents, riddles, moralChoices } from '../game-state.js
 import { showScreen, updateUI } from '../ui.js';
 import { saveGame } from '../save-load.js';
 import { checkLevelUp } from '../game-logic.js';
+import { rollChance, rollSelect } from '../dice.js';
 
 // Trigger random event
 export function triggerRandomEvent(location = null) {
-    const eventType = Math.random();
-    
     // 15% riddle, 15% moral choice, 70% random event
-    if (eventType < 0.15) {
+    if (rollChance(15)) {
         triggerRiddle();
-    } else if (eventType < 0.30) {
+    } else if (rollChance(15)) {
         triggerMoralChoice();
     } else {
         // Filter events by location if specified
@@ -27,7 +26,7 @@ export function triggerRandomEvent(location = null) {
             availableEvents = randomEvents;
         }
         
-        const event = availableEvents[Math.floor(Math.random() * availableEvents.length)];
+        const event = rollSelect(availableEvents);
         const result = event.effect(gameState.player);
         
         showScreen('npcScreen');
@@ -69,7 +68,7 @@ export function triggerRandomEvent(location = null) {
 
 // Trigger riddle
 function triggerRiddle() {
-    const riddle = riddles[Math.floor(Math.random() * riddles.length)];
+    const riddle = rollSelect(riddles);
     
     showScreen('npcScreen');
     
@@ -146,7 +145,7 @@ function checkRiddleAnswer(riddle) {
 
 // Trigger moral choice
 function triggerMoralChoice() {
-    const choice = moralChoices[Math.floor(Math.random() * moralChoices.length)];
+    const choice = rollSelect(moralChoices);
     
     showScreen('npcScreen');
     

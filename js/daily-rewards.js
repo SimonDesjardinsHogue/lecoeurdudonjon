@@ -7,6 +7,7 @@ import { audioManager } from './audio.js';
 import { particleSystem } from './particles.js';
 import { trackAchievementProgress, checkAchievements } from './achievements.js';
 import { popupQueue } from './popup-queue.js';
+import { rollSelect } from './dice.js';
 
 // Daily login reward tiers (progressive rewards)
 const dailyLoginRewards = [
@@ -158,14 +159,14 @@ function giveLegendaryReward() {
     import('./data/shop-items.js').then(module => {
         const legendaryItems = module.legendaryItems;
         if (legendaryItems && legendaryItems.length > 0) {
-            // Get a random legendary item
-            const randomItem = legendaryItems[Math.floor(Math.random() * legendaryItems.length)];
+            // Get a random legendary item using dice-based selection
+            const randomItem = rollSelect(legendaryItems);
             
             // Add to inventory if there's space
             if (gameState.player.inventory.length < 4) {
                 gameState.player.inventory.push({
                     ...randomItem,
-                    id: `legendary_${Date.now()}_${Math.random()}`
+                    id: `legendary_${Date.now()}_${Math.floor(Math.random() * 1000000)}` // Keep for unique ID only
                 });
                 console.log('Legendary item added to inventory:', randomItem.name);
             } else {
@@ -237,7 +238,7 @@ export function startChest(chestTypeId) {
     
     // Create new chest
     const chest = {
-        id: `chest_${Date.now()}_${Math.random()}`,
+        id: `chest_${Date.now()}_${Math.floor(Math.random() * 1000000)}`, // Keep for unique ID only
         type: chestTypeId,
         name: chestType.name,
         icon: chestType.icon,
@@ -335,12 +336,12 @@ function giveRareReward() {
     import('./data/shop-items.js').then(module => {
         const rareItems = module.rareItems;
         if (rareItems && rareItems.length > 0) {
-            const randomItem = rareItems[Math.floor(Math.random() * rareItems.length)];
+            const randomItem = rollSelect(rareItems);
             
             if (gameState.player.inventory.length < 4) {
                 gameState.player.inventory.push({
                     ...randomItem,
-                    id: `rare_${Date.now()}_${Math.random()}`
+                    id: `rare_${Date.now()}_${Math.floor(Math.random() * 1000000)}` // Keep for unique ID only
                 });
                 console.log('Rare item added to inventory:', randomItem.name);
             } else {

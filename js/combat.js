@@ -17,7 +17,7 @@ import { determineInitiative } from './combat/initiative.js';
 import { shouldFaceBoss, createBossEnemy } from './combat/boss.js';
 import { triggerRandomEvent } from './combat/events.js';
 import { showTouchHint } from './touch-gestures.js';
-import { rollDamage, getDamageDiceForLevel, getDamageDiceForEnemy, formatDiceRoll } from './dice.js';
+import { rollDamage, getDamageDiceForLevel, getDamageDiceForEnemy, formatDiceRoll, rollChance, rollSelect, rollRange } from './dice.js';
 export { triggerRandomEvent };
 
 // Start exploring the dungeon
@@ -85,7 +85,7 @@ export function explore() {
     }
     
     // Random encounter - 20% random event, 20% NPC, 60% monster
-    const encounterRoll = Math.random();
+    const encounterRoll = rollChance(20) ? 0.1 : (rollChance(20) ? 0.3 : 0.5); // Dice-based encounter type
     
     if (encounterRoll < 0.2) {
         // Random event (forest-specific)
@@ -95,21 +95,22 @@ export function explore() {
         meetNPC('forest');
     } else {
         // Monster encounter - 7% chance for dual monsters
-        const dualMonsterChance = Math.random() < 0.07;
+        const dualMonsterChance = rollChance(7);
         
         if (dualMonsterChance) {
             // Dual monster encounter - select two different enemies
             const maxEnemyIndex = Math.min(enemies.length - 1, gameState.player.level);
             
-            // Get two different random indices
-            const index1 = Math.floor(Math.random() * (maxEnemyIndex + 1));
-            let index2 = Math.floor(Math.random() * (maxEnemyIndex + 1));
-            while (index2 === index1 && maxEnemyIndex > 0) {
-                index2 = Math.floor(Math.random() * (maxEnemyIndex + 1));
+            // Get two different random indices using dice
+            const availableEnemies = enemies.slice(0, maxEnemyIndex + 1);
+            const enemy1Template = rollSelect(availableEnemies);
+            let enemy2Template = rollSelect(availableEnemies);
+            // Ensure we get different enemies if possible
+            let attempts = 0;
+            while (enemy2Template === enemy1Template && availableEnemies.length > 1 && attempts < 5) {
+                enemy2Template = rollSelect(availableEnemies);
+                attempts++;
             }
-            
-            const enemy1Template = enemies[index1];
-            const enemy2Template = enemies[index2];
             
             // Create enemy objects
             const enemy1 = {
@@ -164,7 +165,8 @@ export function explore() {
         } else {
             // Single monster encounter - select enemy based on player level but ensure we don't exceed array bounds
             const maxEnemyIndex = Math.min(enemies.length - 1, gameState.player.level);
-            const enemyTemplate = enemies[Math.floor(Math.random() * (maxEnemyIndex + 1))];
+            const availableEnemies = enemies.slice(0, maxEnemyIndex + 1);
+            const enemyTemplate = rollSelect(availableEnemies);
             
             gameState.currentEnemy = {
                 ...enemyTemplate,
@@ -275,17 +277,14 @@ export function attack() {
     // Critical hit chance (10% base + event bonus)
     const baseCriticalChance = 0.10;
     const eventCriticalMultiplier = getEventMultiplier('criticalChance', 1);
-    const criticalChance = Math.random();
-    let isCritical = false;
-    if (criticalChance < (baseCriticalChance * eventCriticalMultiplier)) {
-        playerDamage = Math.floor(playerDamage * 1.5);
-        isCritical = true;
-    }
+    const effectiveCritChance = baseCriticalChance * eventCriticalMultiplier * 100;
+    let isCritical = rollChance(effectiveCritChance);
     
     e.health -= playerDamage;
     
     // Display damage with dice roll details
     if (isCritical) {
+        playerDamage = Math.floor(playerDamage * 1.5);
         addCombatLog(`💥 COUP CRITIQUE !`, 'victory');
         addCombatLog(`🎲 Dégâts: ${formatDiceRoll(damageRoll)} - ${e.defense + enemyDefenseMod} défense × 1.5 = ${playerDamage}`, 'player-damage');
     } else {
@@ -318,9 +317,9 @@ export function attack() {
             return;
         }
         
-        // Victory - Add randomness to rewards (80% to 120% of base values)
-        const goldMultiplier = 0.80 + Math.random() * 0.40;
-        const xpMultiplier = 0.80 + Math.random() * 0.40;
+        // Victory - Add randomness to rewards using dice (80% to 120% of base values)
+        const goldMultiplier = rollRange(80, 120) / 100; // ~2d6 scaled to 0.80-1.20
+        const xpMultiplier = rollRange(80, 120) / 100;   // ~2d6 scaled to 0.80-1.20
         
         // Apply event multipliers
         const eventGoldMultiplier = getEventMultiplier('goldMultiplier', 1) * getEventMultiplier('combatRewardMultiplier', 1);
@@ -370,8 +369,8 @@ export function attack() {
             p.bossesDefeated++;
             addCombatLog(`🏆 BOSS VAINCU ! 🏆`, 'victory');
             
-            // Award legendary item
-            const legendaryItem = legendaryItems[Math.floor(Math.random() * legendaryItems.length)];
+            // Award legendary item using dice-based selection
+            const legendaryItem = rollSelect(legendaryItems);
             addCombatLog(`Vous obtenez un objet légendaire : ${legendaryItem.icon} ${legendaryItem.name} !`, 'victory');
             addCombatLog(`${legendaryItem.description}`, 'info');
             legendaryItem.effect(p);
@@ -447,7 +446,7 @@ export function enemyApproachOrAttack() {
             rangedDamage = applyShieldBuff(rangedDamage);
             
             // Class-specific defensive abilities still apply
-            if (p.class === 'magicien' && Math.random() < 0.20) {
+            if (p.class === 'magicien' && rollChance(20)) {
                 const reduction = Math.floor(rangedDamage * 0.30);
                 rangedDamage = rangedDamage - reduction;
                 addCombatLog(`✨ Bouclier arcanique ! Les dégâts sont réduits de ${reduction}.`, 'special');
@@ -455,8 +454,8 @@ export function enemyApproachOrAttack() {
             
             if (p.class === 'archer') {
                 const dexMod = getStatModifier(p.adresse);
-                const dodgeChance = Math.min(0.18, dexMod * 0.018);
-                if (Math.random() < dodgeChance) {
+                const dodgeChance = Math.min(18, dexMod * 1.8); // Convert to percentage
+                if (rollChance(dodgeChance)) {
                     const reduction = Math.floor(rangedDamage * 0.35);
                     rangedDamage = rangedDamage - reduction;
                     addCombatLog(`💨 Esquive partielle ! Les dégâts sont réduits de ${reduction}.`, 'special');
@@ -506,8 +505,8 @@ export function enemyAttack() {
     // Check for natural dodge based on dexterity
     const adresseMod = getStatModifier(p.adresse);
     // Base dodge chance: 5% + (dexterity modifier * 2%)
-    const baseDodgeChance = 0.05 + (adresseMod * 0.02);
-    if (Math.random() < baseDodgeChance) {
+    const baseDodgeChance = 5 + (adresseMod * 2); // Convert to percentage
+    if (rollChance(baseDodgeChance)) {
         addCombatLog(`⚡ Vous esquivez l'attaque avec agilité !`, 'special');
         updateUI();
         return;
@@ -643,7 +642,7 @@ export function enemyAttack() {
     
     // Class-specific defensive abilities
     // Magicien: Arcane Shield - 20% chance to cast shield that reduces damage by 30%
-    if (p.class === 'magicien' && Math.random() < 0.20) {
+    if (p.class === 'magicien' && rollChance(20)) {
         const reduction = Math.floor(enemyDamage * 0.30);
         enemyDamage = enemyDamage - reduction;
         addCombatLog(`✨ Bouclier arcanique ! Les dégâts sont réduits de ${reduction}.`, 'special');
@@ -652,8 +651,8 @@ export function enemyAttack() {
     // Archer: DEX-based dodge - chance to reduce damage based on dexterity
     if (p.class === 'archer') {
         const dexMod = getStatModifier(p.adresse);
-        const dodgeChance = Math.min(0.18, dexMod * 0.018); // Up to 18% dodge chance
-        if (Math.random() < dodgeChance) {
+        const dodgeChance = Math.min(18, dexMod * 1.8); // Up to 18% dodge chance
+        if (rollChance(dodgeChance)) {
             const reduction = Math.floor(enemyDamage * 0.35);
             enemyDamage = enemyDamage - reduction;
             addCombatLog(`💨 Esquive partielle ! Les dégâts sont réduits de ${reduction}.`, 'special');
@@ -775,10 +774,10 @@ export function flee() {
     
     // Charisma improves flee chance: base 50% + (charisma modifier * 5%) - penalties
     const presenceMod = getStatModifier(p.presence);
-    const baseFleeChance = 0.5 + (presenceMod * 0.05) - fleePenalty;
-    const fleeChance = Math.min(0.9, Math.max(0.1, baseFleeChance)); // Cap between 10% and 90%
+    const baseFleeChance = 50 + (presenceMod * 5) - (fleePenalty * 100); // Convert to percentage
+    const fleeChance = Math.min(90, Math.max(10, baseFleeChance)); // Cap between 10% and 90%
     
-    if (Math.random() < fleeChance) {
+    if (rollChance(fleeChance)) {
         // Calculate penalties for fleeing
         const goldLost = Math.floor(p.gold * 0.05); // Lose 5% of gold
         const xpLost = Math.floor(p.xp * 0.03); // Lose 3% of XP

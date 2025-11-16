@@ -5,7 +5,7 @@ import { particleSystem } from './particles.js';
 import { addCombatLog } from './ui.js';
 import { saveGame } from './save-load.js';
 import { trackAchievementProgress } from './achievements.js';
-import { rollDamage, formatDiceRoll } from './dice.js';
+import { rollDamage, formatDiceRoll, rollChance } from './dice.js';
 
 // Skill cooldown tracker
 const skillCooldowns = {};
@@ -435,8 +435,8 @@ export function checkDodge() {
         return false;
     }
     
-    const dodgeChance = gameState.skillBuffs.dodgeChance || 0;
-    return Math.random() < dodgeChance;
+    const dodgeChance = (gameState.skillBuffs.dodgeChance || 0) * 100; // Convert to percentage
+    return rollChance(dodgeChance);
 }
 
 // Reset cooldowns when combat ends
