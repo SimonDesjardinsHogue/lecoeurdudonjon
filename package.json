@@ -5,7 +5,15 @@
   "main": "index.html",
   "scripts": {
     "start": "npx http-server -p 8000",
-    "test": "echo \"No tests specified yet\" && exit 0"
+    "test": "npx playwright test tests/browser-compatibility.test.js",
+    "test:chromium": "npx playwright test tests/browser-compatibility.test.js --project=chromium",
+    "test:firefox": "npx playwright test tests/browser-compatibility.test.js --project=firefox",
+    "test:webkit": "npx playwright test tests/browser-compatibility.test.js --project=webkit",
+    "test:mobile": "npx playwright test tests/browser-compatibility.test.js --project=mobile-chrome --project=mobile-safari",
+    "test:tablet": "npx playwright test tests/browser-compatibility.test.js --project=tablet-ipad",
+    "test:ui": "npx playwright test tests/browser-compatibility.test.js --ui",
+    "test:report": "npx playwright test tests/browser-compatibility.test.js --reporter=html",
+    "test:debug": "npx playwright test tests/browser-compatibility.test.js --debug"
   },
   "repository": {
     "type": "git",
@@ -30,5 +38,9 @@
   "homepage": "https://simondesjardinshogue.github.io/lecoeurdudragon/",
   "engines": {
     "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "playwright": "^1.56.1"
   }
 }
