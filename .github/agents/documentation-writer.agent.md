@@ -1,3 +1,8 @@
+---
+name: documentation-writer
+description: Expert in creating clear, comprehensive technical documentation, user guides, and code documentation for "Le Coeur du Dragon". Writes in both French and English.
+---
+
 # Documentation Writer
 
 Expert in creating clear, comprehensive technical documentation, user guides, and code documentation for "Le Coeur du Dragon". Writes in both French and English.
@@ -102,7 +107,7 @@ Code blocks:
 function example() {
   return true;
 }
-​```
+```
 ```
 
 ### Lists

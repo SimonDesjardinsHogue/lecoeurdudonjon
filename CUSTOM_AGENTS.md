@@ -7,7 +7,7 @@ Les **Custom Agents** sont des assistants IA spécialisés configurés pour aide
 ## 🤖 Agents Disponibles
 
 ### 1. 🎮 Le Coeur du Dragon Game Developer
-**Fichier**: `.github/agents/dragon-heart-agent.md`
+**Fichier**: `.github/agents/dragon-heart-agent.agent.md`
 
 Expert général du jeu "Le Coeur du Dragon" avec une connaissance approfondie de:
 - Architecture modulaire ES6
@@ -30,7 +30,7 @@ Expert général du jeu "Le Coeur du Dragon" avec une connaissance approfondie d
 ---
 
 ### 2. 💻 JavaScript ES6 Module Expert
-**Fichier**: `.github/agents/javascript-expert.md`
+**Fichier**: `.github/agents/javascript-expert.agent.md`
 
 Spécialiste en développement JavaScript moderne avec modules ES6:
 - Architecture et organisation modulaire
@@ -54,7 +54,7 @@ Spécialiste en développement JavaScript moderne avec modules ES6:
 ---
 
 ### 3. 🇫🇷 French Localization Expert
-**Fichier**: `.github/agents/french-localization-expert.md`
+**Fichier**: `.github/agents/french-localization-expert.agent.md`
 
 Expert en localisation française et contenu de jeu:
 - Français natif et grammaire
@@ -78,7 +78,7 @@ Expert en localisation française et contenu de jeu:
 ---
 
 ### 4. ⚖️ Game Balance Expert
-**Fichier**: `.github/agents/game-balance-expert.md`
+**Fichier**: `.github/agents/game-balance-expert.agent.md`
 
 Spécialiste de l'équilibre de jeu et des mécaniques RPG:
 - Systèmes de combat et équilibre
@@ -102,7 +102,7 @@ Spécialiste de l'équilibre de jeu et des mécaniques RPG:
 ---
 
 ### 5. 📚 Documentation Writer
-**Fichier**: `.github/agents/documentation-writer.md`
+**Fichier**: `.github/agents/documentation-writer.agent.md`
 
 Expert en documentation technique et guides utilisateur:
 - Rédaction technique
@@ -126,7 +126,7 @@ Expert en documentation technique et guides utilisateur:
 ---
 
 ### 6. 🔍 Code Review Expert
-**Fichier**: `.github/agents/code-review-expert.md`
+**Fichier**: `.github/agents/code-review-expert.agent.md`
 
 Spécialiste de la qualité de code et des revues:
 - Revue de code approfondie

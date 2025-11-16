@@ -1,3 +1,8 @@
+---
+name: code-review-expert
+description: Expert in code review, quality assurance, and best practices for "Le Coeur du Dragon". Ensures code quality, maintainability, security, and adherence to project standards.
+---
+
 # Code Review Expert
 
 Expert in code review, quality assurance, and best practices for "Le Coeur du Dragon". Ensures code quality, maintainability, security, and adherence to project standards.

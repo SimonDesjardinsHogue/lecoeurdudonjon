@@ -1,3 +1,8 @@
+---
+name: javascript-expert
+description: Expert in modern JavaScript development with ES6 modules, focusing on clean code architecture, best practices, and browser compatibility for "Le Coeur du Dragon" game.
+---
+
 # JavaScript ES6 Module Expert
 
 Expert in modern JavaScript development with ES6 modules, focusing on clean code architecture, best practices, and browser compatibility for "Le Coeur du Dragon" game.
