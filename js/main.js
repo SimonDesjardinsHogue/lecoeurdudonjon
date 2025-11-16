@@ -19,6 +19,7 @@ import * as dailyRewardsModule from './daily-rewards.js';
 import { initI18n, setLanguage, getCurrentLanguage, getLanguageFlag } from './i18n/i18n.js';
 import { updateLanguageUI } from './i18n/language-ui.js';
 import { initializeFirebase } from './firebase-config.js';
+import { domCache } from './utils/dom-cache.js';
 
 
 // Make scheduled events module available globally for UI updates
@@ -213,6 +214,9 @@ window.dismissInstallBanner = dismissInstallBanner;
 
 // Initialize game on load
 window.addEventListener('load', () => {
+    // Initialize DOM cache first for performance
+    domCache.init();
+    
     // Initialize i18n first
     const currentLang = initI18n();
     
