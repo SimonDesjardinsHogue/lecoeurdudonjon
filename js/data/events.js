@@ -206,6 +206,430 @@ export const randomEvents = [
             return `Vous récupérez ${healing} HP et 10 énergie grâce à la générosité des villageois !`;
         },
         location: 'village'
+    },
+    // Additional Forest Events
+    {
+        type: 'treasure',
+        name: 'Ruche d\'Abeilles',
+        icon: '🍯',
+        description: 'Vous découvrez une ruche abandonnée remplie de miel doré !',
+        effect: (p) => {
+            const healing = Math.floor(p.maxHealth * 0.25);
+            p.health = Math.min(p.maxHealth, p.health + healing);
+            const gold = 15 + Math.floor(Math.random() * 25);
+            p.gold += gold;
+            return `Vous récupérez ${healing} HP et trouvez ${gold} pièces d\'or cachées près de la ruche !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'special',
+        name: 'Arbre Ancien',
+        icon: '🌳',
+        description: 'Un arbre millénaire vous murmure des secrets oubliés...',
+        effect: (p) => {
+            const xp = 50 + Math.floor(Math.random() * 70);
+            p.xp += xp;
+            p.esprit += 1;
+            return `La sagesse de l\'arbre vous accorde ${xp} XP et augmente votre esprit de 1 !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'trap',
+        name: 'Marécage Traître',
+        icon: '🌊',
+        description: 'Vous vous enfoncez dans un marécage boueux !',
+        effect: (p) => {
+            const baseDamage = 18 + Math.floor(Math.random() * 22);
+            const damage = Math.max(1, baseDamage - p.defense);
+            p.health = Math.max(1, p.health - damage);
+            return `Vous perdez ${damage} HP en vous extirpant de la boue !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'treasure',
+        name: 'Champignons Lumineux',
+        icon: '🍄',
+        description: 'Des champignons lumineux dégagent une lueur apaisante...',
+        effect: (p) => {
+            const healing = Math.floor(p.maxHealth * 0.20);
+            p.health = Math.min(p.maxHealth, p.health + healing);
+            const xp = 25 + Math.floor(Math.random() * 35);
+            p.xp += xp;
+            return `Leur aura magique vous restaure ${healing} HP et vous octroie ${xp} XP !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'special',
+        name: 'Nid d\'Oiseau Rare',
+        icon: '🪺',
+        description: 'Vous trouvez un nid d\'oiseau rare avec des œufs précieux...',
+        effect: (p) => {
+            const gold = 60 + Math.floor(Math.random() * 80);
+            p.gold += gold;
+            return `Vous vendez délicatement les œufs et gagnez ${gold} pièces d\'or !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'trap',
+        name: 'Plantes Épineuses',
+        icon: '🌵',
+        description: 'Vous êtes blessé par des plantes épineuses envahissantes !',
+        effect: (p) => {
+            const baseDamage = 10 + Math.floor(Math.random() * 15);
+            const damage = Math.max(1, baseDamage - p.defense);
+            p.health = Math.max(1, p.health - damage);
+            return `Les épines vous infligent ${damage} HP de dégâts !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'special',
+        name: 'Source Thermale',
+        icon: '♨️',
+        description: 'Vous découvrez une source thermale naturelle cachée dans les rochers...',
+        effect: (p) => {
+            const healing = Math.floor(p.maxHealth * 0.50);
+            p.health = Math.min(p.maxHealth, p.health + healing);
+            return `Les eaux chaudes vous revitalisent ! Vous récupérez ${healing} HP !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'treasure',
+        name: 'Cristal de Mana',
+        icon: '💠',
+        description: 'Un cristal bleu palpite d\'énergie magique pure...',
+        effect: (p) => {
+            const xp = 60 + Math.floor(Math.random() * 80);
+            p.xp += xp;
+            if (p.maxEnergy !== undefined) {
+                p.energy = Math.min(p.maxEnergy, p.energy + 25);
+                return `Vous absorbez le mana et gagnez ${xp} XP et 25 énergie !`;
+            }
+            return `Vous absorbez le mana et gagnez ${xp} XP !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'trap',
+        name: 'Guêpes Furieuses',
+        icon: '🐝',
+        description: 'Vous dérangez un nid de guêpes agressives !',
+        effect: (p) => {
+            const baseDamage = 20 + Math.floor(Math.random() * 25);
+            const damage = Math.max(1, baseDamage - p.defense);
+            p.health = Math.max(1, p.health - damage);
+            return `Les piqûres vous causent ${damage} HP de dégâts !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'special',
+        name: 'Cerf Majestueux',
+        icon: '🦌',
+        description: 'Un cerf blanc majestueux croise votre chemin et vous bénit de son regard...',
+        effect: (p) => {
+            const xp = 40 + Math.floor(Math.random() * 50);
+            p.xp += xp;
+            p.presence += 1;
+            return `Cette rencontre rare vous accorde ${xp} XP et augmente votre présence de 1 !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'treasure',
+        name: 'Grotte aux Pierres Précieuses',
+        icon: '⛏️',
+        description: 'Vous découvrez une petite grotte remplie de pierres précieuses !',
+        effect: (p) => {
+            const gold = 100 + Math.floor(Math.random() * 150);
+            p.gold += gold;
+            return `Vous récoltez des gemmes et gagnez ${gold} pièces d\'or !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'trap',
+        name: 'Brouillard Égarant',
+        icon: '🌫️',
+        description: 'Un brouillard épais vous fait perdre votre chemin pendant des heures...',
+        effect: (p) => {
+            const baseDamage = 5 + Math.floor(Math.random() * 10);
+            const damage = Math.max(1, baseDamage);
+            p.health = Math.max(1, p.health - damage);
+            if (p.energy !== undefined) {
+                p.energy = Math.max(0, p.energy - 10);
+                return `La fatigue vous fait perdre ${damage} HP et 10 énergie !`;
+            }
+            return `La fatigue vous fait perdre ${damage} HP !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'special',
+        name: 'Rencontre avec un Ermite',
+        icon: '🧙',
+        description: 'Un ermite sage partage ses connaissances avec vous...',
+        effect: (p) => {
+            const xp = 70 + Math.floor(Math.random() * 60);
+            p.xp += xp;
+            p.esprit += 2;
+            return `Vous apprenez beaucoup et gagnez ${xp} XP ! Votre esprit augmente de 2 !`;
+        },
+        location: 'forest'
+    },
+    // Additional Village Events
+    {
+        type: 'treasure',
+        name: 'Loterie du Village',
+        icon: '🎫',
+        description: 'Vous gagnez à la loterie du village !',
+        effect: (p) => {
+            const gold = 70 + Math.floor(Math.random() * 100);
+            p.gold += gold;
+            return `Félicitations ! Vous remportez ${gold} pièces d\'or !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'special',
+        name: 'Guérisseur du Village',
+        icon: '⚕️',
+        description: 'Un guérisseur généreux vous offre ses soins gratuitement...',
+        effect: (p) => {
+            const healing = Math.floor(p.maxHealth * 0.60);
+            p.health = Math.min(p.maxHealth, p.health + healing);
+            return `Le guérisseur vous restaure ${healing} HP !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'theft',
+        name: 'Joueur de Bonneteau',
+        icon: '🃏',
+        description: 'Un escroc vous défie à un jeu de bonneteau...',
+        effect: (p) => {
+            const stolenGold = Math.floor(40 + Math.random() * 60);
+            const actualLoss = Math.min(stolenGold, p.gold);
+            p.gold = Math.max(0, p.gold - actualLoss);
+            return actualLoss > 0 ? `Vous perdez la partie et ${actualLoss} pièces d\'or !` : 'Sans or, vous ne pouvez pas jouer !';
+        },
+        location: 'village'
+    },
+    {
+        type: 'special',
+        name: 'Tournoi de Tir à l\'Arc',
+        icon: '🎯',
+        description: 'Vous participez à un tournoi de tir à l\'arc du village...',
+        effect: (p) => {
+            const gold = 50 + Math.floor(Math.random() * 70);
+            const xp = 45 + Math.floor(Math.random() * 55);
+            p.gold += gold;
+            p.xp += xp;
+            p.dexterite = (p.dexterite || 0) + 1;
+            return `Vous remportez le tournoi ! Vous gagnez ${gold} or, ${xp} XP et +1 dextérité !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'treasure',
+        name: 'Bourse Trouvée',
+        icon: '👛',
+        description: 'Vous trouvez une bourse abandonnée dans la rue...',
+        effect: (p) => {
+            const gold = 35 + Math.floor(Math.random() * 45);
+            p.gold += gold;
+            return `La bourse contient ${gold} pièces d\'or !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'special',
+        name: 'Bibliothèque Ancienne',
+        icon: '📚',
+        description: 'Vous passez du temps dans la bibliothèque du village à étudier d\'anciens grimoires...',
+        effect: (p) => {
+            const xp = 55 + Math.floor(Math.random() * 65);
+            p.xp += xp;
+            p.esprit += 2;
+            return `Vos études vous rapportent ${xp} XP et augmentent votre esprit de 2 !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'theft',
+        name: 'Taxe Imprévue',
+        icon: '📜',
+        description: 'Le collecteur d\'impôts exige une taxe supplémentaire inattendue !',
+        effect: (p) => {
+            const stolenGold = Math.floor(25 + Math.random() * 35);
+            const actualLoss = Math.min(stolenGold, p.gold);
+            p.gold = Math.max(0, p.gold - actualLoss);
+            return actualLoss > 0 ? `Vous payez ${actualLoss} pièces d\'or en taxes !` : 'Vous êtes exempté car vous n\'avez pas d\'or !';
+        },
+        location: 'village'
+    },
+    {
+        type: 'special',
+        name: 'Concert de Ménestrel',
+        icon: '🎵',
+        description: 'Un ménestrel talentueux joue une mélodie enchanteresse sur la place du village...',
+        effect: (p) => {
+            const healing = Math.floor(p.maxHealth * 0.15);
+            p.health = Math.min(p.maxHealth, p.health + healing);
+            if (p.energy !== undefined) {
+                p.energy = Math.min(p.maxEnergy, p.energy + 15);
+                return `La musique apaise votre esprit ! Vous récupérez ${healing} HP et 15 énergie !`;
+            }
+            return `La musique apaise votre esprit ! Vous récupérez ${healing} HP !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'treasure',
+        name: 'Donation Généreuse',
+        icon: '💝',
+        description: 'Un noble riche admire votre courage et vous fait une donation !',
+        effect: (p) => {
+            const gold = 80 + Math.floor(Math.random() * 120);
+            p.gold += gold;
+            return `Le noble vous offre généreusement ${gold} pièces d\'or !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'special',
+        name: 'Forge du Maître',
+        icon: '⚒️',
+        description: 'Le forgeron maître vous enseigne quelques techniques...',
+        effect: (p) => {
+            const xp = 50 + Math.floor(Math.random() * 50);
+            p.xp += xp;
+            p.puissance = (p.puissance || 0) + 1;
+            return `Vous apprenez de nouvelles techniques ! Vous gagnez ${xp} XP et +1 puissance !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'theft',
+        name: 'Jeu de Dés Truqué',
+        icon: '🎲',
+        description: 'Vous êtes piégé dans un jeu de dés truqué à la taverne...',
+        effect: (p) => {
+            const stolenGold = Math.floor(35 + Math.random() * 55);
+            const actualLoss = Math.min(stolenGold, p.gold);
+            p.gold = Math.max(0, p.gold - actualLoss);
+            return actualLoss > 0 ? `Les dés étaient pipés ! Vous perdez ${actualLoss} pièces d\'or !` : 'Sans argent, vous ne pouvez pas jouer !';
+        },
+        location: 'village'
+    },
+    {
+        type: 'special',
+        name: 'Marché aux Épices',
+        icon: '🌶️',
+        description: 'Un marchand d\'épices exotiques vous offre un échantillon gratuit...',
+        effect: (p) => {
+            const healing = Math.floor(p.maxHealth * 0.20);
+            p.health = Math.min(p.maxHealth, p.health + healing);
+            const xp = 30 + Math.floor(Math.random() * 40);
+            p.xp += xp;
+            return `Les épices revigorent votre corps ! Vous récupérez ${healing} HP et gagnez ${xp} XP !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'treasure',
+        name: 'Héritage Inattendu',
+        icon: '📨',
+        description: 'Vous recevez un message concernant un petit héritage d\'un parent éloigné...',
+        effect: (p) => {
+            const gold = 90 + Math.floor(Math.random() * 110);
+            p.gold += gold;
+            return `Vous héritez de ${gold} pièces d\'or !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'special',
+        name: 'Temple de la Sagesse',
+        icon: '🕌',
+        description: 'Vous méditez dans le temple du village et trouvez la paix intérieure...',
+        effect: (p) => {
+            const healing = Math.floor(p.maxHealth * 0.40);
+            p.health = Math.min(p.maxHealth, p.health + healing);
+            p.esprit += 1;
+            return `La méditation vous restaure ${healing} HP et augmente votre esprit de 1 !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'theft',
+        name: 'Fausse Quête',
+        icon: '🗺️',
+        description: 'Un escroc vous vend une fausse carte au trésor...',
+        effect: (p) => {
+            const stolenGold = Math.floor(20 + Math.random() * 30);
+            const actualLoss = Math.min(stolenGold, p.gold);
+            p.gold = Math.max(0, p.gold - actualLoss);
+            return actualLoss > 0 ? `Vous réalisez l\'arnaque trop tard et perdez ${actualLoss} pièces d\'or !` : 'Vous n\'avez pas d\'argent pour acheter la carte !';
+        },
+        location: 'village'
+    },
+    {
+        type: 'special',
+        name: 'Leçon d\'Équitation',
+        icon: '🐴',
+        description: 'Un chevalier vous donne une leçon d\'équitation gratuite...',
+        effect: (p) => {
+            const xp = 40 + Math.floor(Math.random() * 50);
+            p.xp += xp;
+            p.dexterite = (p.dexterite || 0) + 1;
+            return `Vous apprenez à mieux contrôler une monture ! Vous gagnez ${xp} XP et +1 dextérité !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'treasure',
+        name: 'Vente aux Enchères',
+        icon: '🔨',
+        description: 'Vous trouvez une affaire incroyable lors d\'une vente aux enchères !',
+        effect: (p) => {
+            const gold = 55 + Math.floor(Math.random() * 75);
+            p.gold += gold;
+            return `Vous revendez l\'objet avec profit et gagnez ${gold} pièces d\'or !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'special',
+        name: 'Entraînement au Dojo',
+        icon: '🥋',
+        description: 'Le maître du dojo vous invite à une session d\'entraînement...',
+        effect: (p) => {
+            const xp = 60 + Math.floor(Math.random() * 70);
+            p.xp += xp;
+            p.defense = (p.defense || 0) + 1;
+            return `L\'entraînement intensif vous rapporte ${xp} XP et augmente votre défense de 1 !`;
+        },
+        location: 'village'
+    },
+    {
+        type: 'treasure',
+        name: 'Spectacle de Rue',
+        icon: '🎭',
+        description: 'Vous impressionnez la foule avec vos talents et recevez des pourboires...',
+        effect: (p) => {
+            const gold = 30 + Math.floor(Math.random() * 50);
+            p.gold += gold;
+            p.presence += 1;
+            return `Vos talents sont applaudis ! Vous gagnez ${gold} pièces d\'or et +1 présence !`;
+        },
+        location: 'village'
     }
 ];
 
