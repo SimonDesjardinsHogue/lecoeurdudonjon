@@ -76,6 +76,12 @@ export function showScreen(screenId) {
         document.getElementById('gameStats').style.display = 'grid';
     } else {
         document.getElementById('gameStats').style.display = 'none';
+        
+        // Automatically generate a random name when showing the start screen
+        const nameInput = document.getElementById('nameInput');
+        if (nameInput && !nameInput.value.trim() && window.randomizeName) {
+            window.randomizeName();
+        }
     }
     
     // Reset NPC screen layout when showing it
