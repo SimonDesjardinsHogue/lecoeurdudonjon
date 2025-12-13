@@ -3,12 +3,12 @@
 
 import { gameState, bosses } from '../game-state.js';
 
-// Check if player should face a boss (at levels 6, 12, 18, and 24)
+// Check if player should face a boss (at levels 4, 8, 12, 16, 20, and 24)
 export function shouldFaceBoss() {
     const p = gameState.player;
-    // Boss possible at levels 6, 12, 18, and 24
+    // Boss possible at levels 4, 8, 12, 16, 20, and 24
     // Probability increases with each exploration to guarantee boss encounter
-    const bossLevels = [6, 12, 18, 24];
+    const bossLevels = [4, 8, 12, 16, 20, 24];
     const isAtBossLevel = bossLevels.includes(p.level) && p.kills > 0;
     
     if (!isAtBossLevel) {
@@ -33,9 +33,9 @@ export function shouldFaceBoss() {
     // Increment attempt counter
     p.bossAttempts[bossIndex]++;
     
-    // Escalating probability: 25% base, +10% per attempt (max 95%)
-    // This guarantees the boss appears within 8 attempts maximum
-    const baseChance = 0.25;
+    // Escalating probability: 30% base, +10% per attempt (max 95%)
+    // This guarantees the boss appears within 7 attempts maximum
+    const baseChance = 0.30;
     const bonusPerAttempt = 0.10;
     const maxChance = 0.95;
     const currentChance = Math.min(maxChance, baseChance + (p.bossAttempts[bossIndex] - 1) * bonusPerAttempt);
@@ -52,9 +52,9 @@ export function shouldFaceBoss() {
 
 // Helper function to get the correct boss index for a given level
 function getBossIndexForLevel(level) {
-    const bossLevels = [6, 12, 18, 24];
+    const bossLevels = [4, 8, 12, 16, 20, 24];
     const index = bossLevels.indexOf(level);
-    return index; // Returns 0 for level 6, 1 for level 12, 2 for level 18, 3 for level 24
+    return index; // Returns 0 for level 4, 1 for level 8, etc.
 }
 
 // Create boss enemy
@@ -64,7 +64,7 @@ export function createBossEnemy() {
     const bossTemplate = bosses[bossIndex];
     
     // Scale boss stats based on player level
-    const bossLevels = [6, 12, 18, 24];
+    const bossLevels = [4, 8, 12, 16, 20, 24];
     const baseLevelForBoss = bossLevels[bossIndex] || 24;
     const levelMultiplier = 1 + (p.level - baseLevelForBoss) * 0.1;
     

@@ -48,29 +48,55 @@ export const enemies = [
     { name: 'Champion du Chaos', icon: '⚔️👿', health: 380, strength: 56, defense: 36, gold: 607, xp: 552, level: 24 }
 ];
 
-// Boss templates - appear at levels 6, 12, 18, and 24
+// Elite enemies - rare encounters with better loot (15% chance to appear)
+// These have 50% more stats and 2x gold/xp compared to normal enemies at their level
+export const eliteEnemies = [
+    { name: 'Rat Géant Féroce', icon: '👑🐀', health: 45, strength: 11, defense: 3, gold: 32, xp: 46, level: 1, isElite: true },
+    { name: 'Chef Gobelin', icon: '👑👺', health: 75, strength: 14, defense: 6, gold: 52, xp: 74, level: 2, isElite: true },
+    { name: 'Araignée Reine', icon: '👑🕷️', health: 82, strength: 15, defense: 8, gold: 60, xp: 82, level: 4, isElite: true },
+    { name: 'Alpha Loup-Garou', icon: '👑🐺', health: 150, strength: 27, defense: 15, gold: 152, xp: 166, level: 13, isElite: true },
+    { name: 'Archimage Noir', icon: '👑🧙', health: 165, strength: 30, defense: 18, gold: 182, xp: 184, isRanged: true, level: 15, isElite: true },
+    { name: 'Dragon Majeur', icon: '👑🐉', health: 225, strength: 35, defense: 23, gold: 304, xp: 276, level: 16, isElite: true },
+    { name: 'Seigneur Vampire', icon: '👑🧛', health: 240, strength: 42, defense: 24, gold: 404, xp: 368, level: 18, isElite: true },
+    { name: 'Prince Démon', icon: '👑😈', health: 330, strength: 57, defense: 33, gold: 648, xp: 588, level: 24, isElite: true }
+];
+
+// Boss templates - appear at levels 4, 8, 12, 16, 20, and 24
 export const bosses = [
+    { 
+        name: 'Roi Gobelin', 
+        icon: '👑👺', 
+        health: 180, 
+        strength: 22, 
+        defense: 14, 
+        gold: 250, 
+        xp: 280,
+        description: 'Le chef rusé de la tribu gobeline',
+        ability: 'goblin_horde',
+        abilityDescription: 'Appelle ses guerriers pour une attaque coordonnée',
+        level: 4
+    },
     { 
         name: 'Hydre à Trois Têtes', 
         icon: '🐉', 
-        health: 250, 
-        strength: 28, 
-        defense: 18, 
-        gold: 300, 
-        xp: 350,
+        health: 280, 
+        strength: 30, 
+        defense: 19, 
+        gold: 400, 
+        xp: 450,
         description: 'Une hydre féroce crachant du venin',
         ability: 'triple_attack',
         abilityDescription: 'Attaque trois fois de suite',
-        level: 6
+        level: 8
     },
     { 
         name: 'Seigneur Liche', 
         icon: '💀', 
-        health: 320, 
-        strength: 35, 
-        defense: 22, 
-        gold: 450, 
-        xp: 500,
+        health: 360, 
+        strength: 38, 
+        defense: 24, 
+        gold: 600, 
+        xp: 650,
         description: 'Un sorcier mort-vivant aux pouvoirs nécromantiques',
         ability: 'life_drain',
         abilityDescription: 'Vole 15 HP et les ajoute à sa santé',
@@ -79,24 +105,37 @@ export const bosses = [
     { 
         name: 'Démon des Flammes', 
         icon: '😈', 
-        health: 380, 
-        strength: 42, 
-        defense: 25, 
-        gold: 600, 
-        xp: 650,
+        health: 440, 
+        strength: 45, 
+        defense: 27, 
+        gold: 800, 
+        xp: 850,
         description: 'Un démon entouré de flammes infernales',
         ability: 'fire_burst',
         abilityDescription: 'Inflige des dégâts de feu ignorant 50% de la défense',
-        level: 18
+        level: 16
+    },
+    { 
+        name: 'Dragon de Ténèbres', 
+        icon: '🐲', 
+        health: 520, 
+        strength: 52, 
+        defense: 31, 
+        gold: 1100, 
+        xp: 1100,
+        description: 'Un dragon ancien maître des ombres',
+        ability: 'shadow_breath',
+        abilityDescription: 'Souffle d\'ombre qui ignore 40% de la défense',
+        level: 20
     },
     { 
         name: 'Le Cœur du Dragon Corrompu', 
         icon: '💎🐉', 
-        health: 500, 
-        strength: 50, 
-        defense: 30, 
-        gold: 1000, 
-        xp: 900,
+        health: 600, 
+        strength: 58, 
+        defense: 35, 
+        gold: 1500, 
+        xp: 1400,
         description: 'L\'artefact légendaire corrompu par les ténèbres',
         ability: 'corruption_wave',
         abilityDescription: 'Vague de corruption infligeant des dégâts massifs et réduisant la défense',

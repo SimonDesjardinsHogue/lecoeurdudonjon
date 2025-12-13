@@ -1,7 +1,7 @@
 // Combat System Module - Core combat actions
 // Responsibility: Handle main combat actions (attack, defend, flee)
 
-import { gameState, enemies, legendaryItems, getStatModifier, shopItems } from './game-state.js';
+import { gameState, enemies, eliteEnemies, legendaryItems, getStatModifier, shopItems } from './game-state.js';
 import { ENERGY_COSTS, ENCOUNTER_CHANCES } from './data/game-constants.js';
 import { updateUI, updateEnemyUI, addCombatLog, showScreen, updateCombatInventoryUI, updateSkillsUI } from './ui.js';
 import { saveGame } from './save-load.js';
@@ -227,10 +227,21 @@ function initiateDualCombat() {
  */
 function initiateSingleCombat() {
     try {
-        // Single monster encounter - select enemy based on player level but ensure we don't exceed array bounds
-        const maxEnemyIndex = Math.min(enemies.length - 1, gameState.player.level);
-        const availableEnemies = enemies.slice(0, maxEnemyIndex + 1);
-        const enemyTemplate = rollSelect(availableEnemies);
+        // 15% chance for elite enemy encounter (better loot)
+        const isEliteEncounter = rollChance(0.15);
+        let enemyTemplate;
+        
+        if (isEliteEncounter) {
+            // Elite enemy - filter by player level
+            const maxEnemyIndex = Math.min(eliteEnemies.length - 1, Math.floor(gameState.player.level / 3));
+            const availableElites = eliteEnemies.slice(0, maxEnemyIndex + 1);
+            enemyTemplate = rollSelect(availableElites);
+        } else {
+            // Normal enemy
+            const maxEnemyIndex = Math.min(enemies.length - 1, gameState.player.level);
+            const availableEnemies = enemies.slice(0, maxEnemyIndex + 1);
+            enemyTemplate = rollSelect(availableEnemies);
+        }
         
         gameState.currentEnemy = {
             ...enemyTemplate,
@@ -252,7 +263,15 @@ function initiateSingleCombat() {
         if (combatLog) {
             combatLog.innerHTML = '';
         }
-        addCombatLog(`Vous rencontrez un ${gameState.currentEnemy.name} !`, 'info');
+        
+        // Special message for elite enemies
+        if (enemyTemplate.isElite) {
+            addCombatLog(`⭐ ENNEMI ÉLITE ! ⭐`, 'victory');
+            addCombatLog(`Vous rencontrez un ${gameState.currentEnemy.name} !`, 'special');
+            addCombatLog(`💎 Cet ennemi puissant offre de meilleures récompenses !`, 'special');
+        } else {
+            addCombatLog(`Vous rencontrez un ${gameState.currentEnemy.name} !`, 'info');
+        }
         
         // Show distance info for ranged enemies
         if (gameState.currentEnemy.isRanged) {
@@ -394,6 +413,15 @@ export function attack() {
         const goldMultiplier = rollRange(80, 120) / 100; // ~2d6 scaled to 0.80-1.20
         const xpMultiplier = rollRange(80, 120) / 100;   // ~2d6 scaled to 0.80-1.20
         
+        // Increment victory combo
+        p.victoryCombo = (p.victoryCombo || 0) + 1;
+        if (p.victoryCombo > (p.maxVictoryCombo || 0)) {
+            p.maxVictoryCombo = p.victoryCombo;
+        }
+        
+        // Combo bonus: +5% per consecutive victory (max +50% at 10 combo)
+        const comboMultiplier = 1 + Math.min(p.victoryCombo * 0.05, 0.5);
+        
         // Apply event multipliers
         const eventGoldMultiplier = getEventMultiplier('goldMultiplier', 1) * getEventMultiplier('combatRewardMultiplier', 1);
         const eventXpMultiplier = getEventMultiplier('xpMultiplier', 1) * getEventMultiplier('combatRewardMultiplier', 1);
@@ -402,8 +430,8 @@ export function attack() {
         const firstVictory = applyFirstVictoryBonus();
         const firstVictoryMultiplier = firstVictory.applied ? 2 : 1;
         
-        let goldEarned = Math.round(e.gold * goldMultiplier * eventGoldMultiplier * firstVictoryMultiplier);
-        let xpEarned = Math.round(e.xp * xpMultiplier * eventXpMultiplier * firstVictoryMultiplier);
+        let goldEarned = Math.round(e.gold * goldMultiplier * eventGoldMultiplier * firstVictoryMultiplier * comboMultiplier);
+        let xpEarned = Math.round(e.xp * xpMultiplier * eventXpMultiplier * firstVictoryMultiplier * comboMultiplier);
         
         p.gold += goldEarned;
         p.xp += xpEarned;
@@ -412,6 +440,9 @@ export function attack() {
         let victoryMessage = `Victoire ! Vous gagnez ${goldEarned} or et ${xpEarned} XP !`;
         if (eventGoldMultiplier > 1 || eventXpMultiplier > 1) {
             victoryMessage += ' 🎉 (Bonus événement)';
+        }
+        if (p.victoryCombo > 1) {
+            victoryMessage += ` 🔥 COMBO x${p.victoryCombo} ! (+${Math.round((comboMultiplier - 1) * 100)}% bonus)`;
         }
         addCombatLog(victoryMessage, 'victory');
         
@@ -427,6 +458,17 @@ export function attack() {
         
         // Track combat win for achievements
         trackAchievementProgress('combat_win', 1);
+        
+        // Track elite kills
+        if (e.isElite) {
+            trackAchievementProgress('elite_kills', 1);
+        }
+        
+        // Track max combo
+        if (p.victoryCombo > (gameState.achievements?.stats?.max_combo || 0)) {
+            trackAchievementProgress('max_combo', p.victoryCombo);
+        }
+        
         checkAchievements();
         
         // Play victory sound and show particles
@@ -758,6 +800,12 @@ function handleDefeat() {
     p.health = 0;
     addCombatLog('Vous avez été vaincu...', 'damage');
     
+    // Reset victory combo on defeat
+    if (p.victoryCombo > 0) {
+        addCombatLog(`💔 Combo de ${p.victoryCombo} victoires perdu !`, 'damage');
+        p.victoryCombo = 0;
+    }
+    
     // Track combat loss for achievements (resets consecutive wins)
     trackAchievementProgress('combat_loss');
     
@@ -857,6 +905,12 @@ export function flee() {
         
         p.gold = Math.max(0, p.gold - goldLost);
         p.xp = Math.max(0, p.xp - xpLost);
+        
+        // Reset victory combo on flee
+        if (p.victoryCombo > 0) {
+            addCombatLog(`💔 Combo de ${p.victoryCombo} victoires perdu !`, 'damage');
+            p.victoryCombo = 0;
+        }
         
         // Record this flee
         p.fleeHistory.push(now);

@@ -158,6 +158,87 @@ export const achievements = [
         category: 'challenge',
         requirement: { type: 'successful_escapes', value: 10 },
         reward: { adresse: 3 }
+    },
+    {
+        id: 'combo_starter',
+        name: 'Débutant Combo',
+        icon: '🔥',
+        description: 'Atteindre un combo de 5 victoires',
+        category: 'combat',
+        requirement: { type: 'max_combo', value: 5 },
+        reward: { gold: 150, xp: 100 }
+    },
+    {
+        id: 'combo_master',
+        name: 'Maître du Combo',
+        icon: '💥',
+        description: 'Atteindre un combo de 10 victoires',
+        category: 'combat',
+        requirement: { type: 'max_combo', value: 10 },
+        reward: { gold: 350, puissance: 3, defense: 2 }
+    },
+    {
+        id: 'combo_legend',
+        name: 'Légende du Combo',
+        icon: '⚡',
+        description: 'Atteindre un combo de 20 victoires',
+        category: 'combat',
+        requirement: { type: 'max_combo', value: 20 },
+        reward: { gold: 750, maxHealth: 50, puissance: 5 }
+    },
+    {
+        id: 'elite_hunter',
+        name: 'Chasseur d\'Élites',
+        icon: '👑',
+        description: 'Vaincre 5 ennemis élites',
+        category: 'combat',
+        requirement: { type: 'elite_kills', value: 5 },
+        reward: { gold: 300, defense: 3 }
+    },
+    {
+        id: 'elite_slayer',
+        name: 'Tueur d\'Élites',
+        icon: '🏅',
+        description: 'Vaincre 20 ennemis élites',
+        category: 'combat',
+        requirement: { type: 'elite_kills', value: 20 },
+        reward: { gold: 800, puissance: 4, maxHealth: 30 }
+    },
+    {
+        id: 'boss_hunter',
+        name: 'Chasseur de Boss',
+        icon: '🎯',
+        description: 'Vaincre tous les 6 boss',
+        category: 'combat',
+        requirement: { type: 'bosses', value: 6 },
+        reward: { gold: 1000, puissance: 5, defense: 5, maxHealth: 100 }
+    },
+    {
+        id: 'speedrunner',
+        name: 'Speedrunner',
+        icon: '⏱️',
+        description: 'Atteindre le niveau 10 en moins de 2 heures de jeu',
+        category: 'challenge',
+        requirement: { type: 'speedrun_level10', value: 1 },
+        reward: { adresse: 5, xp: 500 }
+    },
+    {
+        id: 'wealthy_merchant',
+        name: 'Marchand Prospère',
+        icon: '💰',
+        description: 'Accumuler 10000 pièces d\'or',
+        category: 'wealth',
+        requirement: { type: 'gold', value: 10000 },
+        reward: { presence: 5, maxHealth: 50 }
+    },
+    {
+        id: 'perfect_warrior',
+        name: 'Guerrier Parfait',
+        icon: '💯',
+        description: 'Vaincre 100 ennemis avec un taux de victoire de 90%+',
+        category: 'challenge',
+        requirement: { type: 'perfect_warrior', value: 1 },
+        reward: { gold: 1500, puissance: 10, defense: 10, maxHealth: 100 }
     }
 ];
 
@@ -173,9 +254,18 @@ export function initAchievements() {
                 items_bought: 0,
                 quests_completed: 0,
                 explorations: 0,
-                successful_escapes: 0
+                successful_escapes: 0,
+                max_combo: 0,
+                elite_kills: 0
             }
         };
+    }
+    // Ensure new stats exist for older saves
+    if (!gameState.achievements.stats.max_combo) {
+        gameState.achievements.stats.max_combo = 0;
+    }
+    if (!gameState.achievements.stats.elite_kills) {
+        gameState.achievements.stats.elite_kills = 0;
     }
 }
 

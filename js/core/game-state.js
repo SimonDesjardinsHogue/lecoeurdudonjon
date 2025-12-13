@@ -2,7 +2,7 @@
 // This module manages the central game state and re-exports data from data modules
 
 // Import data from data modules
-export { enemies, bosses } from '../data/enemies.js';
+export { enemies, eliteEnemies, bosses } from '../data/enemies.js';
 export { npcs } from '../data/npcs.js';
 export { metals } from '../data/metals.js';
 export { rarities, statNames, getStatModifier, hasRandomStats, generateRandomStats } from '../data/game-constants.js';
@@ -55,7 +55,10 @@ export const gameState = {
         // Item inventory - max 4 items (potions and other items)
         inventory: [],
         // Track purchased items from wandering merchant (reset on next encounter)
-        merchantPurchasedItems: []
+        merchantPurchasedItems: [],
+        // Combo system for consecutive victories
+        victoryCombo: 0,
+        maxVictoryCombo: 0
     },
     currentEnemy: null,
     inCombat: false,

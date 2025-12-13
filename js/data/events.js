@@ -632,6 +632,135 @@ export const randomEvents = [
             return `Vos talents sont applaudis ! Vous gagnez ${gold} pièces d\'or et +1 présence !`;
         },
         location: 'village'
+    },
+    // Jackpot events - rare and very rewarding
+    {
+        type: 'jackpot',
+        name: 'Trésor du Dragon Oublié',
+        icon: '🏆',
+        description: 'Vous découvrez le trésor légendaire d\'un dragon oublié !',
+        effect: (p) => {
+            const massiveGold = rollGold(200, 300); // Huge gold reward
+            const massiveXP = rollXP(150, 200); // Huge XP reward
+            p.gold += massiveGold;
+            p.xp += massiveXP;
+            p.puissance += 2;
+            return `💰 JACKPOT ! 💰 Vous gagnez ${massiveGold} or, ${massiveXP} XP et +2 puissance !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'special',
+        name: 'Source Magique',
+        icon: '⛲',
+        description: 'Une source d\'eau cristalline irradie une énergie magique...',
+        effect: (p) => {
+            const fullHeal = p.maxHealth - p.health;
+            p.health = p.maxHealth;
+            p.energy = p.maxEnergy;
+            if (p.maxMana) {
+                p.mana = p.maxMana;
+            }
+            return `Vous êtes complètement restauré ! (+${fullHeal} HP, énergie et mana au maximum)`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'special',
+        name: 'Rencontre avec un Sage',
+        icon: '👴',
+        description: 'Un vieux sage médite près d\'un arbre ancien...',
+        effect: (p) => {
+            const statChoice = rollRange(1, 3);
+            if (statChoice === 1) {
+                p.esprit += 2;
+                return `Le sage partage sa sagesse avec vous. Votre esprit augmente de 2 !`;
+            } else if (statChoice === 2) {
+                p.adresse += 2;
+                return `Le sage vous enseigne une technique ancestrale. Votre adresse augmente de 2 !`;
+            } else {
+                p.presence += 2;
+                return `Le sage vous inspire par sa présence. Votre présence augmente de 2 !`;
+            }
+        },
+        location: 'forest'
+    },
+    {
+        type: 'special',
+        name: 'Étoile Filante',
+        icon: '🌠',
+        description: 'Une étoile filante traverse le ciel nocturne !',
+        effect: (p) => {
+            const xpBonus = rollXP(80, 100);
+            p.xp += xpBonus;
+            // Small chance for extra bonus
+            if (rollRange(1, 100) <= 25) {
+                p.maxHealth += 5;
+                return `Votre vœu est exaucé ! Vous gagnez ${xpBonus} XP et +5 HP max !`;
+            }
+            return `Vous faites un vœu et gagnez ${xpBonus} XP !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'treasure',
+        name: 'Marchand Itinérant Généreux',
+        icon: '🎁',
+        description: 'Un marchand généreux vous offre un cadeau surprise !',
+        effect: (p) => {
+            const goldGift = rollGold(50, 100);
+            const statBoost = rollRange(1, 3);
+            p.gold += goldGift;
+            if (statBoost === 1) {
+                p.puissance += 1;
+                return `Le marchand vous offre ${goldGift} or et une potion de force (+1 puissance) !`;
+            } else if (statBoost === 2) {
+                p.defense += 1;
+                return `Le marchand vous offre ${goldGift} or et une armure enchantée (+1 défense) !`;
+            } else {
+                p.adresse += 1;
+                return `Le marchand vous offre ${goldGift} or et des bottes magiques (+1 adresse) !`;
+            }
+        },
+        location: 'forest'
+    },
+    {
+        type: 'special',
+        name: 'Aurore Mystique',
+        icon: '🌅',
+        description: 'Une aurore aux couleurs mystiques illumine le ciel...',
+        effect: (p) => {
+            const energyBonus = Math.floor(p.maxEnergy * 0.5);
+            p.energy = Math.min(p.maxEnergy, p.energy + energyBonus);
+            const xpBonus = rollXP(40, 60);
+            p.xp += xpBonus;
+            return `L\'aurore vous revigore ! Vous gagnez ${energyBonus} énergie et ${xpBonus} XP !`;
+        },
+        location: 'forest'
+    },
+    {
+        type: 'special',
+        name: 'Cercle de Champignons Magiques',
+        icon: '🍄',
+        description: 'Vous découvrez un cercle parfait de champignons luminescents...',
+        effect: (p) => {
+            // Random effect - could be good or chaotic
+            const effect = rollRange(1, 3);
+            if (effect === 1) {
+                const goldBonus = rollGold(80, 120);
+                p.gold += goldBonus;
+                return `Les champignons transmutent en or ! Vous gagnez ${goldBonus} pièces d\'or !`;
+            } else if (effect === 2) {
+                p.puissance += 1;
+                p.defense += 1;
+                return `La magie des fées vous renforce ! +1 puissance et +1 défense !`;
+            } else {
+                const xpBonus = rollXP(100, 150);
+                p.xp += xpBonus;
+                return `Vous obtenez des visions mystiques ! Vous gagnez ${xpBonus} XP !`;
+            }
+        },
+        location: 'forest'
     }
 ];
 
