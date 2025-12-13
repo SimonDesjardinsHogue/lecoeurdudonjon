@@ -8,6 +8,12 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Non publié]
 
 ### Ajouté
+- **6 Boss au lieu de 4** : Nouveaux boss aux niveaux 4 et 20 pour progression plus régulière
+- **Système de Combo** : Bonus de +5% or/XP par victoire consécutive (max +50% à 10 combos)
+- **Ennemis Élites** : 15% de chance de rencontrer un ennemi puissant (1.5x stats, 2x récompenses)
+- **8 Nouveaux Événements** : Trésor du Dragon, Source Magique, Étoile Filante, Sage, etc.
+- **10 Nouveaux Achievements** : Combo (5, 10, 20), Élites (5, 20), Boss Hunter, Speedrunner, etc.
+- **Affichage Combo** : Indicateur visuel 🔥x{combo} dans l'interface
 - Infrastructure de projet professionnelle (package.json, .editorconfig)
 - Politique de sécurité (SECURITY.md)
 - Code de conduite (CODE_OF_CONDUCT.md)
@@ -16,6 +22,20 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Templates d'issues et PR
 - Badges professionnels dans README
 - Workflow GitHub Actions pour vérifications qualité
+
+### Modifié
+- **Boss Levels** : Maintenant aux niveaux 4, 8, 12, 16, 20, 24 (au lieu de 6, 12, 18, 24)
+- **Récompenses Boss** : Augmentées de 20-50% pour chaque boss
+- **Probabilité Boss** : Augmentée de 25% à 30% de chance de base
+- Statistiques du jeu : 34 ennemis + 8 élites + 6 boss
+- Documentation complète avec nouvelles fonctionnalités
+
+### Amélioré
+- **Variété de Combat** : Ennemis élites ajoutent imprévisibilité et excitation
+- **Récompense d'Habileté** : Système de combo récompense les joueurs expérimentés
+- **Progression** : Boss plus fréquents pour meilleure sensation de progression
+- **Événements** : Plus de variété dans les rencontres aléatoires
+- **Achievements** : Plus d'objectifs à long terme pour engagement
 
 ## [1.1.0] - 2024-11
 
